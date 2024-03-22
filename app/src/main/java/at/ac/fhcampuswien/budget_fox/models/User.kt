@@ -5,5 +5,5 @@ import kotlinx.datetime.LocalDate
 data class User(
     var firstName: String = "",
     var lastName: String = "",
-    var dateOfBirth: LocalDate = LocalDate(1970, 1, 2)
+    var dateOfBirth: LocalDate = LocalDate(1970,1,1)
 )
