@@ -72,4 +72,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0-RC.2")
 }
