@@ -18,7 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+
+val userTest = hashMapOf(
+    "first" to "Alan",
+    "middle" to "Mathison",
+    "last" to "Turing",
+    "born" to 1912,
+)
 
 @Composable
 fun RegistrationForm() {
@@ -56,12 +65,23 @@ fun registerUser(email: String, password: String) {
         .addOnCompleteListener() { task ->
             if(task.isSuccessful) {
                 Log.d(TAG,"Registration OK $email, $password")
+                val user = auth.currentUser
+
+                if (user != null) {
+                    createUserEntryInDatabase(user = user)
+                }
             }
             else
             {
                 Log.e(TAG, "Registration failed $email, $password")
             }
         }
+}
+
+fun createUserEntryInDatabase(user: FirebaseUser) {
+    val database = Firebase.firestore
+
+    database.collection("users").document(user.uid).set(userTest)
 }
 
 @Composable
