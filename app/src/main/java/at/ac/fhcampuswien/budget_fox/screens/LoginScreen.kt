@@ -1,7 +1,5 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +27,7 @@ fun LoginForm() {
     var password by remember {
         mutableStateOf(value = "")
     }
+    val fields = listOf("E-Mail", "Password")
     val buttonNames = listOf("Login", "Create account")
 
     Column(
@@ -39,28 +38,28 @@ fun LoginForm() {
     ) {
         ScreenTitle(title = "Login")
 
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-                email = it
-            },
-            label = {
-                Text(
-                    text = "E-Mail"
-                )
-            }
-        )
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-            },
-            label = {
-                Text(
-                    text = "Password"
-                )
-            }
-        )
+        fields.forEach { field ->
+            OutlinedTextField(
+                value = when (field) {
+                    fields[0] -> email
+                    else -> password
+                },
+                onValueChange = { userInput ->
+                    when (field) {
+                        fields[0] -> email = userInput
+                        else -> password = userInput
+                    }
+                },
+                label = {
+                    Text(
+                        text = when (field) {
+                            fields[0] -> fields[0]
+                            else -> fields[1]
+                        }
+                    )
+                }
+            )
+        }
 
         buttonNames.forEach { name ->
             FilledTonalButton(
@@ -87,9 +86,11 @@ fun userLogin(email: String, password: String) {
     authentication.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.d(TAG, "Successfully logged in with email $email and password $password :)")
+                // Log.d(TAG, "Successfully logged in with email $email and password $password :)")
+                // todo: navigate to profile screen of user
             } else {
-                Log.d(TAG, "An error occurred while trying to log in :(")
+                // Log.d(TAG, "An error occurred while trying to log in :(")
+                // todo: display error message in login screen
             }
         }
 }
