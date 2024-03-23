@@ -1,5 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +21,12 @@ import at.ac.fhcampuswien.budget_fox.widgets.ScreenTitle
 
 @Composable
 fun LoginScreen() {
-    val loginFieldLabels = listOf("E-Mail", "Password")
+    var email by remember {
+        mutableStateOf(value = "")
+    }
+    var password by remember {
+        mutableStateOf(value = "")
+    }
     val buttonNames = listOf("Login", "Create account")
 
     Column(
@@ -30,29 +37,34 @@ fun LoginScreen() {
     ) {
         ScreenTitle(title = "Login")
 
-        loginFieldLabels.forEach { label ->
-            var userInput by remember {
-                mutableStateOf(value = "")
+        OutlinedTextField(
+            value = email,
+            onValueChange = {
+                email = it
+            },
+            label = {
+                Text(
+                    text = "E-Mail"
+                )
             }
-
-            OutlinedTextField(
-                value = userInput,
-                onValueChange = {
-                    userInput = it
-                },
-                label = {
-                    Text(
-                        text = label
-                    )
-                }
-            )
-        }
+        )
+        OutlinedTextField(
+            value = password,
+            onValueChange = {
+                password = it
+            },
+            label = {
+                Text(
+                    text = "Password"
+                )
+            }
+        )
 
         buttonNames.forEach { name ->
             FilledTonalButton(
                 onClick = {
                     when (name) {
-                        buttonNames[0] -> userLogin()
+                        buttonNames[0] -> userLogin(email = email, password = password)
                         // todo: navigate to registration screen
                     }
                 },
@@ -67,6 +79,6 @@ fun LoginScreen() {
     }
 }
 
-fun userLogin() {
-    // Log.d(TAG, "Function was successfully called.")
+fun userLogin(email: String, password: String) {
+    Log.d(TAG, "Function was successfully called.")
 }
