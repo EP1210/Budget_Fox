@@ -1,5 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -7,6 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,11 +20,15 @@ import at.ac.fhcampuswien.budget_fox.widgets.ScreenTitle
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
 import at.ac.fhcampuswien.budget_fox.widgets.passwordField
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 @Composable
 fun LoginForm() {
-    val buttonNames = listOf("Login", "Create account")
+    val buttonNames = listOf("Login", "Create account", "Logout")
+    var user by remember {
+        mutableStateOf(value = Firebase.auth.currentUser)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -35,8 +45,13 @@ fun LoginForm() {
             FilledTonalButton(
                 onClick = {
                     when (name) {
-                        buttonNames[0] -> userLogin(email = email, password = password)
+                        buttonNames[0] -> user = userLogin(email = email, password = password)
                         // todo: navigate to registration screen
+                        buttonNames[2] -> {
+                            Log.d(TAG, "The user $user with uid ${user?.uid} logs out.")
+                            user = null
+                            Log.d(TAG, "The user $user is logged out.")
+                        }
                     }
                 },
                 modifier = Modifier
@@ -53,17 +68,20 @@ fun LoginForm() {
 fun userLogin(
     email: String,
     password: String
-) {
-    val authentication = Firebase.auth
+): FirebaseUser? {
+    var firebaseUser: FirebaseUser? = null
 
-    authentication.signInWithEmailAndPassword(email, password)
+    Firebase.auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                // Log.d(TAG, "Successfully logged in with email $email and password $password :)")
+                firebaseUser = Firebase.auth.currentUser
+                Log.d(TAG, "Successfully logged in with email $email, password $password and uid ${firebaseUser?.uid}.")
                 // todo: navigate to profile screen of user
             } else {
-                // Log.d(TAG, "An error occurred while trying to log in :(")
+                Log.d(TAG, "An error occurred while trying to log in.")
                 // todo: display error message in login screen
             }
         }
+
+    return firebaseUser
 }
