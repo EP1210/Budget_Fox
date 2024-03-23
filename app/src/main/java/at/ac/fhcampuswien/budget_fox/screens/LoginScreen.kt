@@ -5,29 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import at.ac.fhcampuswien.budget_fox.widgets.ScreenTitle
+import at.ac.fhcampuswien.budget_fox.widgets.emailField
+import at.ac.fhcampuswien.budget_fox.widgets.passwordField
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
 @Composable
 fun LoginForm() {
-    var email by remember {
-        mutableStateOf(value = "")
-    }
-    var password by remember {
-        mutableStateOf(value = "")
-    }
-    val fields = listOf("E-Mail", "Password")
     val buttonNames = listOf("Login", "Create account")
 
     Column(
@@ -38,30 +28,8 @@ fun LoginForm() {
             .padding(horizontal = 70.dp)
     ) {
         ScreenTitle(title = "Login")
-
-        fields.forEach { field ->
-            OutlinedTextField(
-                value = when (field) {
-                    fields[0] -> email
-                    else -> password
-                },
-                onValueChange = { userInput ->
-                    when (field) {
-                        fields[0] -> email = userInput
-                        else -> password = userInput
-                    }
-                },
-                label = {
-                    Text(
-                        text = when (field) {
-                            fields[0] -> fields[0]
-                            else -> fields[1]
-                        }
-                    )
-                },
-                singleLine = true
-            )
-        }
+        val email = emailField()
+        val password = passwordField()
 
         buttonNames.forEach { name ->
             FilledTonalButton(
@@ -82,7 +50,10 @@ fun LoginForm() {
     }
 }
 
-fun userLogin(email: String, password: String) {
+fun userLogin(
+    email: String,
+    password: String
+) {
     val authentication = Firebase.auth
 
     authentication.signInWithEmailAndPassword(email, password)
