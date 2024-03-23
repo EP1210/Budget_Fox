@@ -18,9 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import at.ac.fhcampuswien.budget_fox.widgets.ScreenTitle
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
-fun LoginScreen() {
+fun LoginForm() {
     var email by remember {
         mutableStateOf(value = "")
     }
@@ -80,5 +82,14 @@ fun LoginScreen() {
 }
 
 fun userLogin(email: String, password: String) {
-    Log.d(TAG, "Function was successfully called.")
+    val authentication = Firebase.auth
+
+    authentication.signInWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "Successfully logged in with email $email and password $password :)")
+            } else {
+                Log.d(TAG, "An error occurred while trying to log in :(")
+            }
+        }
 }
