@@ -35,6 +35,7 @@ fun LoginForm() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
+            .padding(horizontal = 70.dp)
     ) {
         ScreenTitle(title = "Login")
 
@@ -57,7 +58,8 @@ fun LoginForm() {
                             else -> fields[1]
                         }
                     )
-                }
+                },
+                singleLine = true
             )
         }
 
