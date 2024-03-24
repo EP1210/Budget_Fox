@@ -6,24 +6,22 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import at.ac.fhcampuswien.budget_fox.widgets.ScreenTitle
+import at.ac.fhcampuswien.budget_fox.widgets.CreateButton
+import at.ac.fhcampuswien.budget_fox.widgets.CreateTitle
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
 import at.ac.fhcampuswien.budget_fox.widgets.passwordField
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
-private var user = Firebase.auth.currentUser
+private var user: FirebaseUser? = null
 
 @Composable
 fun LoginForm() {
-    val buttonNames = listOf("Login", "Create account", "Logout")
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -31,30 +29,20 @@ fun LoginForm() {
             .fillMaxSize()
             .padding(horizontal = 70.dp)
     ) {
-        ScreenTitle(title = "Login")
+        CreateTitle(title = "Login")
         val email = emailField()
         val password = passwordField()
 
-        buttonNames.forEach { name ->
-            FilledTonalButton(
-                onClick = {
-                    when (name) {
-                        buttonNames[0] -> userLogin(email = email, password = password)
-                        // todo: navigate to registration screen
-                        buttonNames[2] -> {
-                            Log.d(TAG, "The user $user with uid ${user?.uid} logs out.")
-                            user = null
-                            Log.d(TAG, "The user $user is logged out.")
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .padding(top = 10.dp)
-            ) {
-                Text(
-                    text = name
-                )
-            }
+        CreateButton(name = "Login") {
+            userLogin(email = email, password = password)
+        }
+        CreateButton(name = "Create account") {
+            // todo: navigate to registration screen
+        }
+        CreateButton(name = "Logout") {
+            Log.d(TAG, "The user $user with uid ${user?.uid} logs out.")
+            user = null
+            Log.d(TAG, "The user $user is logged out.")
         }
     }
 }

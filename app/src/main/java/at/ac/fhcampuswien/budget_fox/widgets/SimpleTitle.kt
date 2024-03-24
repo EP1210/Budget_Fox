@@ -9,12 +9,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ScreenTitle(title: String) { // can be used in registration or login screen
+fun CreateTitle( // can be used in registration or login screen
+    title: String,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = title,
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
-        modifier = Modifier
+        modifier = modifier
             .padding(bottom = 10.dp)
     )
 }
