@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CreateButton(
+fun SimpleButton(
     name: String,
     modifier: Modifier = Modifier,
     event: () -> Unit

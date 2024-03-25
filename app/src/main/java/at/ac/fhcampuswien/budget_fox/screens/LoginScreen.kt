@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import at.ac.fhcampuswien.budget_fox.widgets.CreateButton
-import at.ac.fhcampuswien.budget_fox.widgets.CreateTitle
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
 import at.ac.fhcampuswien.budget_fox.widgets.passwordField
 import com.google.firebase.Firebase
@@ -29,17 +29,17 @@ fun LoginForm() {
             .fillMaxSize()
             .padding(horizontal = 70.dp)
     ) {
-        CreateTitle(title = "Login")
+        SimpleTitle(title = "Login")
         val email = emailField()
         val password = passwordField()
 
-        CreateButton(name = "Login") {
+        SimpleButton(name = "Login") {
             userLogin(email = email, password = password)
         }
-        CreateButton(name = "Create account") {
+        SimpleButton(name = "Create account") {
             // todo: navigate to registration screen
         }
-        CreateButton(name = "Logout") {
+        SimpleButton(name = "Logout") {
             Log.d(TAG, "The user $user with uid ${user?.uid} logs out.")
             user = null
             Log.d(TAG, "The user $user is logged out.")
