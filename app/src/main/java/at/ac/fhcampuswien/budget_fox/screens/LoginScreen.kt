@@ -18,10 +18,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
-private var user: FirebaseUser? = null
-
 @Composable
 fun LoginForm() {
+    var user: FirebaseUser? = null
+    user = Firebase.auth.currentUser
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -42,6 +42,7 @@ fun LoginForm() {
         SimpleButton(name = "Logout") {
             Log.d(TAG, "The user $user with uid ${user?.uid} logs out.")
             user = null
+            Firebase.auth.signOut()
             Log.d(TAG, "The user $user is logged out.")
         }
     }
@@ -54,7 +55,7 @@ fun userLogin(
     Firebase.auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                user = Firebase.auth.currentUser
+                val user: FirebaseUser? = Firebase.auth.currentUser
                 Log.d(
                     TAG,
                     "Successfully logged in with email $email, password $password and uid ${user?.uid}."
