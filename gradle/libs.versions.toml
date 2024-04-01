@@ -1,6 +1,6 @@
 [versions]
 agp = "8.3.1"
-firebaseBom = "32.7.4"
+firebaseBom = "32.8.0"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
 junit = "4.13.2"
@@ -8,7 +8,7 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.7.0"
 activityCompose = "1.8.2"
-composeBom = "2023.08.00"
+composeBom = "2024.03.00"
 firebaseAuthKtx = "22.3.1"
 
 [libraries]
