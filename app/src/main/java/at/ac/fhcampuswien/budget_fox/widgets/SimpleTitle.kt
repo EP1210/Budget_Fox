@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SimpleTitle( // can be used in registration or login screen
+fun SimpleTitle(
     title: String,
     modifier: Modifier = Modifier
 ) {

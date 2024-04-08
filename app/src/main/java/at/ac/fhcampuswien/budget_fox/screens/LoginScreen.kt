@@ -17,7 +17,6 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
 import at.ac.fhcampuswien.budget_fox.widgets.passwordField
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 @Composable
