@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
+import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 
 @Composable
 fun Navigation() {
@@ -14,7 +15,7 @@ fun Navigation() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Registration.route //TODO: Start screen
+        startDestination = Screen.Welcome.route //TODO: Start screen
     ) {
         composable(route = Screen.Registration.route) {
             RegistrationScreen(navController)
@@ -24,6 +25,9 @@ fun Navigation() {
         }
         composable(route = Screen.UserProfile.route) {
             UserProfileScreen(navController = navController)
+        }
+        composable(route = Screen.Welcome.route) {
+            WelcomeScreen(navController = navController)
         }
     }
 }
