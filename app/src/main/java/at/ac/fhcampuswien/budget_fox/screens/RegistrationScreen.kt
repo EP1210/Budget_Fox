@@ -11,7 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.User
+import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.dateField
@@ -33,7 +35,7 @@ fun userToDatabase(user: User): Map<String, Any> {
 }
 
 @Composable
-fun RegistrationForm() {
+fun RegistrationScreen(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -51,16 +53,20 @@ fun RegistrationForm() {
         val firstName = simpleField(title = "First name")
         val lastName = simpleField(title = "Last name")
 
+        SimpleButton(name = "To login") {
+            navController.navigate(route = Screen.Login.route)
+        }
+
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate), email, password)
+                registerUser(user = User(firstName, lastName, birthDate), email, password, navController)
             else
                 Log.d("Register", "Fill out email / password") //TODO: Alert or something
         }
     }
 }
 
-fun registerUser(user: User, email: String, password: String) {
+fun registerUser(user: User, email: String, password: String, navController: NavController) {
     val auth = Firebase.auth
 
     auth.createUserWithEmailAndPassword(email, password)
@@ -71,6 +77,9 @@ fun registerUser(user: User, email: String, password: String) {
 
                 if (firebaseUser != null) {
                     createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
+                    navController.navigate(route = Screen.UserProfile.route) {
+                        popUpTo(id = 0)
+                    }
                 }
             } else {
                 Log.e(TAG, "Registration failed $email, $password")
@@ -82,10 +91,4 @@ fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
 
     database.collection("users").document(firebaseUser.uid).set(userToDatabase(user = user))
-}
-
-@Composable
-@Preview(showBackground = true)
-fun Preview() {
-    RegistrationForm()
 }

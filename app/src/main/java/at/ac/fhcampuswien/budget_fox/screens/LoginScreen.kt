@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
@@ -19,9 +21,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 
 @Composable
-fun LoginForm() {
-    var user: FirebaseUser? = null
-    user = Firebase.auth.currentUser
+fun LoginScreen(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -34,33 +34,25 @@ fun LoginForm() {
         val password = passwordField()
 
         SimpleButton(name = "Login") {
-            userLogin(email = email, password = password)
+            userLogin(email = email, password = password, navController = navController)
         }
         SimpleButton(name = "Create account") {
-            // todo: navigate to registration screen
-        }
-        SimpleButton(name = "Logout") {
-            Log.d(TAG, "The user $user with uid ${user?.uid} logs out.")
-            user = null
-            Firebase.auth.signOut()
-            Log.d(TAG, "The user $user is logged out.")
+            navController.navigate(route = Screen.Registration.route)
         }
     }
 }
 
 fun userLogin(
     email: String,
-    password: String
+    password: String,
+    navController: NavController
 ) {
     Firebase.auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val user: FirebaseUser? = Firebase.auth.currentUser
-                Log.d(
-                    TAG,
-                    "Successfully logged in with email $email, password $password and uid ${user?.uid}."
-                )
-                // todo: navigate to profile screen of user
+                navController.navigate(route = Screen.UserProfile.route) {
+                    popUpTo(id = 0)
+                }
             } else {
                 Log.d(TAG, "An error occurred while trying to log in.")
                 // todo: display error message in login screen
