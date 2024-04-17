@@ -1,9 +1,9 @@
 # Budget Fox 🦊
 
-![Logo](./logo.jpg)
+![Logo](./docs/pics/logo.jpg)
 [Source](https://www.bing.com/images/create/mach-mir-ein-logo-fc3bcr-eine-app-namens-22budget-fox22/1-6617a4e4b5df4e3f8b7891667b5648f8?id=0TisW20ge4MAcfuzAdwu2Q%3d%3d&view=detailv2&idpp=genimg&thId=OIG1.7tEdbYQHENIliJQXtEpV&FORM=GCRIDP&mode=overlay)
 
-![App Logo](./app_logo_transparent.png)
+![App Logo](./docs/pics/app_logo_transparent.png)
 [Source](https://copilot.microsoft.com/images/create/ein-freundlich-wirkender-fuchs2c-der-einen-geldsack/1-661e6ab8ed27405d84fd571f78941705?id=8pK0DN2fHCXliYJpLthKeg%3d%3d&view=detailv2&idpp=genimg&idpclose=1&thId=OIG4.hpK.R.mEZscU8FK7wENJ&FORM=SYDBIC)
 
 Budget fox is an easy-to-use budget planning app.
