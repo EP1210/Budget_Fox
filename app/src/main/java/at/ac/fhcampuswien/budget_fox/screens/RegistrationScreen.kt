@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +15,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.dateField
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
@@ -40,7 +42,8 @@ fun RegistrationScreen(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 70.dp)
+            .padding(horizontal = 40.dp)
+            .imePadding()
     ) {
         SimpleTitle(title = "User registration")
 
@@ -52,15 +55,15 @@ fun RegistrationScreen(navController: NavController) {
         val firstName = simpleField(title = "First name")
         val lastName = simpleField(title = "Last name")
 
-        SimpleButton(name = "To login") {
-            navController.navigate(route = Screen.Login.route)
-        }
-
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
                 registerUser(user = User(firstName, lastName, birthDate), email, password, navController)
             else
                 Log.d("Register", "Fill out email / password") //TODO: Alert or something
+        }
+
+        SimpleTextButton(name = "To login") {
+            navController.navigate(route = Screen.Login.route)
         }
     }
 }
