@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import coil.compose.rememberAsyncImagePainter
@@ -29,7 +30,9 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
 @Composable
-fun UserProfileScreen(navController: NavController) {
+fun UserProfileScreen(
+    navController: NavController,
+    viewModel: UserViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -37,7 +40,20 @@ fun UserProfileScreen(navController: NavController) {
     ) {
         val auth = Firebase.auth
         val userMail = auth.currentUser?.email
-        SimpleTitle(title = "You are logged in as\n$userMail")
+        val userName = auth.currentUser?.displayName
+
+        SimpleTitle(
+            title = when (viewModel.newUser) {
+                true -> "Registration successful!"
+                false -> "Welcome back!"
+            }
+        )
+        Text(
+            text = """E-Mail: $userMail
+                |Name: $userName
+                |Registered since: _
+            """.trimMargin()
+        )
 
         SimpleButton(name = "Logout") {
             auth.signOut()

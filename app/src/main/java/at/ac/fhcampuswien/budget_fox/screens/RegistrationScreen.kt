@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
@@ -36,7 +37,9 @@ fun userToDatabase(user: User): Map<String, Any> {
 }
 
 @Composable
-fun RegistrationScreen(navController: NavController) {
+fun RegistrationScreen(
+    navController: NavController,
+    viewModel: UserViewModel) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -57,7 +60,7 @@ fun RegistrationScreen(navController: NavController) {
 
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate), email, password, navController)
+                registerUser(user = User(firstName, lastName, birthDate), email, password, navController, viewModel = viewModel)
             else
                 Log.d("Register", "Fill out email / password") //TODO: Alert or something
         }
@@ -68,7 +71,7 @@ fun RegistrationScreen(navController: NavController) {
     }
 }
 
-fun registerUser(user: User, email: String, password: String, navController: NavController) {
+fun registerUser(user: User, email: String, password: String, navController: NavController, viewModel: UserViewModel) {
     val auth = Firebase.auth
 
     auth.createUserWithEmailAndPassword(email, password)
@@ -77,6 +80,7 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
                 Log.d(TAG, "Registration OK $email, $password")
                 val firebaseUser = auth.currentUser
 
+                viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
                     createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
                     navController.navigate(route = Screen.UserProfile.route) {

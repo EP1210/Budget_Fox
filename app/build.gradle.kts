@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    val lifecycleVersion = "2.7.0"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -76,4 +77,5 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 }
