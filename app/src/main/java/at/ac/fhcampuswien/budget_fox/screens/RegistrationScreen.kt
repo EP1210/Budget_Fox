@@ -16,7 +16,7 @@ import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.dateField
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
@@ -65,7 +65,7 @@ fun RegistrationScreen(
                 Log.d("Register", "Fill out email / password") //TODO: Alert or something
         }
 
-        SimpleTextButton(name = "To login") {
+        SimpleTextLink(name = "To login") {
             navController.navigate(route = Screen.Login.route)
         }
     }

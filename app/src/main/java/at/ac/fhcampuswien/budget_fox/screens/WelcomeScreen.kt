@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.R
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -47,7 +47,7 @@ fun WelcomeScreen(navController: NavController) {
 
         val uriHandler = LocalUriHandler.current
 
-        SimpleTextButton(name = "About us") {
+        SimpleTextLink(name = "About us") {
             uriHandler.openUri("https://github.com/EP1210/Budget_Fox")
         }
     }

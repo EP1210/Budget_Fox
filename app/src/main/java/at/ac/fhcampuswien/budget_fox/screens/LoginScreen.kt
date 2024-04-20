@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
 import at.ac.fhcampuswien.budget_fox.widgets.passwordField
@@ -40,7 +40,7 @@ fun LoginScreen(
                 userLogin(email = email, password = password, navController = navController, viewModel = viewModel)
             }
         }
-        SimpleTextButton(name = "Create account") {
+        SimpleTextLink(name = "Create account") {
             navController.navigate(route = Screen.Registration.route)
         }
     }

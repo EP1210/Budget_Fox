@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +23,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import coil.compose.rememberAsyncImagePainter
 import com.google.firebase.Firebase
@@ -86,12 +86,10 @@ fun UserProfileScreen(
                 )
             }
 
-            TextButton(onClick = {
+            SimpleTextLink(
+                name = "Pick image"
+            ) {
                 galleryLauncher.launch("image/*")
-            }) {
-                Text(
-                    text = "Pick image"
-                )
             }
         }
     }
