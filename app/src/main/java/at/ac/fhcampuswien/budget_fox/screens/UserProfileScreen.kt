@@ -51,7 +51,7 @@ fun UserProfileScreen(
         Text(
             text = """E-Mail: $userMail
                 |Name: $userName
-                |Registered since: _
+                |Registered since:
             """.trimMargin()
         )
 

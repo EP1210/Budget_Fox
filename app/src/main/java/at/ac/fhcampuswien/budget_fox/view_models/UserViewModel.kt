@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 
 class UserViewModel : ViewModel() {
 
-    private var _newUser = mutableStateOf(value = true).value
+    private var _newUser = mutableStateOf(value = false).value
     val newUser: Boolean
         get() = _newUser
 
