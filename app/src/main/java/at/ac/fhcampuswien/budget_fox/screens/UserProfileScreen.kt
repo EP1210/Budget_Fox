@@ -32,7 +32,8 @@ import com.google.firebase.auth.auth
 @Composable
 fun UserProfileScreen(
     navController: NavController,
-    viewModel: UserViewModel) {
+    viewModel: UserViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

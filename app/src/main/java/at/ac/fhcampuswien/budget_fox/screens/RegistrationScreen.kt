@@ -39,7 +39,8 @@ fun userToDatabase(user: User): Map<String, Any> {
 @Composable
 fun RegistrationScreen(
     navController: NavController,
-    viewModel: UserViewModel) {
+    viewModel: UserViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
