@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import at.ac.fhcampuswien.budget_fox.navigation.Navigation
-import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.ui.theme.Budget_FoxTheme
 
 class MainActivity : ComponentActivity() {

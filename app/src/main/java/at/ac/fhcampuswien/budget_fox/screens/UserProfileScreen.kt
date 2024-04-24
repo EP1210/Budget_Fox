@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -51,7 +50,7 @@ fun UserProfileScreen(
         val firebaseUser by remember {
             mutableStateOf(auth.currentUser)
         }
-        var firebaseUserUid = "";
+        var firebaseUserUid = ""
         if(firebaseUser != null) {
             firebaseUserUid = firebaseUser!!.uid
         }

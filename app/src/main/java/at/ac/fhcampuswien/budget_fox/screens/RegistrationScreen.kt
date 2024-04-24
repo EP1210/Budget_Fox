@@ -26,7 +26,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import java.time.ZoneOffset
 
 fun userToDatabase(user: User): Map<String, Any> {
     return mapOf(

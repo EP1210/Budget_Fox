@@ -1,6 +1,5 @@
 package at.ac.fhcampuswien.budget_fox.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
