@@ -77,7 +77,7 @@ fun UserProfileScreen(
                     it
                 )
             }, ZoneOffset.UTC)
-            userRegistrationDate = LocalDateTime.ofInstant(user?.dateTimeOfRegistrationInEpoch?.let {
+            userRegistrationDate = LocalDateTime.ofInstant(user?.dateOfRegistrationInEpoch?.let {
                 Instant.ofEpochSecond(
                     it
                 )

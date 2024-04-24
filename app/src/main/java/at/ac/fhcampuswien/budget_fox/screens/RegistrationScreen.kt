@@ -33,7 +33,7 @@ fun userToDatabase(user: User): Map<String, Any> {
         "firstName" to user.firstName,
         "lastName" to user.lastName,
         "dateOfBirthInEpoch" to user.dateOfBirthInEpoch,
-        "dateOfRegistrationInEpoch" to user.dateTimeOfRegistrationInEpoch
+        "dateOfRegistrationInEpoch" to user.dateOfRegistrationInEpoch
     )
 }
 
