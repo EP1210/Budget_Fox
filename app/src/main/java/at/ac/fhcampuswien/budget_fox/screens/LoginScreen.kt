@@ -22,7 +22,7 @@ import com.google.firebase.auth.auth
 @Composable
 fun LoginScreen(
     navController: NavController,
-    //viewModel: UserViewModel
+    viewModel: UserViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -37,7 +37,7 @@ fun LoginScreen(
 
         SimpleButton(name = "Login") {
             if (email.isNotBlank() && password.isNotBlank()) {
-                userLogin(email = email, password = password, navController = navController)//, //viewModel = viewModel)
+                userLogin(email = email, password = password, navController = navController, viewModel = viewModel)
             }
         }
         SimpleTextLink(name = "Create account") {
@@ -50,12 +50,12 @@ fun userLogin(
     email: String,
     password: String,
     navController: NavController,
-    //viewModel: UserViewModel
+    viewModel: UserViewModel
 ) {
     Firebase.auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                //viewModel.setUserState(firstLogin = task.result.additionalUserInfo?.isNewUser)
+                viewModel.setUserState(firstLogin = task.result.additionalUserInfo?.isNewUser)
                 navController.navigate(route = Screen.UserProfile.route) {
                     popUpTo(id = 0)
                 }

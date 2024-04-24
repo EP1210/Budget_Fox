@@ -48,10 +48,12 @@ fun UserProfileScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         val auth = Firebase.auth
-        val firebaseUser = auth.currentUser
+        val firebaseUser by remember {
+            mutableStateOf(auth.currentUser)
+        }
         var firebaseUserUid = "";
         if(firebaseUser != null) {
-            firebaseUserUid = firebaseUser.uid
+            firebaseUserUid = firebaseUser!!.uid
         }
         val userMail = auth.currentUser?.email
 
@@ -83,7 +85,7 @@ fun UserProfileScreen(
         Text(
             text = """E-Mail: $userMail
                 |Name: $userName
-                |Birth date: $userBirthDate
+                |Birth date: ${userBirthDate.dayOfMonth}.${userBirthDate.monthValue}.${userBirthDate.year}
             """.trimMargin()
         )
 
