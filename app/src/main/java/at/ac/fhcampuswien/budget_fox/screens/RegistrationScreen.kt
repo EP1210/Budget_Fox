@@ -32,7 +32,7 @@ fun userToDatabase(user: User): Map<String, Any> {
     return mapOf(
         "firstName" to user.firstName,
         "lastName" to user.lastName,
-        "dateOfBirthInEpoch" to user.dateOfBirth.toEpochSecond(ZoneOffset.UTC)
+        "dateOfBirthInEpoch" to user.dateOfBirthInEpoch
     )
 }
 
