@@ -64,11 +64,20 @@ fun UserProfileScreen(
             mutableStateOf(LocalDateTime.now())
         }
 
+        var userRegistrationDate by remember {
+            mutableStateOf(LocalDateTime.now())
+        }
+
         val docRef = Firebase.firestore.collection("users").document(firebaseUserUid)
         docRef.get().addOnSuccessListener { documentSnapshot ->
             val user = documentSnapshot.toObject<User>()
             userName = user?.firstName + " " + user?.lastName
             userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
+                Instant.ofEpochSecond(
+                    it
+                )
+            }, ZoneOffset.UTC)
+            userRegistrationDate = LocalDateTime.ofInstant(user?.dateTimeOfRegistrationInEpoch?.let {
                 Instant.ofEpochSecond(
                     it
                 )
@@ -85,6 +94,8 @@ fun UserProfileScreen(
             text = """E-Mail: $userMail
                 |Name: $userName
                 |Birth date: ${userBirthDate.dayOfMonth}.${userBirthDate.monthValue}.${userBirthDate.year}
+                |Registration date: ${userRegistrationDate.dayOfMonth}.${userRegistrationDate.monthValue}.${userRegistrationDate.year}
+                |Registration time: ${userRegistrationDate.hour}:${userRegistrationDate.minute}
             """.trimMargin()
         )
 

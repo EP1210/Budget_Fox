@@ -26,12 +26,14 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import java.time.LocalDateTime
 
 fun userToDatabase(user: User): Map<String, Any> {
     return mapOf(
         "firstName" to user.firstName,
         "lastName" to user.lastName,
-        "dateOfBirthInEpoch" to user.dateOfBirthInEpoch
+        "dateOfBirthInEpoch" to user.dateOfBirthInEpoch,
+        "dateOfRegistrationInEpoch" to user.dateTimeOfRegistrationInEpoch
     )
 }
 
@@ -60,7 +62,7 @@ fun RegistrationScreen(
 
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate), email, password, navController, viewModel = viewModel)
+                registerUser(user = User(firstName, lastName, birthDate, LocalDateTime.now()), email, password, navController, viewModel = viewModel)
             else
                 Log.d("Register", "Fill out email / password") //TODO: Alert or something
         }
