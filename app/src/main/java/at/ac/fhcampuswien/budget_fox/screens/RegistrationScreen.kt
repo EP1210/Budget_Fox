@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.models.Income
 import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
@@ -27,15 +28,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import java.time.LocalDateTime
-
-fun userToDatabase(user: User): Map<String, Any> {
-    return mapOf(
-        "firstName" to user.firstName,
-        "lastName" to user.lastName,
-        "dateOfBirthInEpoch" to user.dateOfBirthInEpoch,
-        "dateOfRegistrationInEpoch" to user.dateOfRegistrationInEpoch
-    )
-}
+import java.time.Period
 
 @Composable
 fun RegistrationScreen(
@@ -97,6 +90,7 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
 
 fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
+    user.addIncome(Income(amount = 10.4F, description = "FHCW", period = Period.ZERO))
 
-    database.collection("users").document(firebaseUser.uid).set(userToDatabase(user = user))
+    database.collection("users").document(firebaseUser.uid).set(user.userToDatabase())
 }
