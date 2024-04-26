@@ -92,5 +92,5 @@ fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
     user.addIncome(Income(amount = 10.4F, description = "FHCW", period = Period.ZERO))
 
-    database.collection("users").document(firebaseUser.uid).set(user.userToDatabase())
+    database.collection("users").document(firebaseUser.uid).set(user.userToDatabase(firebaseUser.uid))
 }

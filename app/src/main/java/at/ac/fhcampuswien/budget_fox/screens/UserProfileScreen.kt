@@ -58,8 +58,8 @@ fun UserProfileScreen(
             mutableStateOf(LocalDateTime.now())
         }
 
-        val docRef = Firebase.firestore.collection("users").document(firebaseUserUid)
-        docRef.get().addOnSuccessListener { documentSnapshot ->
+        val documentReference = Firebase.firestore.collection("users").document(firebaseUserUid)
+        documentReference.get().addOnSuccessListener { documentSnapshot ->
             val user = documentSnapshot.toObject<User>()
             userName = user?.firstName + " " + user?.lastName
             userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
