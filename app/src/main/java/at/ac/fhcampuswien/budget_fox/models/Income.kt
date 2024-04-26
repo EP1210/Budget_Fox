@@ -4,8 +4,8 @@ import java.time.Period
 import java.util.UUID
 
 data class Income(
-    val uid: UUID = UUID.randomUUID(),
+    val uuid: UUID = UUID.randomUUID(),
     val amount : Float,
     val description: String,
-    val period: Period
+    val period: Period? = null // made period nullable to enable non periodical incomes
 )

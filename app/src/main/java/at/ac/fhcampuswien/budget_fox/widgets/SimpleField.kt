@@ -26,6 +26,5 @@ fun simpleField(title: String): String {
         },
         singleLine = true
     )
-
     return textValue
 }

@@ -90,7 +90,7 @@ fun registerUser(user: User, email: String, password: String, navigationControll
 
 fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
-    user.addIncome(Income(amount = 10.4F, description = "FHCW", period = Period.ZERO)) // todo
+    user.addIncome(Income(amount = 10.4F, description = "FHCW", period = Period.ZERO)) // TODO
 
     database.collection("users").document(firebaseUser.uid).set(user.userToDatabase(firebaseUser.uid))
 }

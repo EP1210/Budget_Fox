@@ -6,7 +6,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-class UserRepository() : UserDataAccessObject {
+class UserRepository : UserDataAccessObject {
 
     private val database = Firebase.firestore
 
@@ -28,10 +28,10 @@ class UserRepository() : UserDataAccessObject {
     }
 
     override fun insertIncome(income: Income, uid: String) {
-        database.collection("users").document(uid).collection("incomes").document(income.uid.toString()).set(income)
+        database.collection("users").document(uid).collection("incomes").document(income.uuid.toString()).set(income)
     }
 
-    override fun deleteIncome(income: Income, uid: String, ) {
-        database.collection("users").document(uid).collection("incomes").document(income.uid.toString()).delete()
+    override fun deleteIncome(income: Income, uid: String) {
+        database.collection("users").document(uid).collection("incomes").document(income.uuid.toString()).delete()
     }
 }

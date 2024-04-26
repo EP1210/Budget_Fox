@@ -91,7 +91,7 @@ fun UserProfileScreen(
             SimpleTitle(
                 title = when (viewModel.newUser) {
                     true -> "Registration successful!"
-                    false -> "Welcome back!"
+                    false -> "Personal information"
                 }
             )
             Text(
