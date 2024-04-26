@@ -16,6 +16,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.simpleField
+import at.ac.fhcampuswien.budget_fox.widgets.simpleNumberField
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.time.Period
@@ -48,7 +49,7 @@ fun IncomeExpenseScreen(
                 title = "Add an income or expense"
             )
 
-            val amount = simpleField(
+            val amount = simpleNumberField(
                 title = "Amount"
             )
             val description = simpleField(
@@ -65,7 +66,7 @@ fun IncomeExpenseScreen(
                 if (amount.isNotBlank() && description.isNotBlank() && user != null) {
                     userRepository.insertIncome(
                         income = Income(
-                            amount = amount.toFloat(),
+                            amount = amount.toDouble(),
                             description = description,
                             period = when {
                                 period.isNotBlank() -> Period.ofMonths(period.toInt())
@@ -81,7 +82,7 @@ fun IncomeExpenseScreen(
             simpleField(
                 title = "Date"
             )
-            simpleField(
+            simpleNumberField(
                 title = "Amount"
             )
             simpleField(
