@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,7 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.dateField
 import at.ac.fhcampuswien.budget_fox.widgets.emailField
@@ -23,24 +26,29 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import java.time.ZoneOffset
+import java.time.LocalDateTime
 
 fun userToDatabase(user: User): Map<String, Any> {
     return mapOf(
         "firstName" to user.firstName,
         "lastName" to user.lastName,
-        "dateOfBirthInEpoch" to user.dateOfBirth.toEpochSecond(ZoneOffset.UTC)
+        "dateOfBirthInEpoch" to user.dateOfBirthInEpoch,
+        "dateOfRegistrationInEpoch" to user.dateOfRegistrationInEpoch
     )
 }
 
 @Composable
-fun RegistrationScreen(navController: NavController) {
+fun RegistrationScreen(
+    navController: NavController,
+    viewModel: UserViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 70.dp)
+            .padding(horizontal = 40.dp)
+            .imePadding()
     ) {
         SimpleTitle(title = "User registration")
 
@@ -52,20 +60,20 @@ fun RegistrationScreen(navController: NavController) {
         val firstName = simpleField(title = "First name")
         val lastName = simpleField(title = "Last name")
 
-        SimpleButton(name = "To login") {
-            navController.navigate(route = Screen.Login.route)
-        }
-
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate), email, password, navController)
+                registerUser(user = User(firstName, lastName, birthDate, LocalDateTime.now()), email, password, navController, viewModel = viewModel)
             else
                 Log.d("Register", "Fill out email / password") //TODO: Alert or something
+        }
+
+        SimpleTextLink(name = "To login") {
+            navController.navigate(route = Screen.Login.route)
         }
     }
 }
 
-fun registerUser(user: User, email: String, password: String, navController: NavController) {
+fun registerUser(user: User, email: String, password: String, navController: NavController, viewModel: UserViewModel) {
     val auth = Firebase.auth
 
     auth.createUserWithEmailAndPassword(email, password)
@@ -74,6 +82,7 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
                 Log.d(TAG, "Registration OK $email, $password")
                 val firebaseUser = auth.currentUser
 
+                viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
                     createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
                     navController.navigate(route = Screen.UserProfile.route) {
