@@ -21,7 +21,7 @@ import com.google.firebase.auth.auth
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
+    navigationController: NavController,
     viewModel: UserViewModel
 ) {
     Column(
@@ -37,11 +37,11 @@ fun LoginScreen(
 
         SimpleButton(name = "Login") {
             if (email.isNotBlank() && password.isNotBlank()) {
-                userLogin(email = email, password = password, navController = navController, viewModel = viewModel)
+                userLogin(email = email, password = password, navController = navigationController, viewModel = viewModel)
             }
         }
         SimpleTextLink(name = "Create account") {
-            navController.navigate(route = Screen.Registration.route)
+            navigationController.navigate(route = Screen.Registration.route)
         }
     }
 }

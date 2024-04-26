@@ -10,7 +10,7 @@ class UserRepository() : UserDataAccessObject {
 
     private val database = Firebase.firestore
 
-    override fun addUser(user: User, uid: String) {
+    override fun insertUser(user: User, uid: String) {
         database.collection("users").document(uid).set(user.userToDatabase(uid = uid))
     }
 
@@ -27,7 +27,7 @@ class UserRepository() : UserDataAccessObject {
         database.collection("users").document(uid).delete()
     }
 
-    override fun addIncome(income: Income, uid: String) {
+    override fun insertIncome(income: Income, uid: String) {
         database.collection("users").document(uid).collection("incomes").document(income.uid.toString()).set(income)
     }
 

@@ -32,7 +32,7 @@ import java.time.Period
 
 @Composable
 fun RegistrationScreen(
-    navController: NavController,
+    navigationController: NavController,
     viewModel: UserViewModel
 ) {
     Column(
@@ -55,18 +55,18 @@ fun RegistrationScreen(
 
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate, LocalDateTime.now()), email, password, navController, viewModel = viewModel)
+                registerUser(user = User(firstName, lastName, birthDate, LocalDateTime.now()), email, password, navigationController, viewModel = viewModel)
             else
-                Log.d("Register", "Fill out email / password") //TODO: Alert or something
+                Log.d("Register", "Fill out email / password") // TODO: Alert or something
         }
 
         SimpleTextLink(name = "To login") {
-            navController.navigate(route = Screen.Login.route)
+            navigationController.navigate(route = Screen.Login.route)
         }
     }
 }
 
-fun registerUser(user: User, email: String, password: String, navController: NavController, viewModel: UserViewModel) {
+fun registerUser(user: User, email: String, password: String, navigationController: NavController, viewModel: UserViewModel) {
     val auth = Firebase.auth
 
     auth.createUserWithEmailAndPassword(email, password)
@@ -78,7 +78,7 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
                 viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
                     createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
-                    navController.navigate(route = Screen.UserProfile.route) {
+                    navigationController.navigate(route = Screen.UserProfile.route) {
                         popUpTo(id = 0)
                     }
                 }
@@ -90,7 +90,7 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
 
 fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
-    user.addIncome(Income(amount = 10.4F, description = "FHCW", period = Period.ZERO))
+    user.addIncome(Income(amount = 10.4F, description = "FHCW", period = Period.ZERO)) // todo
 
     database.collection("users").document(firebaseUser.uid).set(user.userToDatabase(firebaseUser.uid))
 }

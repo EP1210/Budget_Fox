@@ -19,14 +19,16 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
 @Composable
-fun WelcomeScreen(navController: NavController) {
+fun WelcomeScreen(
+    navigationController: NavController
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
         if (Firebase.auth.currentUser != null) {
-            navController.navigate(route = Screen.UserProfile.route) {
+            navigationController.navigate(route = Screen.UserProfile.route) {
                 popUpTo(id = 0)
             }
         }
@@ -39,10 +41,10 @@ fun WelcomeScreen(navController: NavController) {
         SimpleTitle(title = "Welcome to Budget Fox")
 
         SimpleButton(name = "Create account") {
-            navController.navigate(route = Screen.Registration.route)
+            navigationController.navigate(route = Screen.Registration.route)
         }
         SimpleButton(name = "Login") {
-            navController.navigate(route = Screen.Login.route)
+            navigationController.navigate(route = Screen.Login.route)
         }
 
         val uriHandler = LocalUriHandler.current

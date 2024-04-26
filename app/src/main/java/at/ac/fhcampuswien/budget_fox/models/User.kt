@@ -27,7 +27,7 @@ class User(
     fun userToDatabase(uid: String): Map<String, Any> {
         val userRepository = UserRepository()
 
-        userRepository.addIncome(income = Income(amount = 10.5f, description = "FHCW", period = Period.ZERO), uid = uid)
+        userRepository.insertIncome(income = Income(amount = 10.5f, description = "FHCW", period = Period.ZERO), uid = uid)
         return mapOf(
             "firstName" to this.firstName,
             "lastName" to this.lastName,
