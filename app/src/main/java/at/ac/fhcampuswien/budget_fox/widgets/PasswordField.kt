@@ -17,7 +17,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun passwordField(): String {
+fun PasswordField(
+    onValueChange: (String) -> Unit
+) {
     var password by remember {
         mutableStateOf(value = "")
     }
@@ -29,6 +31,7 @@ fun passwordField(): String {
         value = password,
         onValueChange = { userInput ->
             password = userInput
+            onValueChange(password)
         },
         label = {
             Text(
@@ -56,6 +59,4 @@ fun passwordField(): String {
             }
         }
     )
-
-    return password
 }

@@ -11,7 +11,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun simpleNumberField(title: String): String {
+fun SimpleNumberField(
+    title: String,
+    onValueChange: (String) -> Unit
+) {
     var textValue by remember {
         mutableStateOf(value = "")
     }
@@ -20,6 +23,7 @@ fun simpleNumberField(title: String): String {
         value = textValue,
         onValueChange = { userInput ->
             textValue = userInput
+            onValueChange(textValue)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
@@ -31,6 +35,4 @@ fun simpleNumberField(title: String): String {
         },
         singleLine = true
     )
-
-    return textValue
 }

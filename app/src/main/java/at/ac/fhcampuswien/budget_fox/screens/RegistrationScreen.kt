@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,10 +22,10 @@ import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import at.ac.fhcampuswien.budget_fox.widgets.dateField
-import at.ac.fhcampuswien.budget_fox.widgets.emailField
-import at.ac.fhcampuswien.budget_fox.widgets.passwordField
-import at.ac.fhcampuswien.budget_fox.widgets.simpleField
+import at.ac.fhcampuswien.budget_fox.widgets.DateField
+import at.ac.fhcampuswien.budget_fox.widgets.EmailField
+import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -33,6 +37,22 @@ fun RegistrationScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
+    var email by remember {
+        mutableStateOf(value = "")
+    }
+    var dateOfBirth by remember {
+        mutableStateOf(value = LocalDateTime.now())
+    }
+    var password by remember {
+        mutableStateOf(value = "")
+    }
+    var firstName by remember {
+        mutableStateOf(value = "")
+    }
+    var lastName by remember {
+        mutableStateOf(value = "")
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -43,17 +63,25 @@ fun RegistrationScreen(
     ) {
         SimpleTitle(title = "User registration")
 
-        val email = emailField()
-        val password = passwordField()
-
-        val birthDate = dateField()
-
-        val firstName = simpleField(title = "First name")
-        val lastName = simpleField(title = "Last name")
+        EmailField { mail ->
+            email = mail
+        }
+        PasswordField { word ->
+            password = word
+        }
+        DateField { date ->
+            dateOfBirth = date
+        }
+        SimpleField(title = "First name") { name ->
+            firstName = name
+        }
+        SimpleField(title = "Last name") { name ->
+            lastName = name
+        }
 
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate, LocalDateTime.now()), email, password, navigationController, viewModel = viewModel)
+                registerUser(user = User(firstName, lastName, dateOfBirth, LocalDateTime.now()), email, password, navigationController, viewModel = viewModel)
             else
                 Log.d("Register", "Fill out email / password") // TODO: Alert or something
         }

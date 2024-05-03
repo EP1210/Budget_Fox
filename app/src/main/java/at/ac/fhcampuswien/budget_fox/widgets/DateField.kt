@@ -23,14 +23,14 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dateField(): LocalDateTime {
+fun DateField(
+    onValueChanged: (LocalDateTime) -> Unit
+) {
     val datePickerState = rememberDatePickerState()
     val showDialog = rememberSaveable { mutableStateOf(false) }
-
     var dateOfBirth by remember {
-        mutableStateOf(LocalDateTime.now())
+        mutableStateOf(value = LocalDateTime.now())
     }
-
 
     // https://material.io/blog/material-3-compose-1-1
     if (showDialog.value) {
@@ -54,6 +54,7 @@ fun dateField(): LocalDateTime {
     if (datePickerState.selectedDateMillis != null) {
         dateOfBirth = Instant.fromEpochMilliseconds(datePickerState.selectedDateMillis!!)
             .toLocalDateTime(timeZone = TimeZone.currentSystemDefault()).toJavaLocalDateTime()
+        onValueChanged(dateOfBirth)
     }
 
     OutlinedTextField(
@@ -68,6 +69,4 @@ fun dateField(): LocalDateTime {
             Text("Date of birth")
         }
     )
-
-    return dateOfBirth
 }

@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -14,9 +18,9 @@ import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.models.Income
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import at.ac.fhcampuswien.budget_fox.widgets.simpleField
-import at.ac.fhcampuswien.budget_fox.widgets.simpleNumberField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.time.Period
@@ -28,6 +32,15 @@ fun IncomeExpenseScreen(
 ) {
     val userRepository = UserRepository()
     val firebaseUser = Firebase.auth.currentUser
+    var incomeDescription by remember {
+        mutableStateOf(value = "")
+    }
+    var monthlyInterval by remember {
+        mutableStateOf(value = "")
+    }
+    var incomeAmount by remember {
+        mutableStateOf(value = "")
+    }
 
     Scaffold(
         bottomBar = {
@@ -49,27 +62,34 @@ fun IncomeExpenseScreen(
                 title = "Add an income or expense"
             )
 
-            val amount = simpleNumberField(
+            SimpleNumberField(
                 title = "Amount"
-            )
-            val description = simpleField(
+            ) { amount ->
+                incomeAmount = amount
+            }
+            SimpleField(
                 title = "Description"
-            )
-            val period = simpleField(
+            ) { description ->
+                incomeDescription = description
+            }
+            SimpleField(
                 title = "Monthly interval (optional)"
-            )
+            ) { interval ->
+                monthlyInterval = interval
+            }
+
             SimpleButton(
                 name = "Add income",
                 modifier = Modifier
                     .padding(bottom = 30.dp)
             ) {
-                if (amount.isNotBlank() && description.isNotBlank() && firebaseUser != null) {
+                if (incomeAmount.isNotBlank() && incomeDescription.isNotBlank() && firebaseUser != null) {
                     userRepository.insertIncome(
                         income = Income(
-                            amount = amount.toDouble(),
-                            description = description,
+                            amount = incomeAmount.toDouble(),
+                            description = incomeDescription,
                             period = when {
-                                period.isNotBlank() -> Period.ofMonths(period.toInt())
+                                monthlyInterval.isNotBlank() -> Period.ofMonths(monthlyInterval.toInt())
                                 else -> null
                             }
                         ),
@@ -79,13 +99,14 @@ fun IncomeExpenseScreen(
             }
 
             // TODO: make it possible to add an expense
-            simpleField(
+            /*
+            SimpleField(
                 title = "Date"
             )
-            simpleNumberField(
+            SimpleNumberField(
                 title = "Amount"
             )
-            simpleField(
+            SimpleField(
                 title = "Description"
             )
             SimpleButton(
@@ -93,6 +114,7 @@ fun IncomeExpenseScreen(
             ) {
 
             }
+             */
         }
     }
 }

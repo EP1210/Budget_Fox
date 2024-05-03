@@ -9,7 +9,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
-fun emailField(): String {
+fun EmailField(
+    onValueChange: (String) -> Unit
+) {
     var email by remember {
         mutableStateOf(value = "")
     }
@@ -18,6 +20,7 @@ fun emailField(): String {
         value = email,
         onValueChange = { userInput ->
             email = userInput
+            onValueChange(email)
         },
         label = {
             Text(
@@ -26,6 +29,4 @@ fun emailField(): String {
         },
         singleLine = true
     )
-
-    return email
 }
