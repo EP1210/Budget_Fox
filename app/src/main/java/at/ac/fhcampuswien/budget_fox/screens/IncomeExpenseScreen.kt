@@ -27,7 +27,7 @@ fun IncomeExpenseScreen(
     route: String
 ) {
     val userRepository = UserRepository()
-    val user = Firebase.auth.currentUser
+    val firebaseUser = Firebase.auth.currentUser
 
     Scaffold(
         bottomBar = {
@@ -63,7 +63,7 @@ fun IncomeExpenseScreen(
                 modifier = Modifier
                     .padding(bottom = 30.dp)
             ) {
-                if (amount.isNotBlank() && description.isNotBlank() && user != null) {
+                if (amount.isNotBlank() && description.isNotBlank() && firebaseUser != null) {
                     userRepository.insertIncome(
                         income = Income(
                             amount = amount.toDouble(),
@@ -73,7 +73,7 @@ fun IncomeExpenseScreen(
                                 else -> null
                             }
                         ),
-                        uid = user.uid
+                        uid = firebaseUser.uid
                     )
                 }
             }
