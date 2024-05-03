@@ -15,7 +15,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
@@ -23,8 +22,6 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -55,7 +52,7 @@ fun UserProfileScreen(
                 mutableStateOf(auth.currentUser)
             }
             var firebaseUserUid = ""
-            if(firebaseUser != null) {
+            if (firebaseUser != null) {
                 firebaseUserUid = firebaseUser!!.uid
             }
             val userMail = auth.currentUser?.email
@@ -72,21 +69,18 @@ fun UserProfileScreen(
                 mutableStateOf(LocalDateTime.now())
             }
 
-            val documentReference = Firebase.firestore.collection("users").document(firebaseUserUid)
-            documentReference.get().addOnSuccessListener { documentSnapshot ->
-                val user = documentSnapshot.toObject<User>()
-                userName = user?.firstName + " " + user?.lastName
-                userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
-                    Instant.ofEpochSecond(
-                        it
-                    )
-                }, ZoneOffset.UTC)
-                userRegistrationDate = LocalDateTime.ofInstant(user?.dateOfRegistrationInEpoch?.let {
-                    Instant.ofEpochSecond(
-                        it
-                    )
-                }, ZoneOffset.UTC)
-            }
+            val user = viewModel.user
+            userName = user?.firstName + " " + user?.lastName
+            userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
+                Instant.ofEpochSecond(
+                    it
+                )
+            }, ZoneOffset.UTC)
+            userRegistrationDate = LocalDateTime.ofInstant(user?.dateOfRegistrationInEpoch?.let {
+                Instant.ofEpochSecond(
+                    it
+                )
+            }, ZoneOffset.UTC)
 
             SimpleTitle(
                 title = when (viewModel.newUser) {

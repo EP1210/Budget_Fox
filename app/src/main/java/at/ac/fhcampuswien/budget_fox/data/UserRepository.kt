@@ -39,4 +39,22 @@ class UserRepository : UserDataAccessObject {
     override fun insertExpense(userId: String, expense: Expense) {
         database.collection("users").document(userId).collection("expenses").document(expense.uuid.toString()).set(expense)
     }
+
+    override fun getIncomes(user: User) {
+        database.collection("users").document(user.getUid()).collection("incomes").get().addOnSuccessListener {query ->
+            query.documents.forEach {document ->
+                document.toObject<Income>()?.let { user.addIncome(it) }
+            }
+        }
+    }
+
+    override fun getExpenses(user: User) {
+        database.collection("users").document(user.getUid()).collection("expenses").get().addOnSuccessListener {query ->
+            query.documents.forEach {document ->
+                document.toObject<Expense>()?.let { user.addExpense(it) }
+            }
+        }
+    }
+
+
 }

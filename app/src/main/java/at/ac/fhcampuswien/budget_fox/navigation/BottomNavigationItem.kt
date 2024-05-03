@@ -26,7 +26,7 @@ fun getBottomNavigationItems(): List<BottomNavigationItem> {
             label = "Budget",
             selected = Icons.Filled.ShoppingCart,
             unselected = Icons.Outlined.ShoppingCart,
-            route = Screen.IncomeExpense.route
+            route = Screen.TransactionList.route
         )
     )
 }
