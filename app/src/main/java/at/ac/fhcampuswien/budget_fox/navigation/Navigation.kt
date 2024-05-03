@@ -46,7 +46,8 @@ fun Navigation() {
         composable(route = Screen.IncomeExpense.route) {
             IncomeExpenseScreen(
                 navigationController = navigationController,
-                route = Screen.IncomeExpense.route
+                route = Screen.IncomeExpense.route,
+                viewModel = userViewModel
             )
         }
     }

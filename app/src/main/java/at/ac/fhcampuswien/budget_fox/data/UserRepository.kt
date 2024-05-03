@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.data
 
+import at.ac.fhcampuswien.budget_fox.models.Expense
 import at.ac.fhcampuswien.budget_fox.models.Income
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
@@ -10,28 +11,32 @@ class UserRepository : UserDataAccessObject {
 
     private val database = Firebase.firestore
 
-    override fun insertUser(user: User, uid: String) {
-        database.collection("users").document(uid).set(user.userToDatabase(uid = uid))
+    override fun insertUser(user: User, userId: String) {
+        database.collection("users").document(userId).set(user.userToDatabase(uid = userId))
     }
 
-    override fun getUser(uid: String): User? {
+    override fun getUser(userId: String): User? {
         var user: User? = null
 
-        database.collection("users").document(uid).get().addOnSuccessListener {
+        database.collection("users").document(userId).get().addOnSuccessListener {
             user =  it.toObject<User>()
         }
         return user
     }
 
-    override fun deleteUser(uid: String) {
-        database.collection("users").document(uid).delete()
+    override fun deleteUser(userId: String) {
+        database.collection("users").document(userId).delete()
     }
 
-    override fun insertIncome(income: Income, uid: String) {
-        database.collection("users").document(uid).collection("incomes").document(income.uuid.toString()).set(income)
+    override fun insertIncome(income: Income, userId: String) {
+        database.collection("users").document(userId).collection("incomes").document(income.uuid.toString()).set(income)
     }
 
-    override fun deleteIncome(income: Income, uid: String) {
-        database.collection("users").document(uid).collection("incomes").document(income.uuid.toString()).delete()
+    override fun deleteIncome(income: Income, userId: String) {
+        database.collection("users").document(userId).collection("incomes").document(income.uuid.toString()).delete()
+    }
+
+    override fun insertExpense(userId: String, expense: Expense) {
+        database.collection("users").document(userId).collection("expenses").document(expense.uuid.toString()).set(expense)
     }
 }

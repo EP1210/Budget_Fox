@@ -1,17 +1,20 @@
 package at.ac.fhcampuswien.budget_fox.data
 
+import at.ac.fhcampuswien.budget_fox.models.Expense
 import at.ac.fhcampuswien.budget_fox.models.Income
 import at.ac.fhcampuswien.budget_fox.models.User
 
 interface UserDataAccessObject {
 
-    fun insertUser(user: User, uid: String)
+    fun insertUser(user: User, userId: String)
 
-    fun getUser(uid: String): User?
+    fun getUser(userId: String): User?
 
-    fun deleteUser(uid: String)
+    fun deleteUser(userId: String)
 
-    fun insertIncome(income: Income, uid: String)
+    fun insertIncome(income: Income, userId: String)
 
-    fun deleteIncome(income: Income, uid: String)
+    fun deleteIncome(income: Income, userId: String)
+
+    fun insertExpense(userId: String, expense: Expense)
 }

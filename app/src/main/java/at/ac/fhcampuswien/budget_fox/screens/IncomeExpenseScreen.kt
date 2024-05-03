@@ -15,12 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.models.Expense
 import at.ac.fhcampuswien.budget_fox.models.Income
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.time.Period
@@ -28,7 +30,8 @@ import java.time.Period
 @Composable
 fun IncomeExpenseScreen(
     navigationController: NavController,
-    route: String
+    route: String,
+    viewModel: UserViewModel
 ) {
     val userRepository = UserRepository()
     val firebaseUser = Firebase.auth.currentUser
@@ -93,28 +96,41 @@ fun IncomeExpenseScreen(
                                 else -> null
                             }
                         ),
-                        uid = firebaseUser.uid
+                        userId = firebaseUser.uid
                     )
                 }
             }
 
-            // TODO: make it possible to add an expense
-            /*
             SimpleField(
                 title = "Date"
-            )
+            ) { date ->
+                viewModel.setExpenseDate(date = date)
+            }
             SimpleNumberField(
                 title = "Amount"
-            )
+            ) { amount ->
+                viewModel.setExpenseAmount(amount = amount)
+            }
             SimpleField(
                 title = "Description"
-            )
+            ) { description ->
+                viewModel.setExpenseDescription(description = description)
+            }
+
             SimpleButton(
                 name = "Add expense"
             ) {
-
+                if (viewModel.expenseAmount.isNotBlank() && viewModel.expenseDescription.isNotBlank() && viewModel.expenseDate.isNotBlank() && firebaseUser != null) {
+                    userRepository.insertExpense(
+                        expense = Expense(
+                            date = viewModel.expenseDate,
+                            amount = viewModel.expenseAmount,
+                            description = viewModel.expenseDescription
+                        ),
+                        userId = firebaseUser.uid
+                    )
+                }
             }
-             */
         }
     }
 }
