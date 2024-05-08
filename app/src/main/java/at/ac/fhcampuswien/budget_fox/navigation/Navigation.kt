@@ -1,25 +1,21 @@
 package at.ac.fhcampuswien.budget_fox.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.screens.IncomeExpenseScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
-import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
-import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 
 @Composable
 fun Navigation() {
     val navigationController = rememberNavController()
-    val userViewModel: UserViewModel = viewModel(factory = ViewModelFactory(repository = UserRepository()))
+    val userViewModel: UserViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -45,22 +41,13 @@ fun Navigation() {
             )
         }
         composable(route = Screen.Welcome.route) {
-            WelcomeScreen(
-                navigationController = navigationController,
-                viewModel = userViewModel
-            )
+            WelcomeScreen(navigationController = navigationController)
         }
         composable(route = Screen.IncomeExpense.route) {
             IncomeExpenseScreen(
                 navigationController = navigationController,
                 route = Screen.IncomeExpense.route,
                 viewModel = userViewModel
-            )
-        }
-        composable(route = Screen.TransactionList.route) {
-            TransactionListScreen(
-                navigationController = navigationController,
-                route = Screen.TransactionList.route
             )
         }
     }

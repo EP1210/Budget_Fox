@@ -2,7 +2,6 @@ package at.ac.fhcampuswien.budget_fox.models
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.UUID
 
 class User(
     var firstName: String = "",
@@ -10,9 +9,7 @@ class User(
     var dateOfBirthInEpoch: Long = 0,
     var dateOfRegistrationInEpoch: Long = 0,
 
-    private var uid: String = "",
-    private val _incomes : MutableList<Income> = mutableListOf(),
-    private val _expenses: MutableList<Expense> = mutableListOf()
+    private val _incomes : MutableList<Income> = mutableListOf()
 ) {
     constructor(firstName: String, lastName: String, dateOfBirth: LocalDateTime, dateTimeOfRegistration: LocalDateTime) : this() {
         this.firstName = firstName
@@ -25,19 +22,12 @@ class User(
         _incomes.add(income)
     }
 
-    fun addExpense(expense: Expense) {
-        _expenses.add(expense)
-    }
-
-    fun getUid() : String {
-        return uid
-    }
-
-    fun setUid(uid: String) {
-        this.uid = uid
-    }
-
     fun userToDatabase(uid: String): Map<String, Any> {
+        /*
+        val userRepository = UserRepository()
+
+        userRepository.insertIncome(income = Income(amount = 10.5f, description = "FHCW", period = Period.ZERO), uid = uid)
+         */
         return mapOf(
             "firstName" to this.firstName,
             "lastName" to this.lastName,

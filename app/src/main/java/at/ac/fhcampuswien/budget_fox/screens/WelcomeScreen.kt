@@ -12,7 +12,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.R
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
@@ -21,19 +20,14 @@ import com.google.firebase.auth.auth
 
 @Composable
 fun WelcomeScreen(
-    navigationController: NavController,
-    viewModel: UserViewModel
+    navigationController: NavController
 ) {
-    val userId = Firebase.auth.currentUser?.uid
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
         if (Firebase.auth.currentUser != null) {
-            if (userId != null) {
-                viewModel.getUserFromDatabase(userId)
-            }
             navigationController.navigate(route = Screen.UserProfile.route) {
                 popUpTo(id = 0)
             }
