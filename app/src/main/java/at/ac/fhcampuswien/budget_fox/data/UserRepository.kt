@@ -39,4 +39,24 @@ class UserRepository : UserDataAccessObject {
     override fun insertExpense(userId: String, expense: Expense) {
         database.collection("users").document(userId).collection("expenses").document(expense.uuid.toString()).set(expense)
     }
+
+    override fun getExpensesFromUser(userId: String): List<Expense> {
+        val expenses = mutableListOf<Expense>()
+        database.collection("users").document(userId).collection("expenses").get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                expenses.add(document.toObject<Expense>())
+            }
+        }
+        return expenses
+    }
+
+    override fun getIncomesFromUser(userId: String): List<Income> {
+        val incomes = mutableListOf<Income>()
+        database.collection("users").document(userId).collection("incomes").get().addOnSuccessListener { documents ->
+            for (document in documents) {
+                incomes.add(document.toObject<Income>())
+            }
+        }
+        return incomes
+    }
 }

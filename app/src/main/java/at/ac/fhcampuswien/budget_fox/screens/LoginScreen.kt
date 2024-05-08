@@ -77,6 +77,7 @@ fun userLogin(
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 viewModel.setUserState(firstLogin = task.result.additionalUserInfo?.isNewUser)
+                viewModel.initializeUser(Firebase.auth.currentUser!!.uid) // TODO: Leon fragen
                 navController.navigate(route = Screen.UserProfile.route) {
                     popUpTo(id = 0)
                 }

@@ -16,12 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 
 @Composable
 fun TransactionListScreen(
     navigationController: NavController,
-    route: String
+    route: String,
+    viewModel: UserViewModel
 ) {
     Scaffold(
         bottomBar = {

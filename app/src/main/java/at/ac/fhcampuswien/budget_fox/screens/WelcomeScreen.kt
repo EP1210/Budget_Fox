@@ -12,6 +12,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.R
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
@@ -20,7 +21,8 @@ import com.google.firebase.auth.auth
 
 @Composable
 fun WelcomeScreen(
-    navigationController: NavController
+    navigationController: NavController,
+    viewModel: UserViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -28,6 +30,7 @@ fun WelcomeScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         if (Firebase.auth.currentUser != null) {
+            viewModel.initializeUser(Firebase.auth.currentUser!!.uid) // TODO: Leon fragen
             navigationController.navigate(route = Screen.UserProfile.route) {
                 popUpTo(id = 0)
             }

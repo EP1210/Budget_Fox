@@ -104,6 +104,7 @@ fun registerUser(user: User, email: String, password: String, navigationControll
                 viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
                     createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
+                    viewModel.initializeUser(firebaseUser.uid)
                     navigationController.navigate(route = Screen.UserProfile.route) {
                         popUpTo(id = 0)
                     }

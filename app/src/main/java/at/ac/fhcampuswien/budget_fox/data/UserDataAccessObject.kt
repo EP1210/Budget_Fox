@@ -17,4 +17,9 @@ interface UserDataAccessObject {
     fun deleteIncome(income: Income, userId: String)
 
     fun insertExpense(userId: String, expense: Expense)
+
+    fun getExpensesFromUser(userId: String) : List<Expense>
+
+    fun getIncomesFromUser(userId: String) : List<Income>
+
 }
