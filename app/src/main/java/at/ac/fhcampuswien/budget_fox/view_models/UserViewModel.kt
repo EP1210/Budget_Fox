@@ -18,6 +18,33 @@ class UserViewModel : ViewModel() {
     val expenseDescription: String
         get() = _expenseDescription
 
+//cast to something
+
+    private var _incomeDescription = mutableStateOf(value = "").value
+    val incomeDescription: String
+        get() = _incomeDescription
+
+    private var _monthlyInterval = mutableStateOf(value = "").value
+    val monthlyInterval: String
+        get() = _monthlyInterval
+
+    private var _incomeAmount = mutableStateOf(value = "").value
+    val incomeAmount: String
+        get() = _incomeAmount
+
+
+    fun setIncomeDescription(description: String) {
+        _incomeDescription = description
+    }
+
+    fun setMonthlyInterval(interval: String) {
+        _monthlyInterval = interval
+    }
+
+    fun setIncomeAmount(amount: String) {
+        _incomeAmount = amount
+    }
+
     fun setUserState(firstLogin: Boolean?) {
         _newUser = firstLogin ?: return
     }

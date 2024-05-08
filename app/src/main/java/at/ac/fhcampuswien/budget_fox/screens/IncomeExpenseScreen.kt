@@ -6,10 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -35,15 +31,7 @@ fun IncomeExpenseScreen(
 ) {
     val userRepository = UserRepository()
     val firebaseUser = Firebase.auth.currentUser
-    var incomeDescription by remember {
-        mutableStateOf(value = "")
-    }
-    var monthlyInterval by remember {
-        mutableStateOf(value = "")
-    }
-    var incomeAmount by remember {
-        mutableStateOf(value = "")
-    }
+
 
     Scaffold(
         bottomBar = {
@@ -68,17 +56,17 @@ fun IncomeExpenseScreen(
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->
-                incomeAmount = amount
+                viewModel.setIncomeAmount(amount)
             }
             SimpleField(
                 title = "Description"
             ) { description ->
-                incomeDescription = description
+                viewModel.setIncomeDescription(description)
             }
             SimpleField(
                 title = "Monthly interval (optional)"
             ) { interval ->
-                monthlyInterval = interval
+               viewModel.setMonthlyInterval(interval)
             }
 
             SimpleButton(
@@ -86,13 +74,13 @@ fun IncomeExpenseScreen(
                 modifier = Modifier
                     .padding(bottom = 30.dp)
             ) {
-                if (incomeAmount.isNotBlank() && incomeDescription.isNotBlank() && firebaseUser != null) {
+                if (viewModel.incomeAmount.isNotBlank() && viewModel.incomeDescription.isNotBlank() && firebaseUser != null) {
                     userRepository.insertIncome(
                         income = Income(
-                            amount = incomeAmount.toDouble(),
-                            description = incomeDescription,
+                            amount = viewModel.incomeAmount.toDouble(),
+                            description = viewModel.incomeDescription,
                             period = when {
-                                monthlyInterval.isNotBlank() -> Period.ofMonths(monthlyInterval.toInt())
+                                viewModel.monthlyInterval.isNotBlank() -> Period.ofMonths(viewModel.monthlyInterval.toInt())
                                 else -> null
                             }
                         ),
