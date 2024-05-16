@@ -48,9 +48,6 @@ fun UserProfileScreen(
                 .padding(paddingValues = it)
         ) {
             val auth = Firebase.auth
-            val firebaseUser by remember {
-                mutableStateOf(auth.currentUser)
-            }
 
             val userMail = auth.currentUser?.email
 
