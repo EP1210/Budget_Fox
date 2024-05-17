@@ -65,6 +65,7 @@ fun UserProfileScreen(
 
 
             val user = viewModel.user
+            user?.toString()?.let { it1 -> Log.d("FIREBASE", it1) }
             userName = user?.firstName + " " + user?.lastName
             userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
                 Instant.ofEpochSecond(
