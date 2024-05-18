@@ -28,6 +28,14 @@ class User(
         _expenses.addAll(expenses)
     }
 
+    fun addIncome(income: Income) {
+        _incomes.add(income)
+    }
+
+    fun addExpense(expense: Expense) {
+        _expenses.add(expense)
+    }
+
     fun userToDatabase(uid: String): Map<String, Any> {
         /*
         val userRepository = UserRepository()

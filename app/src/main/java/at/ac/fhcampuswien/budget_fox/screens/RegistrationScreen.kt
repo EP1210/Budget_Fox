@@ -16,16 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.DateField
 import at.ac.fhcampuswien.budget_fox.widgets.EmailField
 import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
@@ -81,7 +82,13 @@ fun RegistrationScreen(
 
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, dateOfBirth, LocalDateTime.now()), email, password, navigationController, viewModel = viewModel)
+                registerUser(
+                    user = User(firstName, lastName, dateOfBirth, LocalDateTime.now()),
+                    email,
+                    password,
+                    navigationController,
+                    viewModel = viewModel
+                )
             else
                 Log.d("Register", "Fill out email / password") // TODO: Alert or something
         }
@@ -92,8 +99,16 @@ fun RegistrationScreen(
     }
 }
 
-fun registerUser(user: User, email: String, password: String, navigationController: NavController, viewModel: UserViewModel) {
+fun registerUser(
+    user: User,
+    email: String,
+    password: String,
+    navigationController: NavController,
+    viewModel: UserViewModel
+) {
     val auth = Firebase.auth
+    val database = Firebase.firestore
+
 
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
@@ -103,11 +118,33 @@ fun registerUser(user: User, email: String, password: String, navigationControll
 
                 viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
-                    createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
-                    viewModel.initializeUser(firebaseUser.uid)
-                    navigationController.navigate(route = Screen.UserProfile.route) {
-                        popUpTo(id = 0)
-                    }
+                    val newDocRef = database.collection("users").document(firebaseUser.uid)
+                    val batch = database.batch()
+
+                    batch.set(newDocRef, user.userToDatabase(firebaseUser.uid))
+
+                    //TODO: Refactor ugly code!
+                    batch.commit()
+                        .addOnSuccessListener {
+                            val repository = UserRepository()
+
+                            repository.getAllDataFromUser(firebaseUser.uid,
+                                onSuccess = { user ->
+                                    if (user != null) {
+                                        viewModel.setUser(user)
+                                        navigationController.navigate(route = Screen.UserProfile.route) {
+                                            popUpTo(id = 0)
+                                        }
+                                    } else {
+                                        Log.d("FIREBASE", "USER IS NULL!")
+                                    }
+                                }, onFailure = { exception: Exception ->
+                                    Log.d("FIREBASE", "COLD NOT LOAD USER! $exception")
+                                })
+                        }
+                        .addOnFailureListener { ex ->
+                            Log.d("FIRESTORE", ex.toString())
+                        }
                 }
             } else {
                 Log.e(TAG, "Registration failed $email, $password")
@@ -118,5 +155,6 @@ fun registerUser(user: User, email: String, password: String, navigationControll
 fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
 
-    database.collection("users").document(firebaseUser.uid).set(user.userToDatabase(firebaseUser.uid))
+    database.collection("users").document(firebaseUser.uid)
+        .set(user.userToDatabase(firebaseUser.uid))
 }
