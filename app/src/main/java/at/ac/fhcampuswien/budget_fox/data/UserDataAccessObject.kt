@@ -22,4 +22,6 @@ interface UserDataAccessObject {
 
     fun getIncomesFromUser(userId: String) : List<Income>
 
+    fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
+
 }
