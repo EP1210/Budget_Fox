@@ -128,6 +128,7 @@ fun registerUser(
                         .addOnSuccessListener {
                             val repository = UserRepository()
 
+                            //TODO: Duplicate code!
                             repository.getAllDataFromUser(firebaseUser.uid,
                                 onSuccess = { user ->
                                     if (user != null) {
