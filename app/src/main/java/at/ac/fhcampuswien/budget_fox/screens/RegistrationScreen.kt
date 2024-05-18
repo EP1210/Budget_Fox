@@ -27,13 +27,9 @@ import at.ac.fhcampuswien.budget_fox.widgets.EmailField
 import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
 @Composable
@@ -107,28 +103,20 @@ fun registerUser(user: User, email: String, password: String, navigationControll
 
                 viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        try {
-                            // Add a new document with a generated ID
-                            Firebase.firestore.collection("users").document(firebaseUser.uid).set(user.userToDatabase(firebaseUser.uid)).await()
-                            withContext(Dispatchers.Main) {
-                                // Handle success on the main thread
-                                println("User added successfully")
-                                viewModel.initializeUser(firebaseUser.uid)
-                                navigationController.navigate(route = Screen.UserProfile.route) {
-                                    popUpTo(id = 0)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            withContext(Dispatchers.Main) {
-                                // Handle failure on the main thread
-                                println("Error adding user: ${e.message}")
-                            }
-                        }
+                    createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
+                    viewModel.initializeUser(firebaseUser.uid)
+                    navigationController.navigate(route = Screen.UserProfile.route) {
+                        popUpTo(id = 0)
                     }
                 }
             } else {
                 Log.e(TAG, "Registration failed $email, $password")
             }
         }
+}
+
+fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
+    val database = Firebase.firestore
+
+    database.collection("users").document(firebaseUser.uid).set(user.userToDatabase(firebaseUser.uid))
 }
