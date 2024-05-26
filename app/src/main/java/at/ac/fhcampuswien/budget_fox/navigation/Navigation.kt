@@ -49,7 +49,6 @@ fun Navigation() {
         composable(route = Screen.Transaction.route) {
             TransactionScreen(
                 navigationController = navigationController,
-                route = Screen.Transaction.route,
                 viewModel = userViewModel
             )
         }

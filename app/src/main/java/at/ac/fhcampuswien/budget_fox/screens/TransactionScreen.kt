@@ -4,6 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,6 +22,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.time.Period
@@ -25,19 +30,18 @@ import java.time.Period
 @Composable
 fun TransactionScreen(
     navigationController: NavController,
-    route: String,
     viewModel: UserViewModel
 ) {
-    val userRepository = UserRepository()
-    val firebaseUser = Firebase.auth.currentUser
-
-
     Scaffold(
-        bottomBar = {
-            SimpleBottomNavigationBar(
-                navigationController = navigationController,
-                currentRoute = route
-            )
+        topBar = {
+            SimpleTopAppBar(title = "Add transaction") {
+                IconButton(onClick = { navigationController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Localized description"
+                    )
+                }
+            }
         }
     ) {
         Column(
@@ -48,10 +52,6 @@ fun TransactionScreen(
                 .padding(paddingValues = it)
                 .padding(horizontal = 70.dp)
         ) {
-            SimpleTitle(
-                title = "Add an income or expense"
-            )
-
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->

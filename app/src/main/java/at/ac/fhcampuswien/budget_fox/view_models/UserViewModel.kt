@@ -68,10 +68,10 @@ class UserViewModel : ViewModel() {
                 uuid = UUID.randomUUID().toString(),
                 amount = transactionAmount,
                 description = transactionDescription,
-                period = when {
+                /*period = when {
                     monthlyInterval.isNotBlank() -> Period.ofMonths(monthlyInterval.toInt())
                     else -> null
-                }
+                }*/ //TODO: Period
             )
             userRepository.insertTransaction(transaction = transaction, userId = firebaseUser.uid, onSuccess = {
                 user?.addTransaction(transaction)

@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
 @Composable
@@ -28,6 +29,9 @@ fun TransactionListScreen(
     viewModel: UserViewModel
 ) {
     Scaffold(
+        topBar = {
+            SimpleTopAppBar(title = "Your transactions")
+        },
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
@@ -38,7 +42,6 @@ fun TransactionListScreen(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(paddingValues = it)
         ) {
             viewModel.user?.let { it1 ->
@@ -48,9 +51,10 @@ fun TransactionListScreen(
             }
         }
 
-        Box( modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues = it)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = it)
         )
         {
             FloatingActionButton(
