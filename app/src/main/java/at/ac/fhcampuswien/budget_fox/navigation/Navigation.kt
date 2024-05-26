@@ -5,7 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import at.ac.fhcampuswien.budget_fox.screens.IncomeExpenseScreen
+import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
@@ -46,10 +46,10 @@ fun Navigation() {
                 navigationController = navigationController,
                 viewModel = userViewModel)
         }
-        composable(route = Screen.IncomeExpense.route) {
-            IncomeExpenseScreen(
+        composable(route = Screen.Transaction.route) {
+            TransactionScreen(
                 navigationController = navigationController,
-                route = Screen.IncomeExpense.route,
+                route = Screen.Transaction.route,
                 viewModel = userViewModel
             )
         }

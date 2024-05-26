@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -18,6 +19,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
+import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
 @Composable
 fun TransactionListScreen(
@@ -33,15 +35,17 @@ fun TransactionListScreen(
             )
         }
     ) {
-
         LazyColumn(
-            //verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = it)
         ) {
-            //items(items = )
+            viewModel.user?.let { it1 ->
+                items(it1.getTransactions()) { transaction ->
+                    TransactionListItem(transaction = transaction)
+                }
+            }
         }
 
         Box( modifier = Modifier
@@ -51,7 +55,7 @@ fun TransactionListScreen(
         {
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.IncomeExpense.route)
+                    navigationController.navigate(route = Screen.Transaction.route)
                 },
                 shape = CircleShape,
                 modifier = Modifier

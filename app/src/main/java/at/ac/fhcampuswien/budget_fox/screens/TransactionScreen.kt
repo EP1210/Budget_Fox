@@ -23,7 +23,7 @@ import com.google.firebase.auth.auth
 import java.time.Period
 
 @Composable
-fun IncomeExpenseScreen(
+fun TransactionScreen(
     navigationController: NavController,
     route: String,
     viewModel: UserViewModel
@@ -55,12 +55,12 @@ fun IncomeExpenseScreen(
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->
-                viewModel.setIncomeAmount(amount)
+                viewModel.setTransactionAmount(amount.toDouble())
             }
             SimpleField(
                 title = "Description"
             ) { description ->
-                viewModel.setIncomeDescription(description)
+                viewModel.setTransactionDescription(description)
             }
             SimpleField(
                 title = "Monthly interval (optional)"
@@ -73,53 +73,14 @@ fun IncomeExpenseScreen(
                 modifier = Modifier
                     .padding(bottom = 30.dp)
             ) {
-                if (viewModel.incomeAmount.isNotBlank() && viewModel.incomeDescription.isNotBlank() && firebaseUser != null) {
-                    userRepository.insertTransaction(
-                        transaction = Transaction(
-                            amount = viewModel.incomeAmount.toDouble(),
-                            description = viewModel.incomeDescription,
-                            period = when {
-                                viewModel.monthlyInterval.isNotBlank() -> Period.ofMonths(viewModel.monthlyInterval.toInt())
-                                else -> null
-                            }
-                        ),
-                        userId = firebaseUser.uid
-                    )
-                }
-            }
-
-            SimpleField(
-                title = "Date"
-            ) { date ->
-                viewModel.setExpenseDate(date = date)
-            }
-            SimpleNumberField(
-                title = "Amount"
-            ) { amount ->
-                viewModel.setExpenseAmount(amount = amount)
-            }
-            SimpleField(
-                title = "Description"
-            ) { description ->
-                viewModel.setExpenseDescription(description = description)
+                viewModel.insertTransaction()
             }
 
             SimpleButton(
                 name = "Add expense"
             ) {
-                if (viewModel.expenseAmount.isNotBlank() && viewModel.expenseDescription.isNotBlank() && viewModel.expenseDate.isNotBlank() && firebaseUser != null) {
-                    userRepository.insertTransaction(
-                        transaction = Transaction(
-                            period = when {
-                                viewModel.monthlyInterval.isNotBlank() -> Period.ofMonths(viewModel.expenseDate.toInt())
-                                else -> null
-                            },
-                            amount = viewModel.expenseAmount.toDouble() * -1,
-                            description = viewModel.expenseDescription
-                        ),
-                        userId = firebaseUser.uid
-                    )
-                }
+                viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
+                viewModel.insertTransaction()
             }
         }
     }

@@ -34,12 +34,13 @@ class UserRepository : UserDataAccessObject {
             .document(userId).delete()
     }
 
-    override fun insertTransaction(userId: String, transaction: Transaction) {
+    override fun insertTransaction(userId: String, transaction: Transaction, onSuccess: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .document(transaction.uuid.toString()).set(transaction)
+            .addOnSuccessListener { onSuccess() }
     }
 
     override fun deleteTransaction(userId: String, transactionId: String) {

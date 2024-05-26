@@ -2,9 +2,17 @@ package at.ac.fhcampuswien.budget_fox.view_models
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import java.time.Period
+import java.util.UUID
 
 class UserViewModel : ViewModel() {
+    private val userRepository = UserRepository()
+    private val firebaseUser = Firebase.auth.currentUser
 
     private var _user = mutableStateOf<User?>(value = null).value
     val user: User?
@@ -14,60 +22,60 @@ class UserViewModel : ViewModel() {
     val newUser: Boolean
         get() = _newUser
 
-    private var _expenseDate = mutableStateOf(value = "").value
-    val expenseDate: String
-        get() = _expenseDate
+    private var _transactionDate = mutableStateOf(value = "").value
+    val transactionDate: String
+        get() = _transactionDate
 
-    private var _expenseAmount = mutableStateOf(value = "").value
-    val expenseAmount: String
-        get() = _expenseAmount
+    private var _transactionAmount = mutableStateOf(value = 0.0).value
+    val transactionAmount: Double
+        get() = _transactionAmount
 
-    private var _expenseDescription = mutableStateOf(value = "").value
-    val expenseDescription: String
-        get() = _expenseDescription
-
-//cast to something
-
-    private var _incomeDescription = mutableStateOf(value = "").value
-    val incomeDescription: String
-        get() = _incomeDescription
+    private var _transactionDescription = mutableStateOf(value = "").value
+    val transactionDescription: String
+        get() = _transactionDescription
 
     private var _monthlyInterval = mutableStateOf(value = "").value
-    val monthlyInterval: String
+    val monthlyInterval: String //TODO: Transaction period
         get() = _monthlyInterval
-
-    private var _incomeAmount = mutableStateOf(value = "").value
-    val incomeAmount: String
-        get() = _incomeAmount
 
     fun setUser(user: User) {
         _user = user
-    }
-    fun setIncomeDescription(description: String) {
-        _incomeDescription = description
     }
 
     fun setMonthlyInterval(interval: String) {
         _monthlyInterval = interval
     }
 
-    fun setIncomeAmount(amount: String) {
-        _incomeAmount = amount
-    }
-
     fun setUserState(firstLogin: Boolean?) {
         _newUser = firstLogin ?: return
     }
 
-    fun setExpenseDate(date: String) {
-        _expenseDate = date
+    fun setTransactionDate(date: String) {
+        _transactionDate = date
     }
 
-    fun setExpenseAmount(amount: String) {
-        _expenseAmount = amount
+    fun setTransactionAmount(amount: Double) {
+        _transactionAmount = amount
     }
 
-    fun setExpenseDescription(description: String) {
-        _expenseDescription = description
+    fun setTransactionDescription(description: String) {
+        _transactionDescription = description
+    }
+
+    fun insertTransaction() {
+        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && firebaseUser != null) {
+            val transaction = Transaction(
+                uuid = UUID.randomUUID().toString(),
+                amount = transactionAmount,
+                description = transactionDescription,
+                period = when {
+                    monthlyInterval.isNotBlank() -> Period.ofMonths(monthlyInterval.toInt())
+                    else -> null
+                }
+            )
+            userRepository.insertTransaction(transaction = transaction, userId = firebaseUser.uid, onSuccess = {
+                user?.addTransaction(transaction)
+            })
+        }
     }
 }

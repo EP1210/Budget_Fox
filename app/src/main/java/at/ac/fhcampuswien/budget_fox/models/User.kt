@@ -27,6 +27,10 @@ class User(
         _transactions.add(transaction)
     }
 
+    fun getTransactions() : List<Transaction> {
+        return _transactions
+    }
+
     fun userToDatabase(): Map<String, Any> {
         return mapOf(
             "firstName" to this.firstName,

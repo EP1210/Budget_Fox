@@ -11,7 +11,7 @@ interface UserDataAccessObject {
 
     fun deleteUser(userId: String)
 
-    fun insertTransaction(userId: String, transaction: Transaction)
+    fun insertTransaction(userId: String, transaction: Transaction, onSuccess: () -> Unit)
 
     fun deleteTransaction(userId: String, transactionId: String)
 

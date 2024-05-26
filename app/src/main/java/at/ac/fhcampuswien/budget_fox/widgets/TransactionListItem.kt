@@ -36,10 +36,10 @@ fun TransactionListItem(transaction: Transaction) {
             .clickable {}
             .background(MaterialTheme.colorScheme.primary)
             .padding(16.dp),
-        horizontalArrangement = Arrangement.Center
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = if (true) {
+            imageVector = if (transaction.amount >= 0) {
                 Icons.Outlined.AddCircle
             } else {
                 Icons.Outlined.ShoppingCart
@@ -49,43 +49,29 @@ fun TransactionListItem(transaction: Transaction) {
             tint = MaterialTheme.colorScheme.inverseOnSurface
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
                 Text(
                     text = transaction.description,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp
                 )
-            }
             Column(
-                horizontalAlignment = Alignment.End
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.weight(weight = 4f)
             ) {
-                Text(
-                    text = if (true) {
-                        "- ${transaction.amount}€"
-                    } else {
-                        "+ ${transaction.amount}€"
-                    },
+                Text(text = "${transaction.amount}€",
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp,
                 )
-
                 Text(
                     text = transaction.period.toString(),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
             }
-        }
     }
 }
 
 @Composable
 @Preview
 fun DefaultPreview() {
-    TransactionListItem(Transaction(UUID.randomUUID(), 10.78, "FHCW"))
+    TransactionListItem(Transaction(UUID.randomUUID().toString(), 10.78 * -1, "FHCW"))
 }
