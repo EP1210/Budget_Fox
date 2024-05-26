@@ -121,7 +121,7 @@ fun registerUser(
                     val newDocRef = database.collection("users").document(firebaseUser.uid)
                     val batch = database.batch()
 
-                    batch.set(newDocRef, user.userToDatabase(firebaseUser.uid))
+                    batch.set(newDocRef, user.userToDatabase())
 
                     //TODO: Refactor ugly code!
                     batch.commit()
@@ -157,5 +157,5 @@ fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
 
     database.collection("users").document(firebaseUser.uid)
-        .set(user.userToDatabase(firebaseUser.uid))
+        .set(user.userToDatabase())
 }

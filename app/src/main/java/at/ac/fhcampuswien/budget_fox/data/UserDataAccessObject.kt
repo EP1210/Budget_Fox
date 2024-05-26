@@ -1,7 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.data
 
-import at.ac.fhcampuswien.budget_fox.models.Expense
-import at.ac.fhcampuswien.budget_fox.models.Income
+import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 
 interface UserDataAccessObject {
@@ -12,15 +11,11 @@ interface UserDataAccessObject {
 
     fun deleteUser(userId: String)
 
-    fun insertIncome(income: Income, userId: String)
+    fun insertTransaction(userId: String, transaction: Transaction)
 
-    fun deleteIncome(income: Income, userId: String)
+    fun deleteTransaction(userId: String, transactionId: String)
 
-    fun insertExpense(userId: String, expense: Expense)
-
-    fun getExpensesFromUser(userId: String) : List<Expense>
-
-    fun getIncomesFromUser(userId: String) : List<Income>
+    fun getTransactionsFromUser(userId: String) : List<Transaction>
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
 

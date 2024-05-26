@@ -1,11 +1,8 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.models.User
-import kotlinx.coroutines.runBlocking
 
 class UserViewModel : ViewModel() {
 
@@ -42,16 +39,6 @@ class UserViewModel : ViewModel() {
     private var _incomeAmount = mutableStateOf(value = "").value
     val incomeAmount: String
         get() = _incomeAmount
-
-    fun initializeUser(userId : String) {
-        runBlocking {
-            val repository = UserRepository()
-            _user = repository.getUser(userId)
-            _user?.addExpenses(repository.getExpensesFromUser(userId))
-            _user?.addIncomes(repository.getIncomesFromUser(userId))
-            Log.d("FIREBASE", "User initialized! " + user.toString())
-        }
-    }
 
     fun setUser(user: User) {
         _user = user

@@ -24,11 +24,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.ac.fhcampuswien.budget_fox.models.Income
+import at.ac.fhcampuswien.budget_fox.models.Transaction
 import java.util.UUID
 
 @Composable
-fun TransactionListItem(income: Income) {
+fun TransactionListItem(transaction: Transaction) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,7 +44,7 @@ fun TransactionListItem(income: Income) {
             } else {
                 Icons.Outlined.ShoppingCart
             },
-            contentDescription = income.description,
+            contentDescription = transaction.description,
             modifier = Modifier.size(40.dp),
             tint = MaterialTheme.colorScheme.inverseOnSurface
         )
@@ -57,7 +57,7 @@ fun TransactionListItem(income: Income) {
         ) {
             Column {
                 Text(
-                    text = income.description,
+                    text = transaction.description,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp
                 )
@@ -67,16 +67,16 @@ fun TransactionListItem(income: Income) {
             ) {
                 Text(
                     text = if (true) {
-                        "- ${income.amount}€"
+                        "- ${transaction.amount}€"
                     } else {
-                        "+ ${income.amount}€"
+                        "+ ${transaction.amount}€"
                     },
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp,
                 )
 
                 Text(
-                    text = income.period.toString(),
+                    text = transaction.period.toString(),
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                 )
             }
@@ -87,5 +87,5 @@ fun TransactionListItem(income: Income) {
 @Composable
 @Preview
 fun DefaultPreview() {
-    TransactionListItem(Income(UUID.randomUUID(), 10.78, "FHCW"))
+    TransactionListItem(Transaction(UUID.randomUUID(), 10.78, "FHCW"))
 }

@@ -11,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
-import at.ac.fhcampuswien.budget_fox.models.Expense
-import at.ac.fhcampuswien.budget_fox.models.Income
+import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
@@ -75,8 +74,8 @@ fun IncomeExpenseScreen(
                     .padding(bottom = 30.dp)
             ) {
                 if (viewModel.incomeAmount.isNotBlank() && viewModel.incomeDescription.isNotBlank() && firebaseUser != null) {
-                    userRepository.insertIncome(
-                        income = Income(
+                    userRepository.insertTransaction(
+                        transaction = Transaction(
                             amount = viewModel.incomeAmount.toDouble(),
                             description = viewModel.incomeDescription,
                             period = when {
@@ -109,10 +108,13 @@ fun IncomeExpenseScreen(
                 name = "Add expense"
             ) {
                 if (viewModel.expenseAmount.isNotBlank() && viewModel.expenseDescription.isNotBlank() && viewModel.expenseDate.isNotBlank() && firebaseUser != null) {
-                    userRepository.insertExpense(
-                        expense = Expense(
-                            date = viewModel.expenseDate,
-                            amount = viewModel.expenseAmount,
+                    userRepository.insertTransaction(
+                        transaction = Transaction(
+                            period = when {
+                                viewModel.monthlyInterval.isNotBlank() -> Period.ofMonths(viewModel.expenseDate.toInt())
+                                else -> null
+                            },
+                            amount = viewModel.expenseAmount.toDouble() * -1,
                             description = viewModel.expenseDescription
                         ),
                         userId = firebaseUser.uid

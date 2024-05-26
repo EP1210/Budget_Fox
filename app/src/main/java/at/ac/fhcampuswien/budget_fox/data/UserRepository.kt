@@ -1,7 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.data
 
-import at.ac.fhcampuswien.budget_fox.models.Expense
-import at.ac.fhcampuswien.budget_fox.models.Income
+import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
@@ -12,57 +11,56 @@ class UserRepository : UserDataAccessObject {
     private val database = Firebase.firestore
 
     override fun insertUser(user: User, userId: String) {
-        database.collection("users").document(userId).set(user.userToDatabase(uid = userId))
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId).set(user.userToDatabase())
     }
 
     override fun getUser(userId: String): User? {
         var user: User? = null
 
-        database.collection("users").document(userId).get().addOnSuccessListener {
-            user = it.toObject<User>()
-        }
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId).get()
+            .addOnSuccessListener {
+                user = it.toObject<User>()
+            }
         return user
     }
 
     override fun deleteUser(userId: String) {
-        database.collection("users").document(userId).delete()
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId).delete()
     }
 
-    override fun insertIncome(income: Income, userId: String) {
-        database.collection("users").document(userId).collection("incomes")
-            .document(income.uuid.toString()).set(income)
+    override fun insertTransaction(userId: String, transaction: Transaction) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transaction.uuid.toString()).set(transaction)
     }
 
-    override fun deleteIncome(income: Income, userId: String) {
-        database.collection("users").document(userId).collection("incomes")
-            .document(income.uuid.toString()).delete()
+    override fun deleteTransaction(userId: String, transactionId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId).collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId).delete()
     }
 
-    override fun insertExpense(userId: String, expense: Expense) {
-        database.collection("users").document(userId).collection("expenses")
-            .document(expense.uuid.toString()).set(expense)
-    }
-
-    override fun getExpensesFromUser(userId: String): List<Expense> {
-        val expenses = mutableListOf<Expense>()
-        database.collection("users").document(userId).collection("expenses").get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    expenses.add(document.toObject<Expense>())
+    override fun getTransactionsFromUser(userId: String): List<Transaction> {
+        val transactionList = mutableListOf<Transaction>()
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName).get()
+            .addOnSuccessListener { transactions ->
+                for (transaction in transactions) {
+                    transactionList.add(transaction.toObject<Transaction>())
                 }
             }
-        return expenses
-    }
-
-    override fun getIncomesFromUser(userId: String): List<Income> {
-        val incomes = mutableListOf<Income>()
-        database.collection("users").document(userId).collection("incomes").get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    incomes.add(document.toObject<Income>())
-                }
-            }
-        return incomes
+        return transactionList
     }
 
     // TODO: Single responsibility principle!
@@ -71,24 +69,20 @@ class UserRepository : UserDataAccessObject {
         onSuccess: (User?) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        var user: User? = null
+        var user: User?
 
-        database.collection("users").document(userId).get()
+        database.collection(DatabaseCollection.Users.collectionName)
+            .document(userId).get()
             .addOnSuccessListener {
                 user = it.toObject<User>()
-                database.collection("users").document(userId).collection("expenses").get()
-                    .addOnSuccessListener { expenseDocuments ->
-                        for (document in expenseDocuments) {
-                            user?.addExpense(document.toObject<Expense>())
+                database.collection(DatabaseCollection.Users.collectionName)
+                    .document(userId)
+                    .collection(DatabaseCollection.Transactions.collectionName).get()
+                    .addOnSuccessListener { transactions ->
+                        for (transaction in transactions) {
+                            user?.addTransaction(transaction.toObject<Transaction>())
                         }
-                        database.collection("users").document(userId).collection("incomes").get()
-                            .addOnSuccessListener { incomeDocuments ->
-                                for (document in incomeDocuments) {
-                                    user?.addIncome(document.toObject<Income>())
-                                }
-                                onSuccess(user)
-                            }
-                            .addOnFailureListener(onFailure)
+                        onSuccess(user)
                     }
                     .addOnFailureListener(onFailure)
             }

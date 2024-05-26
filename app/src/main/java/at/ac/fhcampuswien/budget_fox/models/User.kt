@@ -9,8 +9,7 @@ class User(
     var dateOfBirthInEpoch: Long = 0,
     var dateOfRegistrationInEpoch: Long = 0,
 
-    private val _incomes : MutableList<Income> = mutableListOf(),
-    private val _expenses : MutableList<Expense> = mutableListOf()
+    private val _transactions : MutableList<Transaction> = mutableListOf()
 
 ) {
     constructor(firstName: String, lastName: String, dateOfBirth: LocalDateTime, dateTimeOfRegistration: LocalDateTime) : this() {
@@ -20,28 +19,15 @@ class User(
         this.dateOfRegistrationInEpoch = dateTimeOfRegistration.toEpochSecond(ZoneOffset.UTC)
     }
 
-    fun addIncomes(incomes: List<Income>) {
-        _incomes.addAll(incomes)
+    fun addTransactions(transactions: List<Transaction>) {
+        _transactions.addAll(transactions)
     }
 
-    fun addExpenses(expenses: List<Expense>) {
-        _expenses.addAll(expenses)
+    fun addTransaction(transaction: Transaction) {
+        _transactions.add(transaction)
     }
 
-    fun addIncome(income: Income) {
-        _incomes.add(income)
-    }
-
-    fun addExpense(expense: Expense) {
-        _expenses.add(expense)
-    }
-
-    fun userToDatabase(uid: String): Map<String, Any> {
-        /*
-        val userRepository = UserRepository()
-
-        userRepository.insertIncome(income = Income(amount = 10.5f, description = "FHCW", period = Period.ZERO), uid = uid)
-         */
+    fun userToDatabase(): Map<String, Any> {
         return mapOf(
             "firstName" to this.firstName,
             "lastName" to this.lastName,
