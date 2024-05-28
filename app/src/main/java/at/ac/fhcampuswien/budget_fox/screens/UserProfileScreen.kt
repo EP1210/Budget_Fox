@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,54 +15,56 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
-import com.google.firebase.firestore.toObject
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 @Composable
 fun UserProfileScreen(
-    navController: NavController,
-    viewModel: UserViewModel
+    navigationController: NavController,
+    viewModel: UserViewModel,
+    route: String
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()
+    Scaffold(
+        bottomBar = {
+            SimpleBottomNavigationBar(
+                navigationController = navigationController,
+                currentRoute = route
+            )
+        }
     ) {
-        val auth = Firebase.auth
-        val firebaseUser by remember {
-            mutableStateOf(auth.currentUser)
-        }
-        var firebaseUserUid = ""
-        if(firebaseUser != null) {
-            firebaseUserUid = firebaseUser!!.uid
-        }
-        val userMail = auth.currentUser?.email
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = it)
+        ) {
+            val auth = Firebase.auth
 
-        var userName by remember {
-            mutableStateOf("")
-        }
+            val userMail = auth.currentUser?.email
 
-        var userBirthDate by remember {
-            mutableStateOf(LocalDateTime.now())
-        }
+            var userName by remember {
+                mutableStateOf("")
+            }
 
-        var userRegistrationDate by remember {
-            mutableStateOf(LocalDateTime.now())
-        }
+            var userBirthDate by remember {
+                mutableStateOf(LocalDateTime.now())
+            }
 
-        val docRef = Firebase.firestore.collection("users").document(firebaseUserUid)
-        docRef.get().addOnSuccessListener { documentSnapshot ->
-            val user = documentSnapshot.toObject<User>()
+            var userRegistrationDate by remember {
+                mutableStateOf(LocalDateTime.now())
+            }
+
+
+            val user = viewModel.user
             userName = user?.firstName + " " + user?.lastName
             userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
                 Instant.ofEpochSecond(
@@ -72,28 +76,29 @@ fun UserProfileScreen(
                     it
                 )
             }, ZoneOffset.UTC)
-        }
 
-        SimpleTitle(
-            title = when (viewModel.newUser) {
-                true -> "Registration successful!"
-                false -> "Welcome back!"
-            }
-        )
-        Text(
-            text = """E-Mail: $userMail
+
+            SimpleTitle(
+                title = when (viewModel.newUser) {
+                    true -> "Registration successful!"
+                    false -> "Personal information"
+                }
+            )
+            Text(
+                text = """E-Mail: $userMail
                 |Name: $userName
                 |Birth date: ${userBirthDate.dayOfMonth}.${userBirthDate.monthValue}.${userBirthDate.year}
                 |Registration date: ${userRegistrationDate.dayOfMonth}.${userRegistrationDate.monthValue}.${userRegistrationDate.year}
                 |Registration time: ${userRegistrationDate.hour}:${userRegistrationDate.minute}
             """.trimMargin()
-        )
+            )
 
-        SimpleButton(name = "Logout") {
-            auth.signOut()
-            Log.d("TAG", "Signed out!")
-            navController.navigate(Screen.Login.route) {
-                popUpTo(id = 0)
+            SimpleButton(name = "Logout") {
+                auth.signOut()
+                Log.d("TAG", "Signed out!")
+                navigationController.navigate(Screen.Login.route) {
+                    popUpTo(id = 0)
+                }
             }
         }
     }

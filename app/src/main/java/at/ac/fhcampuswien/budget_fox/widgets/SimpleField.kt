@@ -9,7 +9,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 
 @Composable
-fun simpleField(title: String): String {
+fun SimpleField(
+    title: String,
+    onValueChange: (String) -> Unit
+) {
     var textValue by remember {
         mutableStateOf(value = "")
     }
@@ -18,6 +21,7 @@ fun simpleField(title: String): String {
         value = textValue,
         onValueChange = { userInput ->
             textValue = userInput
+            onValueChange(textValue)
         },
         label = {
             Text(
@@ -26,6 +30,4 @@ fun simpleField(title: String): String {
         },
         singleLine = true
     )
-
-    return textValue
 }

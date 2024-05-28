@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.widgets
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -7,24 +8,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun EmailField(
+fun SimpleNumberField(
+    title: String,
     onValueChange: (String) -> Unit
 ) {
-    var email by remember {
+    var textValue by remember {
         mutableStateOf(value = "")
     }
 
     OutlinedTextField(
-        value = email,
+        value = textValue,
         onValueChange = { userInput ->
-            email = userInput
-            onValueChange(email)
+            textValue = userInput
+            onValueChange(textValue)
         },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Number
+        ),
         label = {
             Text(
-                text = "E-Mail"
+                text = title
             )
         },
         singleLine = true

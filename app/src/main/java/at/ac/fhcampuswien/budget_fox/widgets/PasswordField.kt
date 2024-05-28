@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.widgets
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material3.Icon
@@ -11,11 +12,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
-fun passwordField(): String {
+fun PasswordField(
+    onValueChange: (String) -> Unit
+) {
     var password by remember {
         mutableStateOf(value = "")
     }
@@ -27,6 +31,7 @@ fun passwordField(): String {
         value = password,
         onValueChange = { userInput ->
             password = userInput
+            onValueChange(password)
         },
         label = {
             Text(
@@ -34,6 +39,9 @@ fun passwordField(): String {
             )
         },
         singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password
+        ),
         visualTransformation = when {
             !plaintextPassword -> PasswordVisualTransformation()
             else -> VisualTransformation.None
@@ -51,6 +59,4 @@ fun passwordField(): String {
             }
         }
     )
-
-    return password
 }

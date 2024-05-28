@@ -8,40 +8,52 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.models.User
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.widgets.DateField
+import at.ac.fhcampuswien.budget_fox.widgets.EmailField
+import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import at.ac.fhcampuswien.budget_fox.widgets.dateField
-import at.ac.fhcampuswien.budget_fox.widgets.emailField
-import at.ac.fhcampuswien.budget_fox.widgets.passwordField
-import at.ac.fhcampuswien.budget_fox.widgets.simpleField
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import java.time.LocalDateTime
 
-fun userToDatabase(user: User): Map<String, Any> {
-    return mapOf(
-        "firstName" to user.firstName,
-        "lastName" to user.lastName,
-        "dateOfBirthInEpoch" to user.dateOfBirthInEpoch,
-        "dateOfRegistrationInEpoch" to user.dateOfRegistrationInEpoch
-    )
-}
-
 @Composable
 fun RegistrationScreen(
-    navController: NavController,
+    navigationController: NavController,
     viewModel: UserViewModel
 ) {
+    var email by remember {
+        mutableStateOf(value = "")
+    }
+    var dateOfBirth by remember {
+        mutableStateOf(value = LocalDateTime.now())
+    }
+    var password by remember {
+        mutableStateOf(value = "")
+    }
+    var firstName by remember {
+        mutableStateOf(value = "")
+    }
+    var lastName by remember {
+        mutableStateOf(value = "")
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -52,29 +64,51 @@ fun RegistrationScreen(
     ) {
         SimpleTitle(title = "User registration")
 
-        val email = emailField()
-        val password = passwordField()
-
-        val birthDate = dateField()
-
-        val firstName = simpleField(title = "First name")
-        val lastName = simpleField(title = "Last name")
+        EmailField { mail ->
+            email = mail
+        }
+        PasswordField { word ->
+            password = word
+        }
+        DateField { date ->
+            dateOfBirth = date
+        }
+        SimpleField(title = "First name") { name ->
+            firstName = name
+        }
+        SimpleField(title = "Last name") { name ->
+            lastName = name
+        }
 
         SimpleButton(name = "Register") {
             if (email.isNotBlank() && password.isNotBlank())
-                registerUser(user = User(firstName, lastName, birthDate, LocalDateTime.now()), email, password, navController, viewModel = viewModel)
+                registerUser(
+                    user = User(firstName, lastName, dateOfBirth, LocalDateTime.now()),
+                    email,
+                    password,
+                    navigationController,
+                    viewModel = viewModel
+                )
             else
-                Log.d("Register", "Fill out email / password") //TODO: Alert or something
+                Log.d("Register", "Fill out email / password") // TODO: Alert or something
         }
 
         SimpleTextLink(name = "To login") {
-            navController.navigate(route = Screen.Login.route)
+            navigationController.navigate(route = Screen.Login.route)
         }
     }
 }
 
-fun registerUser(user: User, email: String, password: String, navController: NavController, viewModel: UserViewModel) {
+fun registerUser(
+    user: User,
+    email: String,
+    password: String,
+    navigationController: NavController,
+    viewModel: UserViewModel
+) {
     val auth = Firebase.auth
+    val database = Firebase.firestore
+
 
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
@@ -84,10 +118,34 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
 
                 viewModel.setUserState(firstLogin = true)
                 if (firebaseUser != null) {
-                    createUserEntryInDatabase(user = user, firebaseUser = firebaseUser)
-                    navController.navigate(route = Screen.UserProfile.route) {
-                        popUpTo(id = 0)
-                    }
+                    val newDocRef = database.collection("users").document(firebaseUser.uid)
+                    val batch = database.batch()
+
+                    batch.set(newDocRef, user.userToDatabase())
+
+                    //TODO: Refactor ugly code!
+                    batch.commit()
+                        .addOnSuccessListener {
+                            val repository = UserRepository()
+
+                            //TODO: Duplicate code!
+                            repository.getAllDataFromUser(firebaseUser.uid,
+                                onSuccess = { user ->
+                                    if (user != null) {
+                                        viewModel.setUser(user)
+                                        navigationController.navigate(route = Screen.UserProfile.route) {
+                                            popUpTo(id = 0)
+                                        }
+                                    } else {
+                                        Log.d("FIREBASE", "USER IS NULL!")
+                                    }
+                                }, onFailure = { exception: Exception ->
+                                    Log.d("FIREBASE", "COLD NOT LOAD USER! $exception")
+                                })
+                        }
+                        .addOnFailureListener { ex ->
+                            Log.d("FIRESTORE", ex.toString())
+                        }
                 }
             } else {
                 Log.e(TAG, "Registration failed $email, $password")
@@ -98,5 +156,6 @@ fun registerUser(user: User, email: String, password: String, navController: Nav
 fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
     val database = Firebase.firestore
 
-    database.collection("users").document(firebaseUser.uid).set(userToDatabase(user = user))
+    database.collection("users").document(firebaseUser.uid)
+        .set(user.userToDatabase())
 }
