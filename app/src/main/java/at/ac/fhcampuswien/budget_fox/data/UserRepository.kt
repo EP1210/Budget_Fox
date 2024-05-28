@@ -39,7 +39,7 @@ class UserRepository : UserDataAccessObject {
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Transactions.collectionName)
-            .document(transaction.uuid.toString()).set(transaction)
+            .document(transaction.uuid).set(transaction.transactionToDatabase())
             .addOnSuccessListener { onSuccess() }
     }
 

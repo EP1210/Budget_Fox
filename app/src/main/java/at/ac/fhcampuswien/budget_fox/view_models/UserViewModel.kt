@@ -7,8 +7,8 @@ import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import java.time.Period
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class UserViewModel : ViewModel() {
     private val userRepository = UserRepository()
@@ -34,16 +34,9 @@ class UserViewModel : ViewModel() {
     val transactionDescription: String
         get() = _transactionDescription
 
-    private var _monthlyInterval = mutableStateOf(value = "").value
-    val monthlyInterval: String //TODO: Transaction period
-        get() = _monthlyInterval
 
     fun setUser(user: User) {
         _user = user
-    }
-
-    fun setMonthlyInterval(interval: String) {
-        _monthlyInterval = interval
     }
 
     fun setUserState(firstLogin: Boolean?) {
@@ -64,18 +57,25 @@ class UserViewModel : ViewModel() {
 
     fun insertTransaction() {
         if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && firebaseUser != null) {
-            val transaction = Transaction(
-                uuid = UUID.randomUUID().toString(),
-                amount = transactionAmount,
-                description = transactionDescription,
-                /*period = when {
-                    monthlyInterval.isNotBlank() -> Period.ofMonths(monthlyInterval.toInt())
-                    else -> null
-                }*/ //TODO: Period
-            )
-            userRepository.insertTransaction(transaction = transaction, userId = firebaseUser.uid, onSuccess = {
-                user?.addTransaction(transaction)
-            })
+
+            val format = SimpleDateFormat("yyyy-MM-dd")
+            val date: Date? = format.parse(transactionDate)
+
+            if (date != null) {
+                val transaction = Transaction(
+                    amount = transactionAmount,
+                    description = transactionDescription,
+                    date = date
+                )
+
+                userRepository.insertTransaction(
+                    transaction = transaction,
+                    userId = firebaseUser.uid,
+                    onSuccess = {
+                        user?.addTransaction(transaction)
+                    })
+            }
+            //TODO: Display error message
         }
     }
 }

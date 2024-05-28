@@ -1,10 +1,27 @@
 package at.ac.fhcampuswien.budget_fox.models
 
-import java.time.Period
+import java.util.Date
+import java.util.UUID
 
-data class Transaction(
-    val uuid: String = "",
-    val amount: Double = 0.0,
-    val description: String = "",
-    //val period: Period? = null // made period nullable to enable non periodical incomes //TODO: Period
-)
+class Transaction(
+    var uuid: String = "",
+    var amount: Double = 0.0,
+    var description: String = "",
+    var date: Date = Date()
+) {
+    constructor(amount: Double, description: String, date: Date) : this() {
+        uuid = UUID.randomUUID().toString()
+        this.amount = amount
+        this.description = description
+        this.date = date
+    }
+
+    fun transactionToDatabase() : Map<String, Any> {
+        return mapOf (
+            "uuid" to this.uuid,
+            "amount" to this.amount,
+            "description" to this.description,
+            "date" to date
+        )
+    }
+}

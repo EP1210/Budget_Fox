@@ -26,10 +26,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.ac.fhcampuswien.budget_fox.models.Transaction
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun TransactionListItem(transaction: Transaction) {
+    val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -67,8 +70,7 @@ fun TransactionListItem(transaction: Transaction) {
                 fontSize = 16.sp,
             )
             Text(
-                //text = transaction.period.toString(),
-                text = "PERIOD", //TODO: Period
+                text = format.format(transaction.date),
                 color = MaterialTheme.colorScheme.inverseOnSurface,
             )
         }
@@ -78,5 +80,8 @@ fun TransactionListItem(transaction: Transaction) {
 @Composable
 @Preview
 fun DefaultPreview() {
-    TransactionListItem(Transaction(UUID.randomUUID().toString(), 10.78 * -1, "FHCW"))
+    val currentTimeInMillis = System.currentTimeMillis()
+    val currentDate = Date(currentTimeInMillis)
+
+    TransactionListItem(Transaction(amount = 10.78 * -1, description = "FHCW", date = currentDate))
 }

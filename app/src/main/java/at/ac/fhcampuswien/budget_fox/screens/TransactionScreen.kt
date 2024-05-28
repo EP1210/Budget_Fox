@@ -14,18 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
-import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import java.time.Period
 
 @Composable
 fun TransactionScreen(
@@ -63,9 +56,9 @@ fun TransactionScreen(
                 viewModel.setTransactionDescription(description)
             }
             SimpleField(
-                title = "Monthly interval (optional)"
+                title = "Date"
             ) { interval ->
-               viewModel.setMonthlyInterval(interval)
+                viewModel.setTransactionDate(interval)
             }
 
             SimpleButton(
