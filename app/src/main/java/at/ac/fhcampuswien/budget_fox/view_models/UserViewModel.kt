@@ -57,7 +57,6 @@ class UserViewModel : ViewModel() {
 
     fun insertTransaction() {
         if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && firebaseUser != null) {
-
             val format = SimpleDateFormat("yyyy-MM-dd")
             val date: Date? = format.parse(transactionDate)
 

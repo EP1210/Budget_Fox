@@ -13,7 +13,10 @@ import androidx.compose.runtime.Composable
 @Composable
 fun SimpleTopAppBar(title: String, arrowBack: @Composable () -> Unit = {}) {
     CenterAlignedTopAppBar(
-        title = { Text(title) },
-        navigationIcon = { arrowBack() }
+        title = {
+            Text(
+                text = title
+            )},
+        navigationIcon = arrowBack
     )
 }

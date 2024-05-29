@@ -152,10 +152,3 @@ fun registerUser(
             }
         }
 }
-
-fun createUserEntryInDatabase(user: User, firebaseUser: FirebaseUser) {
-    val database = Firebase.firestore
-
-    database.collection("users").document(firebaseUser.uid)
-        .set(user.userToDatabase())
-}

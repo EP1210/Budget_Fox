@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
@@ -58,6 +59,9 @@ fun Navigation() {
                 route = Screen.TransactionList.route,
                 viewModel = userViewModel
             )
+        }
+        composable(route = Screen.Category.route) {
+            CategoryScreen()
         }
     }
 }

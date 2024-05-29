@@ -8,9 +8,7 @@ class User(
     var lastName: String = "",
     var dateOfBirthInEpoch: Long = 0,
     var dateOfRegistrationInEpoch: Long = 0,
-
     private val _transactions : MutableList<Transaction> = mutableListOf()
-
 ) {
     constructor(firstName: String, lastName: String, dateOfBirth: LocalDateTime, dateTimeOfRegistration: LocalDateTime) : this() {
         this.firstName = firstName
