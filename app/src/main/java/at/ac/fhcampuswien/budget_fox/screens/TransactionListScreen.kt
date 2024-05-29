@@ -46,7 +46,7 @@ fun TransactionListScreen(
         ) {
             viewModel.user?.let { it1 ->
                 items(it1.getTransactions()) { transaction ->
-                    TransactionListItem(transaction = transaction)
+                    TransactionListItem(transaction = transaction, navigationController = navigationController)
                 }
             }
         }

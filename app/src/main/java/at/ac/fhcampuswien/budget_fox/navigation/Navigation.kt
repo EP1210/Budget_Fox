@@ -61,7 +61,10 @@ fun Navigation() {
             )
         }
         composable(route = Screen.Category.route) {
-            CategoryScreen()
+            CategoryScreen(
+                navigationController = navigationController,
+                viewModel = userViewModel
+            )
         }
     }
 }

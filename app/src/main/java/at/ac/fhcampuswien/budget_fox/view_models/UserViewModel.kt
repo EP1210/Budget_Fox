@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.budget_fox.view_models
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
@@ -34,6 +35,14 @@ class UserViewModel : ViewModel() {
     val transactionDescription: String
         get() = _transactionDescription
 
+    private var _categoryName = mutableStateOf(value = "").value
+    val categoryName: String
+        get() = _categoryName
+
+    private var _categoryDescription = mutableStateOf(value = "").value
+    val categoryDescription: String
+        get() = _categoryDescription
+
 
     fun setUser(user: User) {
         _user = user
@@ -56,25 +65,35 @@ class UserViewModel : ViewModel() {
     }
 
     fun insertTransaction() {
-        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && firebaseUser != null) {
-            val format = SimpleDateFormat("yyyy-MM-dd")
-            val date: Date? = format.parse(transactionDate)
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = format.parse(transactionDate)
 
-            if (date != null) {
-                val transaction = Transaction(
-                    amount = transactionAmount,
-                    description = transactionDescription,
-                    date = date
-                )
+        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && date != null && firebaseUser != null) {
+            val transaction = Transaction(
+                amount = transactionAmount,
+                description = transactionDescription,
+                date = date
+            )
 
-                userRepository.insertTransaction(
-                    transaction = transaction,
-                    userId = firebaseUser.uid,
-                    onSuccess = {
-                        user?.addTransaction(transaction)
-                    })
-            }
+            userRepository.insertTransaction(
+                transaction = transaction,
+                userId = firebaseUser.uid,
+                onSuccess = {
+                    user?.addTransaction(transaction)
+                })
             //TODO: Display error message
         }
+    }
+
+    fun setCategoryName(categoryName: String) {
+        _categoryName = categoryName
+    }
+
+    fun setCategoryDescription(categoryDescription: String) {
+        _categoryDescription = categoryDescription
+    }
+
+    fun insertCategory(category: Category) {
+        firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
     }
 }

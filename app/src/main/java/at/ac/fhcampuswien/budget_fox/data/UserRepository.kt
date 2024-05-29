@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.data
 
+import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
@@ -62,6 +63,18 @@ class UserRepository : UserDataAccessObject {
                 }
             }
         return transactionList
+    }
+
+    override fun insertCategory(userId: String, category: Category) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(category.uuid).set(category)
+    }
+
+    override fun getCategoriesFromUser(userId: String): List<Category> {
+        TODO("Not yet implemented")
     }
 
     // TODO: Single responsibility principle!

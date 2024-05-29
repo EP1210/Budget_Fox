@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.data
 
+import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 
@@ -15,7 +16,11 @@ interface UserDataAccessObject {
 
     fun deleteTransaction(userId: String, transactionId: String)
 
-    fun getTransactionsFromUser(userId: String) : List<Transaction>
+    fun getTransactionsFromUser(userId: String): List<Transaction>
+
+    fun insertCategory(userId: String, category: Category)
+
+    fun getCategoriesFromUser(userId: String): List<Category>
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
 

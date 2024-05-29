@@ -25,13 +25,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Transaction
+import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun TransactionListItem(transaction: Transaction) {
+fun TransactionListItem(
+    navigationController: NavController,
+    transaction: Transaction
+) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     Row(
         modifier = Modifier
@@ -40,7 +45,9 @@ fun TransactionListItem(transaction: Transaction) {
             .border(0.dp, Color.Transparent)
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
-            .clickable {}
+            .clickable {
+                navigationController.navigate(route = Screen.Category.route)
+            }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -83,5 +90,5 @@ fun DefaultPreview() {
     val currentTimeInMillis = System.currentTimeMillis()
     val currentDate = Date(currentTimeInMillis)
 
-    TransactionListItem(Transaction(amount = 10.78 * -1, description = "FHCW", date = currentDate))
+    //TransactionListItem(Transaction(amount = 10.78 * -1, description = "FHCW", date = currentDate))
 }

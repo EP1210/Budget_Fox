@@ -28,7 +28,9 @@ fun TransactionScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add transaction") {
-                IconButton(onClick = { navigationController.popBackStack() }) {
+                IconButton(onClick = {
+                    navigationController.popBackStack()
+                }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Localized description"

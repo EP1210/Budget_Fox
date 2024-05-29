@@ -8,7 +8,8 @@ class User(
     var lastName: String = "",
     var dateOfBirthInEpoch: Long = 0,
     var dateOfRegistrationInEpoch: Long = 0,
-    private val _transactions : MutableList<Transaction> = mutableListOf()
+    private val _transactions : MutableList<Transaction> = mutableListOf(),
+    private val _categories: MutableList<Category> = mutableListOf()
 ) {
     constructor(firstName: String, lastName: String, dateOfBirth: LocalDateTime, dateTimeOfRegistration: LocalDateTime) : this() {
         this.firstName = firstName
@@ -25,8 +26,16 @@ class User(
         _transactions.add(transaction)
     }
 
-    fun getTransactions() : List<Transaction> {
+    fun getTransactions(): List<Transaction> {
         return _transactions
+    }
+
+    fun addCategory(category: Category) {
+        _categories.add(category)
+    }
+
+    fun getCategories(): List<Category> {
+        return _categories
     }
 
     fun userToDatabase(): Map<String, Any> {
