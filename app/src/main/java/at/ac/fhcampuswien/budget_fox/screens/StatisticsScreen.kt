@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -33,18 +34,27 @@ import java.util.Locale
 @Composable
 fun StatisticsScreen(
     navigationController: NavController,
-    route: String
+    route: String,
+    viewModel: StatisticsViewModel
 ) {
+    viewModel.mapTransactionsFromUserToMonths(year = 2024)
     // Help: https://github.com/patrykandpatrick/vico/blob/master/sample/src/main/java/com/patrykandpatrick/vico/sample/showcase/charts/Chart3.kt
     val modelProducer = remember { CartesianChartModelProducer.build() }
+
     LaunchedEffect(Unit) {
         withContext(Dispatchers.Default) {
             modelProducer.tryRunTransaction {
                 /* Learn more:
                 https://patrykandpatrick.com/vico/wiki/cartesian-charts/layers/line-layer#data. */
                 columnSeries {
-                    series(y = listOf(20, 22, 18, 4, 5, 6, 27, 19, 12, 34, 11, 23), x = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
-                    series(y = listOf(12, 15, 23, 5, 4, 4, 24, 19, 9, 30, 20, 10), x = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+                    series(
+                        y = viewModel.incomes.values,
+                        x = viewModel.incomes.keys
+                    )
+                    series(
+                        y = viewModel.expenses.values,
+                        x = viewModel.expenses.keys
+                    )
                 }
             }
         }
@@ -68,11 +78,13 @@ fun StatisticsScreen(
                 .padding(paddingValues = it)
                 .fillMaxSize()
         ) {
-            ComposeChart1(modelProducer = modelProducer, modifier = Modifier.fillMaxSize())
+            ComposeChart1(
+                modelProducer = modelProducer,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
-
 
 @Composable
 private fun ComposeChart1(modelProducer: CartesianChartModelProducer, modifier: Modifier) {
@@ -94,13 +106,13 @@ private fun ComposeChart1(modelProducer: CartesianChartModelProducer, modifier: 
             ),
             startAxis = rememberStartAxis(),
             bottomAxis =
-                rememberBottomAxis(
-                    valueFormatter = bottomAxisValueFormatter,
-                    itemPlacer =
-                    remember {
-                        AxisItemPlacer.Horizontal.default(spacing = 1, addExtremeLabelPadding = true)
-                    },
-                ),
+            rememberBottomAxis(
+                valueFormatter = bottomAxisValueFormatter,
+                itemPlacer =
+                remember {
+                    AxisItemPlacer.Horizontal.default(spacing = 1, addExtremeLabelPadding = true)
+                },
+            ),
         ),
         modelProducer = modelProducer,
         modifier = modifier,
@@ -114,5 +126,5 @@ private val colorRed = Color(0xFFFF0000)
 
 private val monthNames = DateFormatSymbols.getInstance(Locale.US).shortMonths
 private val bottomAxisValueFormatter = CartesianValueFormatter { x, _, _ ->
-    monthNames[x.toInt() - 1]
+    monthNames[x.toInt()]
 }

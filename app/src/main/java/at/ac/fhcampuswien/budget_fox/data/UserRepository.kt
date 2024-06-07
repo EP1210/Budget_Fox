@@ -51,7 +51,7 @@ class UserRepository : UserDataAccessObject {
             .document(transactionId).delete()
     }
 
-    override fun getTransactionsFromUser(userId: String): List<Transaction> {
+    override fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit) {
         val transactionList = mutableListOf<Transaction>()
         database
             .collection(DatabaseCollection.Users.collectionName)
@@ -61,8 +61,9 @@ class UserRepository : UserDataAccessObject {
                 for (transaction in transactions) {
                     transactionList.add(transaction.toObject<Transaction>())
                 }
+                onSuccess(transactionList)
             }
-        return transactionList
+            .addOnFailureListener(onFailure)
     }
 
     override fun insertCategory(userId: String, category: Category) {

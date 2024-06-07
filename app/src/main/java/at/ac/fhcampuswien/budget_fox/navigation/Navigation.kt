@@ -13,12 +13,14 @@ import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
+import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
 @Composable
 fun Navigation() {
     val navigationController = rememberNavController()
     val userViewModel: UserViewModel = viewModel()
+    val statisticsViewModel: StatisticsViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -70,7 +72,8 @@ fun Navigation() {
         composable(route = Screen.Statistics.route) {
             StatisticsScreen(
                 navigationController = navigationController,
-                route = Screen.Statistics.route
+                route = Screen.Statistics.route,
+                viewModel = statisticsViewModel
             )
         }
     }
