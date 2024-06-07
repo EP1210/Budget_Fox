@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -17,10 +19,16 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStartAxis
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberColumnCartesianLayer
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
+import com.patrykandpatrick.vico.compose.common.component.rememberLineComponent
+import com.patrykandpatrick.vico.core.cartesian.axis.AxisItemPlacer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
+import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
+import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.text.DateFormatSymbols
+import java.util.Locale
 
 @Composable
 fun StatisticsScreen(
@@ -35,7 +43,8 @@ fun StatisticsScreen(
                 /* Learn more:
                 https://patrykandpatrick.com/vico/wiki/cartesian-charts/layers/line-layer#data. */
                 columnSeries {
-                    series(2.45433, 5, 3, 4)
+                    series(y = listOf(20, 22, 18, 4, 5, 6, 27, 19, 12, 34, 11, 23), x = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
+                    series(y = listOf(12, 15, 23, 5, 4, 4, 24, 19, 9, 30, 20, 10), x = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12))
                 }
             }
         }
@@ -71,12 +80,39 @@ private fun ComposeChart1(modelProducer: CartesianChartModelProducer, modifier: 
         chart =
         rememberCartesianChart(
             rememberColumnCartesianLayer(
+                columnProvider =
+                ColumnCartesianLayer.ColumnProvider.series(
+                    rememberLineComponent(
+                        color = colorGreen,
+                        thickness = COLUMN_THICKNESS_DP.dp
+                    ),
+                    rememberLineComponent(
+                        color = colorRed,
+                        thickness = COLUMN_THICKNESS_DP.dp
+                    ),
+                )
             ),
             startAxis = rememberStartAxis(),
-            bottomAxis = rememberBottomAxis(guideline = null),
+            bottomAxis =
+                rememberBottomAxis(
+                    valueFormatter = bottomAxisValueFormatter,
+                    itemPlacer =
+                    remember {
+                        AxisItemPlacer.Horizontal.default(spacing = 1, addExtremeLabelPadding = true)
+                    },
+                ),
         ),
         modelProducer = modelProducer,
         modifier = modifier,
         zoomState = rememberVicoZoomState(zoomEnabled = false),
     )
+}
+
+private const val COLUMN_THICKNESS_DP: Int = 10
+private val colorGreen = Color(0xFF008000)
+private val colorRed = Color(0xFFFF0000)
+
+private val monthNames = DateFormatSymbols.getInstance(Locale.US).shortMonths
+private val bottomAxisValueFormatter = CartesianValueFormatter { x, _, _ ->
+    monthNames[x.toInt() - 1]
 }
