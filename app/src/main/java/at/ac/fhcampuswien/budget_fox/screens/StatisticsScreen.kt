@@ -2,10 +2,6 @@ package at.ac.fhcampuswien.budget_fox.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,17 +17,8 @@ fun StatisticsScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(
-                title = "Manage your categories"
-            ) {
-                IconButton(onClick = {
-                    navigationController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
-                    )
-                }
-            }
+                title = "Statistics"
+            )
         },
         bottomBar = {
             SimpleBottomNavigationBar(

@@ -52,8 +52,6 @@ android {
 }
 
 dependencies {
-    val lifecycleVersion = "2.7.0"
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -72,8 +70,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(platform(libs.firebase.bom))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
