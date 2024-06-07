@@ -5,7 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,8 +27,6 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.columnSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.ColumnCartesianLayer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.text.DateFormatSymbols
 import java.util.Locale
 
@@ -40,23 +39,21 @@ fun StatisticsScreen(
     viewModel.mapTransactionsFromUserToMonths(year = 2024)
     // Help: https://github.com/patrykandpatrick/vico/blob/master/sample/src/main/java/com/patrykandpatrick/vico/sample/showcase/charts/Chart3.kt
     val modelProducer = remember { CartesianChartModelProducer.build() }
+    val incomes by viewModel.incomes.collectAsState()
+    val expenses by viewModel.expenses.collectAsState()
 
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.Default) {
-            modelProducer.tryRunTransaction {
-                /* Learn more:
-                https://patrykandpatrick.com/vico/wiki/cartesian-charts/layers/line-layer#data. */
-                columnSeries {
-                    series(
-                        y = viewModel.incomes.values,
-                        x = viewModel.incomes.keys
-                    )
-                    series(
-                        y = viewModel.expenses.values,
-                        x = viewModel.expenses.keys
-                    )
-                }
-            }
+    modelProducer.tryRunTransaction {
+        /* Learn more:
+        https://patrykandpatrick.com/vico/wiki/cartesian-charts/layers/line-layer#data. */
+        columnSeries {
+            series(
+                y = incomes.values,
+                x = incomes.keys
+            )
+            series(
+                y = expenses.values,
+                x = expenses.keys
+            )
         }
     }
 
