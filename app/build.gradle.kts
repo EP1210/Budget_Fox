@@ -78,4 +78,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
+
+    implementation(libs.vico.compose)
+    implementation(libs.vico.compose.m3)
+    implementation(libs.vico.core)
+    implementation(libs.vico.views)
 }

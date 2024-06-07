@@ -13,6 +13,7 @@ activityCompose = "1.9.0"
 composeBom = "2024.04.01"
 firebaseAuthKtx = "22.3.1"
 navigationCompose = "2.7.7"
+vico = "2.0.0-alpha.21"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -34,6 +35,18 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+
+# For Jetpack Compose.
+vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
+
+# For `compose`. Creates a `ChartStyle` based on an M3 Material Theme.
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+
+# Houses the core logic for charts and other elements. Included in all other modules.
+vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = "vico" }
+
+# For the view system.
+vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

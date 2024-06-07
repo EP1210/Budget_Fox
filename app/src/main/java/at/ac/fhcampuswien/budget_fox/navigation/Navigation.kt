@@ -9,6 +9,7 @@ import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
+import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
@@ -64,6 +65,12 @@ fun Navigation() {
             CategoryScreen(
                 navigationController = navigationController,
                 viewModel = userViewModel
+            )
+        }
+        composable(route = Screen.Statistics.route) {
+            StatisticsScreen(
+                navigationController = navigationController,
+                route = Screen.Statistics.route
             )
         }
     }
