@@ -2,11 +2,8 @@ package at.ac.fhcampuswien.budget_fox.screens
 
 import android.graphics.Typeface
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Label
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -45,6 +42,7 @@ import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.core.common.Dimensions
 import com.patrykandpatrick.vico.core.common.shape.Shape
 import java.text.DateFormatSymbols
+import java.util.Calendar
 import java.util.Locale
 
 /*
@@ -57,10 +55,10 @@ fun StatisticsScreen(
     route: String,
     viewModel: StatisticsViewModel
 ) {
-    viewModel.mapTransactionsFromUserToMonths(year = 2024)
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val incomes by viewModel.incomes.collectAsState()
     val expenses by viewModel.expenses.collectAsState()
+    viewModel.mapTransactionsFromUserToMonths(Calendar.getInstance().get(Calendar.YEAR))
 
     modelProducer.tryRunTransaction {
         columnSeries {
@@ -78,7 +76,7 @@ fun StatisticsScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(
-                title = "Statistics"
+                title = "Statistics of the current year"
             )
         },
         bottomBar = {
@@ -93,14 +91,10 @@ fun StatisticsScreen(
                 .padding(paddingValues = it)
                 .fillMaxSize()
         ) {
-            Row {
-            }
-            Row {
-                IncomeExpensesChart(
-                    modelProducer = modelProducer,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+            IncomeExpensesChart(
+                modelProducer = modelProducer,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
@@ -166,8 +160,8 @@ private fun rememberLegend() =
                     typeface = Typeface.MONOSPACE,
                 ),
                 labelText = (when (chartColor) {
-                    colorRed -> "Incomes"
-                    colorGreen -> "Expenses"
+                    colorGreen -> "Incomes"
+                    colorRed -> "Expenses"
                     else -> "Error"
                 })
             )
@@ -182,7 +176,7 @@ private const val COLUMN_THICKNESS_DP: Int = 10
 private val colorGreen = Color(0xFF008000)
 private val colorRed = Color(0xFFFF0000)
 
-private val chartColors = listOf(colorRed, colorGreen)
+private val chartColors = listOf(colorGreen, colorRed)
 
 private val monthNames = DateFormatSymbols.getInstance(Locale.US).shortMonths
 private val bottomAxisValueFormatter = CartesianValueFormatter { x, _, _ ->

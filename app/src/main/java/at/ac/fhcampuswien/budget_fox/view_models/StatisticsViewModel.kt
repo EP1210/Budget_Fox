@@ -7,6 +7,7 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.Calendar
 
 class StatisticsViewModel : ViewModel() {
 
@@ -34,11 +35,13 @@ class StatisticsViewModel : ViewModel() {
                 }
                 transactions.forEach { transaction ->
                     if (transaction.date.year + 1900 == year) { // adding 1900 because years since 1900 are returned
-                            if (transaction.amount > 0) {
-                                _incomes.value[transaction.date.month] = _incomes.value[transaction.date.month]!! + transaction.amount
-                            } else {
-                                _expenses.value[transaction.date.month] = _expenses.value[transaction.date.month]!! - transaction.amount
-                            }
+                        if (transaction.amount > 0) {
+                            _incomes.value[transaction.date.month] =
+                                _incomes.value[transaction.date.month]!! + transaction.amount
+                        } else {
+                            _expenses.value[transaction.date.month] =
+                                _expenses.value[transaction.date.month]!! - transaction.amount
+                        }
                     }
                 }
             },
@@ -48,6 +51,6 @@ class StatisticsViewModel : ViewModel() {
     }
 
     init {
-        mapTransactionsFromUserToMonths(year = 2024)
+        mapTransactionsFromUserToMonths(Calendar.getInstance().get(Calendar.YEAR))
     }
 }
