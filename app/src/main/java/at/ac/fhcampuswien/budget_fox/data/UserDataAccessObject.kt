@@ -16,7 +16,7 @@ interface UserDataAccessObject {
 
     fun deleteTransaction(userId: String, transactionId: String)
 
-    fun getTransactionsFromUser(userId: String): List<Transaction>
+    fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit)
 
     fun insertCategory(userId: String, category: Category)
 
