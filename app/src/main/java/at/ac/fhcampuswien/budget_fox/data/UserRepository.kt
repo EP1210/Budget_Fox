@@ -1,13 +1,14 @@
 package at.ac.fhcampuswien.budget_fox.data
 
 import at.ac.fhcampuswien.budget_fox.models.Category
+import at.ac.fhcampuswien.budget_fox.models.Household
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-class UserRepository : UserDataAccessObject {
+class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     private val database = Firebase.firestore
 
@@ -35,7 +36,11 @@ class UserRepository : UserDataAccessObject {
             .document(userId).delete()
     }
 
-    override fun insertTransaction(userId: String, transaction: Transaction, onSuccess: () -> Unit) {
+    override fun insertTransaction(
+        userId: String,
+        transaction: Transaction,
+        onSuccess: () -> Unit
+    ) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -51,7 +56,11 @@ class UserRepository : UserDataAccessObject {
             .document(transactionId).delete()
     }
 
-    override fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit) {
+    override fun getTransactionsFromUser(
+        userId: String,
+        onSuccess: (List<Transaction>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         val transactionList = mutableListOf<Transaction>()
         database
             .collection(DatabaseCollection.Users.collectionName)
@@ -103,6 +112,58 @@ class UserRepository : UserDataAccessObject {
             }
             .addOnFailureListener {
                 onFailure(it)
+            }
+    }
+
+    override fun insertHousehold(household: Household) {
+        database
+            .collection(DatabaseCollection.Household.collectionName)
+            .document(household.uuid)
+            .set(household.householdToDatabase())
+    }
+
+    override fun getHousehold(householdId: String, onSuccess: (Household?) -> Unit) {
+        database
+            .collection(DatabaseCollection.Household.collectionName)
+            .document(householdId)
+            .get()
+            .addOnSuccessListener { household ->
+                onSuccess(household.toObject<Household>())
+            }
+    }
+
+    override fun deleteHousehold(householdId: String) {
+        database
+            .collection(DatabaseCollection.Household.collectionName)
+            .document(householdId)
+            .delete()
+    }
+
+    override fun insertHouseholdTransaction(transaction: Transaction, householdId: String) {
+        database
+            .collection(DatabaseCollection.Household.collectionName)
+            .document(householdId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transaction.uuid)
+            .set(transaction.transactionToDatabase())
+    }
+
+    override fun getTransactionsFromHousehold(
+        householdId: String,
+        onSuccess: (List<Transaction>) -> Unit
+    ) {
+        database
+            .collection(DatabaseCollection.Household.collectionName)
+            .document(householdId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .get()
+            .addOnSuccessListener { transactions ->
+                val transactionList = mutableListOf<Transaction>()
+
+                transactions.forEach { transaction ->
+                    transactionList.add(transaction.toObject<Transaction>())
+                }
+                onSuccess(transactionList)
             }
     }
 }

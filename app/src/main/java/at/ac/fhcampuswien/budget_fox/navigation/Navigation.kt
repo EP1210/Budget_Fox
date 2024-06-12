@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdWelcomeScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
@@ -74,6 +75,12 @@ fun Navigation() {
                 navigationController = navigationController,
                 route = Screen.Statistics.route,
                 viewModel = statisticsViewModel
+            )
+        }
+        composable(route = Screen.HouseholdWelcome.route) {
+            HouseholdWelcomeScreen(
+                navigationController = navigationController,
+                route = Screen.HouseholdWelcome.route
             )
         }
     }

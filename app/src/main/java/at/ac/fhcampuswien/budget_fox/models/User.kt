@@ -8,8 +8,9 @@ class User(
     var lastName: String = "",
     var dateOfBirthInEpoch: Long = 0,
     var dateOfRegistrationInEpoch: Long = 0,
-    private val _transactions : MutableList<Transaction> = mutableListOf(),
-    private val _categories: MutableList<Category> = mutableListOf()
+    private val _transactions: MutableList<Transaction> = mutableListOf(),
+    private val _categories: MutableList<Category> = mutableListOf(),
+    var householdId: String = ""
 ) {
     constructor(firstName: String, lastName: String, dateOfBirth: LocalDateTime, dateTimeOfRegistration: LocalDateTime) : this() {
         this.firstName = firstName
@@ -38,12 +39,17 @@ class User(
         return _categories
     }
 
+    fun joinHousehold(householdId: String) {
+        this.householdId = householdId
+    }
+
     fun userToDatabase(): Map<String, Any> {
         return mapOf(
             "firstName" to this.firstName,
             "lastName" to this.lastName,
             "dateOfBirthInEpoch" to this.dateOfBirthInEpoch,
             "dateOfRegistrationInEpoch" to this.dateOfRegistrationInEpoch,
+            "householdId" to this.householdId
         )
     }
 }

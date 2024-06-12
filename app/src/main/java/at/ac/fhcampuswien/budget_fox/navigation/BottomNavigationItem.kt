@@ -2,9 +2,11 @@ package at.ac.fhcampuswien.budget_fox.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Face
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,6 +37,12 @@ fun getBottomNavigationItems(): List<BottomNavigationItem> {
             selected = Icons.Filled.Info,
             unselected = Icons.Outlined.Info,
             route = Screen.Statistics.route
+        ),
+        BottomNavigationItem(
+            label = "Household",
+            selected = Icons.Filled.Home,
+            unselected = Icons.Outlined.Home,
+            route = Screen.HouseholdWelcome.route
         )
     )
 }
