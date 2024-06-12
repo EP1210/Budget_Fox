@@ -11,7 +11,7 @@ sealed class Screen(val route: String) {
     data object Statistics : Screen(route = "statistics_screen")
     data object HouseholdWelcome : Screen(route = "household_welcome_screen")
     data object HouseholdJoin : Screen(route = "household_join_screen")
-    data object HouseholdRegister : Screen(route = "household_register_screen")
+    data object HouseholdCreate : Screen(route = "household_register_screen")
     data object HouseholdTransaction : Screen(route = "household_transaction_screen")
 
 }

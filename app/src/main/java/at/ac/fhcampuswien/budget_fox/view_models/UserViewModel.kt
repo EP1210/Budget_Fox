@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
@@ -27,7 +28,7 @@ class UserViewModel : ViewModel() {
     val transactionDate: String
         get() = _transactionDate
 
-    private var _transactionAmount = mutableStateOf(value = 0.0).value
+    private var _transactionAmount = mutableDoubleStateOf(value = 0.0).doubleValue
     val transactionAmount: Double
         get() = _transactionAmount
 
