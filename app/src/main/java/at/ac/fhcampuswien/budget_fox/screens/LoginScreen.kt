@@ -17,11 +17,11 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.widgets.EmailField
+import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import at.ac.fhcampuswien.budget_fox.widgets.EmailField
-import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -83,6 +83,7 @@ fun userLogin(
                 val repository = UserRepository()
                 val firebaseUser = Firebase.auth.currentUser
                 val uid = firebaseUser?.uid
+
                 if (uid != null) {
                     repository.getAllDataFromUser(uid, //TODO: Leon Fragen
                         onSuccess = { user ->
@@ -97,9 +98,7 @@ fun userLogin(
                         }, onFailure = { exception: Exception ->
                             Log.d("FIREBASE", "COLD NOT LOAD USER! $exception")
                         })
-                }
-                else
-                {
+                } else {
                     Log.d("FIREBASE", "User is null!")
                 }
             } else {

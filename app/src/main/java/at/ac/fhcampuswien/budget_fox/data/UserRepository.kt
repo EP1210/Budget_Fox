@@ -7,8 +7,6 @@ import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
@@ -48,14 +46,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(userId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .document(transaction.uuid).set(transaction.transactionToDatabase())
-            .addOnSuccessListener { onSuccess() }
-    }
-
-    override fun deleteTransaction(userId: String, transactionId: String) {
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId).collection(DatabaseCollection.Transactions.collectionName)
-            .document(transactionId).delete()
+            .addOnSuccessListener {
+                onSuccess()
+            }
     }
 
     override fun getTransactionsFromUser(
@@ -76,6 +69,13 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 onSuccess(transactionList)
             }
             .addOnFailureListener(onFailure)
+    }
+
+    override fun deleteTransaction(userId: String, transactionId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId).collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId).delete()
     }
 
     override fun insertCategory(userId: String, category: Category) {
@@ -99,6 +99,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 }
                 onSuccess(categoriesFromUser)
             }
+    }
+
+    override fun deleteCategory(userId: String, categoryId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).delete()
     }
 
     // TODO: Single responsibility principle!
@@ -180,4 +188,5 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 onSuccess(transactionList)
             }
     }
+
 }

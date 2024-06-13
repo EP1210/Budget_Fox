@@ -50,4 +50,5 @@ class StatisticsViewModel : ViewModel() {
 
             })
     }
+
 }

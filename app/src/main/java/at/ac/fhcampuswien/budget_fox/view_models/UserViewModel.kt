@@ -1,26 +1,20 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
-import android.util.Log
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
 class UserViewModel : ViewModel() {
+
     private val userRepository = UserRepository()
     private val firebaseUser = Firebase.auth.currentUser
 
@@ -55,7 +49,6 @@ class UserViewModel : ViewModel() {
     private var _categoriesFromUser = mutableStateListOf<Category>()
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
-
 
     fun setUser(user: User) {
         _user = user
@@ -108,6 +101,12 @@ class UserViewModel : ViewModel() {
 
     fun insertCategory(category: Category) {
         firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
+    }
+
+    fun deleteCategory(categoryId: String) {
+        if (firebaseUser != null) {
+            userRepository.deleteCategory(userId = firebaseUser.uid, categoryId = categoryId)
+        }
     }
 
     fun loadCategoriesFromUser() {

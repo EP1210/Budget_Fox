@@ -28,9 +28,11 @@ fun TransactionScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add transaction") {
-                IconButton(onClick = {
-                    navigationController.popBackStack()
-                }) {
+                IconButton(
+                    onClick = {
+                        navigationController.popBackStack()
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Localized description"
@@ -50,27 +52,24 @@ fun TransactionScreen(
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->
-                viewModel.setTransactionAmount(amount.toDouble())
+                viewModel.setTransactionAmount(amount = amount.toDouble())
             }
             SimpleField(
                 title = "Description"
             ) { description ->
-                viewModel.setTransactionDescription(description)
+                viewModel.setTransactionDescription(description = description)
             }
             SimpleField(
                 title = "Date"
             ) { interval ->
-                viewModel.setTransactionDate(interval)
+                viewModel.setTransactionDate(date = interval)
             }
 
             SimpleButton(
-                name = "Add income",
-                modifier = Modifier
-                    .padding(bottom = 30.dp)
+                name = "Add income"
             ) {
                 viewModel.insertTransaction()
             }
-
             SimpleButton(
                 name = "Add expense"
             ) {

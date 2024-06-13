@@ -50,7 +50,7 @@ fun HouseholdCreateScreen(
                 viewModel.setHouseholdName(householdName = name)
             }
             SimpleButton(name = "Create") {
-                viewModel.createHousehold()
+                viewModel.insertHousehold()
             }
         }
     }

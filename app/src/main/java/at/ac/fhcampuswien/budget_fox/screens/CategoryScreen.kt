@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -19,6 +20,7 @@ import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
@@ -49,8 +51,8 @@ fun CategoryScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(paddingValues = it)
                 .fillMaxSize()
+                .padding(paddingValues = it)
                 .padding(horizontal = 70.dp)
         ) {
             SimpleField(
@@ -63,6 +65,7 @@ fun CategoryScreen(
             ) { description ->
                 viewModel.setCategoryDescription(categoryDescription = description)
             }
+
             SimpleButton(
                 name = "Add category",
                 modifier = Modifier
@@ -75,17 +78,25 @@ fun CategoryScreen(
                             description = viewModel.categoryDescription
                         )
                     )
-                    viewModel.setCategoryDescription(categoryDescription = "")
+                    viewModel.setCategoryName(categoryName = "")
                 }
-                viewModel.setCategoryName(categoryName = "")
+                viewModel.setCategoryDescription(categoryDescription = "")
                 viewModel.loadCategoriesFromUser()
             }
+
             LazyColumn {
                 items(items = categories) { category ->
                     CategoryItem(
-                        name = category.name,
-                        description = category.description
-                    )
+                        categoryName = category.name,
+                        categoryDescription = category.description
+                    ) {
+                        SimpleEventIcon(
+                            icon = Icons.Default.Clear
+                        ) {
+                            viewModel.deleteCategory(categoryId = category.uuid)
+                            viewModel.loadCategoriesFromUser()
+                        }
+                    }
                 }
             }
         }

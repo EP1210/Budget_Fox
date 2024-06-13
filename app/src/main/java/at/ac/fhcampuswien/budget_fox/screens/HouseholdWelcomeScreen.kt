@@ -34,8 +34,8 @@ fun HouseholdWelcomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .padding(paddingValues = it)
                 .fillMaxSize()
+                .padding(paddingValues = it)
         ) {
             SimpleButton(
                 name = "Create Household"
