@@ -83,4 +83,6 @@ dependencies {
     implementation(libs.vico.views)
 
     implementation(libs.compose.qr.code)
+
+    implementation(libs.barcode.scanning)
 }
