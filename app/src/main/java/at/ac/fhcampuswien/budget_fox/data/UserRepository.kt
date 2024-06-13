@@ -139,14 +139,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     override fun insertHousehold(household: Household) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(household.uuid)
             .set(household.householdToDatabase())
     }
 
     override fun getHousehold(householdId: String, onSuccess: (Household?) -> Unit) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .get()
             .addOnSuccessListener { household ->
@@ -156,14 +156,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     override fun deleteHousehold(householdId: String) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .delete()
     }
 
     override fun insertHouseholdTransaction(transaction: Transaction, householdId: String) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .document(transaction.uuid)
@@ -175,7 +175,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
         onSuccess: (List<Transaction>) -> Unit
     ) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .get()

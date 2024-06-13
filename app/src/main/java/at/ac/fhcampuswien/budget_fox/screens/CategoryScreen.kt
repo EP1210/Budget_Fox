@@ -8,8 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,13 +35,10 @@ fun CategoryScreen(
             SimpleTopAppBar(
                 title = "Manage your categories"
             ) {
-                IconButton(onClick = {
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack
+                ) {
                     navigationController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
-                    )
                 }
             }
         }
