@@ -6,6 +6,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdCreateScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdJoinScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdTransactionScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdWelcomeScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
@@ -13,6 +17,7 @@ import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
@@ -21,6 +26,7 @@ fun Navigation() {
     val navigationController = rememberNavController()
     val userViewModel: UserViewModel = viewModel()
     val statisticsViewModel: StatisticsViewModel = viewModel()
+    val houseCreateViewModel: HouseholdCreateViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -76,6 +82,23 @@ fun Navigation() {
                 route = Screen.Statistics.route,
                 viewModel = statisticsViewModel
             )
+        }
+        composable(route = Screen.HouseholdWelcome.route) {
+            HouseholdWelcomeScreen(
+                navigationController = navigationController,
+                route = Screen.HouseholdWelcome.route
+            )
+        }
+        composable(route = Screen.HouseholdCreate.route) {
+            HouseholdCreateScreen(
+                navigationController = navigationController,
+                viewModel = houseCreateViewModel)
+        }
+        composable(route = Screen.HouseholdJoin.route) {
+            HouseholdJoinScreen(navigationController = navigationController)
+        }
+        composable(route = Screen.HouseholdTransaction.route) {
+            HouseholdTransactionScreen(navigationController = navigationController)
         }
     }
 }
