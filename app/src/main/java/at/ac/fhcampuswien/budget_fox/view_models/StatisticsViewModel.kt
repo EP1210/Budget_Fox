@@ -43,8 +43,8 @@ class StatisticsViewModel : ViewModel() {
                                 _expenses.value[transaction.date.month]!! - transaction.amount
                         }
                     }
-                    onSuccess()
                 }
+                onSuccess()
             },
             onFailure = { exception ->
 
