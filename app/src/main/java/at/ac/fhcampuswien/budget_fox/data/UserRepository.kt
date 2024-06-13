@@ -53,6 +53,7 @@ class UserRepository : UserDataAccessObject {
 
     override fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit) {
         val transactionList = mutableListOf<Transaction>()
+
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -75,7 +76,18 @@ class UserRepository : UserDataAccessObject {
     }
 
     override fun getCategoriesFromUser(userId: String): List<Category> {
-        TODO("Not yet implemented")
+        val categoriesFromUser = mutableListOf<Category>()
+
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName).get()
+            .addOnSuccessListener { categories ->
+                categories.forEach { category ->
+                    categoriesFromUser.add(category.toObject<Category>())
+                }
+            }
+        return categoriesFromUser
     }
 
     // TODO: Single responsibility principle!

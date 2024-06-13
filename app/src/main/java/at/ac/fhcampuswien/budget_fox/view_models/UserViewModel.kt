@@ -43,6 +43,10 @@ class UserViewModel : ViewModel() {
     val categoryDescription: String
         get() = _categoryDescription
 
+    private var _categoriesFromUser = listOf<Category>()
+    val categoriesFromUser: List<Category>
+        get() = _categoriesFromUser
+
 
     fun setUser(user: User) {
         _user = user
@@ -95,5 +99,15 @@ class UserViewModel : ViewModel() {
 
     fun insertCategory(category: Category) {
         firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
+    }
+
+    private fun setCategoriesFromUser() {
+        if (firebaseUser != null) {
+            _categoriesFromUser = userRepository.getCategoriesFromUser(userId = firebaseUser.uid)
+        }
+    }
+
+    init {
+        setCategoriesFromUser()
     }
 }

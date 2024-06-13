@@ -3,6 +3,8 @@ package at.ac.fhcampuswien.budget_fox.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -23,6 +26,8 @@ fun CategoryScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
+    val categories = viewModel.categoriesFromUser
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(
@@ -55,7 +60,6 @@ fun CategoryScreen(
             ) { description ->
                 viewModel.setCategoryDescription(categoryDescription = description)
             }
-
             SimpleButton(
                 name = "Add category"
             ) {
@@ -63,6 +67,16 @@ fun CategoryScreen(
                     name = viewModel.categoryName,
                     description = viewModel.categoryDescription
                 ))
+            }
+        }
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(items = categories) {category ->
+                CategoryItem(
+                    name = category.name,
+                    description = category.description
+                )
             }
         }
     }
