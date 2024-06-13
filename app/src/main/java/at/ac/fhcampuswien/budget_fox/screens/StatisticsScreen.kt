@@ -58,20 +58,20 @@ fun StatisticsScreen(
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val incomes by viewModel.incomes.collectAsState()
     val expenses by viewModel.expenses.collectAsState()
-    viewModel.mapTransactionsFromUserToMonths(Calendar.getInstance().get(Calendar.YEAR))
-
-    modelProducer.tryRunTransaction {
-        columnSeries {
-            series(
-                y = incomes.values,
-                x = incomes.keys
-            )
-            series(
-                y = expenses.values,
-                x = expenses.keys
-            )
+    viewModel.mapTransactionsFromUserToMonths(Calendar.getInstance().get(Calendar.YEAR), onSuccess = {
+        modelProducer.tryRunTransaction {
+            columnSeries {
+                series(
+                    y = incomes.values,
+                    x = incomes.keys
+                )
+                series(
+                    y = expenses.values,
+                    x = expenses.keys
+                )
+            }
         }
-    }
+    })
 
     Scaffold(
         topBar = {

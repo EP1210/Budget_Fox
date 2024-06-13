@@ -7,7 +7,6 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.Calendar
 
 class StatisticsViewModel : ViewModel() {
 
@@ -22,7 +21,8 @@ class StatisticsViewModel : ViewModel() {
         get() = _expenses.asStateFlow()
 
     fun mapTransactionsFromUserToMonths(
-        year: Int
+        year: Int,
+        onSuccess: () -> Unit
     ) {
         val userId = Firebase.auth.currentUser?.uid ?: ""
 
@@ -43,14 +43,11 @@ class StatisticsViewModel : ViewModel() {
                                 _expenses.value[transaction.date.month]!! - transaction.amount
                         }
                     }
+                    onSuccess()
                 }
             },
             onFailure = { exception ->
 
             })
-    }
-
-    init {
-        mapTransactionsFromUserToMonths(Calendar.getInstance().get(Calendar.YEAR))
     }
 }
