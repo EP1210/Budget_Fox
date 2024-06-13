@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
@@ -26,6 +27,7 @@ fun CategoryScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
+    viewModel.loadCategoriesFromUser()
     val categories = viewModel.categoriesFromUser
 
     Scaffold(
@@ -49,6 +51,7 @@ fun CategoryScreen(
             modifier = Modifier
                 .padding(paddingValues = it)
                 .fillMaxSize()
+                .padding(horizontal = 70.dp)
         ) {
             SimpleField(
                 title = "Category name"
@@ -61,22 +64,29 @@ fun CategoryScreen(
                 viewModel.setCategoryDescription(categoryDescription = description)
             }
             SimpleButton(
-                name = "Add category"
+                name = "Add category",
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
             ) {
-                viewModel.insertCategory(category = Category(
-                    name = viewModel.categoryName,
-                    description = viewModel.categoryDescription
-                ))
+                if (viewModel.categoryName.isNotBlank()) {
+                    viewModel.insertCategory(
+                        category = Category(
+                            name = viewModel.categoryName,
+                            description = viewModel.categoryDescription
+                        )
+                    )
+                    viewModel.setCategoryDescription(categoryDescription = "")
+                }
+                viewModel.setCategoryName(categoryName = "")
+                viewModel.loadCategoriesFromUser()
             }
-        }
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(items = categories) {category ->
-                CategoryItem(
-                    name = category.name,
-                    description = category.description
-                )
+            LazyColumn {
+                items(items = categories) { category ->
+                    CategoryItem(
+                        name = category.name,
+                        description = category.description
+                    )
+                }
             }
         }
     }

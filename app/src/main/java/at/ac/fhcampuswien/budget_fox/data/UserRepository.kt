@@ -7,6 +7,8 @@ import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
@@ -84,7 +86,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(category.uuid).set(category)
     }
 
-    override fun getCategoriesFromUser(userId: String): List<Category> {
+    override fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit) {
         val categoriesFromUser = mutableListOf<Category>()
 
         database
@@ -95,8 +97,8 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 categories.forEach { category ->
                     categoriesFromUser.add(category.toObject<Category>())
                 }
+                onSuccess(categoriesFromUser)
             }
-        return categoriesFromUser
     }
 
     // TODO: Single responsibility principle!

@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.budget_fox.data
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
+import kotlinx.coroutines.flow.Flow
 
 interface UserDataAccessObject {
 
@@ -20,7 +21,7 @@ interface UserDataAccessObject {
 
     fun insertCategory(userId: String, category: Category)
 
-    fun getCategoriesFromUser(userId: String): List<Category>
+    fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit)
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
 
