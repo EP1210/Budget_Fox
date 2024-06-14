@@ -109,7 +109,7 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun loadCategoriesFromUser() {
+    fun getCategoriesFromUser() {
         if (firebaseUser != null) {
             userRepository.getCategoriesFromUser(userId = firebaseUser.uid) { categories ->
                 _categoriesFromUser.clear()

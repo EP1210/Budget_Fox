@@ -38,6 +38,7 @@ fun TransactionListItem(
     transaction: Transaction
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     Row(
         modifier = Modifier
             .fillMaxWidth()

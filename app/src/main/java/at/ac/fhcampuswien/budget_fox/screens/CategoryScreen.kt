@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,8 +26,7 @@ fun CategoryScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
-    viewModel.loadCategoriesFromUser()
-    val categories = viewModel.categoriesFromUser
+    viewModel.getCategoriesFromUser()
 
     Scaffold(
         topBar = {
@@ -74,24 +72,24 @@ fun CategoryScreen(
                         )
                     )
                     viewModel.setCategoryName(categoryName = "")
+                    viewModel.setCategoryDescription(categoryDescription = "")
                 }
-                viewModel.setCategoryDescription(categoryDescription = "")
-                viewModel.loadCategoriesFromUser()
+                viewModel.getCategoriesFromUser()
             }
 
             LazyColumn {
-                items(items = categories) { category ->
+                items(items = viewModel.categoriesFromUser) { category ->
                     CategoryItem(
                         categoryName = category.name,
-                        categoryDescription = category.description
-                    ) {
-                        SimpleEventIcon(
-                            icon = Icons.Default.Clear
-                        ) {
+                        categoryDescription = category.description,
+                        edit = {
+                            // todo
+                        },
+                        delete = {
                             viewModel.deleteCategory(categoryId = category.uuid)
-                            viewModel.loadCategoriesFromUser()
+                            viewModel.getCategoriesFromUser()
                         }
-                    }
+                    )
                 }
             }
         }

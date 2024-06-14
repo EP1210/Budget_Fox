@@ -48,6 +48,7 @@ fun HouseholdCreateScreen(
             SimpleButton(name = "Create") {
                 if (viewModel.householdName.isNotBlank()) {
                     viewModel.insertHousehold()
+                    viewModel.setHouseholdName(householdName = "")
                 }
             }
         }

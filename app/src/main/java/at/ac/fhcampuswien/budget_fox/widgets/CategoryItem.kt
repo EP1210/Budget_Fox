@@ -2,8 +2,10 @@ package at.ac.fhcampuswien.budget_fox.widgets
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,30 +18,42 @@ import androidx.compose.ui.unit.dp
 fun CategoryItem(
     categoryName: String,
     categoryDescription: String,
-    deleteIcon: @Composable () -> Unit
+    edit: () -> Unit,
+    delete: () -> Unit
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(bottom = 7.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .padding(start = 5.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(start = 5.dp)
-                    .weight(weight = 1f)
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = categoryName,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .weight(weight = 1f)
                 )
+                SimpleEventIcon(
+                    icon = Icons.Default.Edit
+                ) {
+                    edit()
+                }
+                SimpleEventIcon(
+                    icon = Icons.Default.Delete
+                ) {
+                    delete()
+                }
+            }
+            if (categoryDescription.isNotBlank()) {
                 Text(
                     text = categoryDescription
                 )
             }
-            deleteIcon()
         }
     }
 }
