@@ -94,5 +94,8 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
 
     // https://mvnrepository.com/artifact/androidx.camera/camera-lifecycle
-    runtimeOnly(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.lifecycle)
+
+    //Guava: Google Core Libraries for Java
+    implementation(libs.guava)
 }
