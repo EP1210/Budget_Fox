@@ -1,8 +1,10 @@
 [versions]
 agp = "8.4.2"
-barcodeScanning = "17.2.0"
+cameraView = "1.3.4"
+cameraViewVersion = "1.3.4"
 coilCompose = "2.6.0"
 composeQrCode = "1.0.1"
+zxingCore = "3.5.3"
 firebaseBom = "33.1.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
@@ -19,12 +21,15 @@ navigationCompose = "2.7.7"
 vico = "2.0.0-alpha.21"
 
 [libraries]
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraView" }
+androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraViewVersion" }
+androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraView" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleVersion" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 compose-qr-code = { module = "com.lightspark:compose-qr-code", version.ref = "composeQrCode" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }

@@ -84,5 +84,15 @@ dependencies {
 
     implementation(libs.compose.qr.code)
 
-    implementation(libs.barcode.scanning)
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    implementation(libs.zxing.core)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-view
+    implementation(libs.androidx.camera.view)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-camera2
+    implementation(libs.androidx.camera.camera2)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-lifecycle
+    runtimeOnly(libs.androidx.camera.lifecycle)
 }
