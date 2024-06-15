@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -44,7 +45,8 @@ fun CategoryItem(
                     edit()
                 }
                 SimpleEventIcon(
-                    icon = Icons.Default.Delete
+                    icon = Icons.Default.Delete,
+                    colour = Color.Red
                 ) {
                     delete()
                 }
