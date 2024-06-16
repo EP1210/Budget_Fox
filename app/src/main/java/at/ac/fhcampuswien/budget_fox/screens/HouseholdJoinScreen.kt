@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
 import android.content.pm.PackageManager
+import android.util.Log
 import android.util.Size
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,15 +30,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.helper.QrCodeAnalyzer
+import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
 fun HouseholdJoinScreen(
-    navigationController: NavController
+    navigationController: NavController,
 ) {
-    var code by remember {
-        mutableStateOf("")
+    var message by remember {
+        mutableStateOf("SCAN QR")
     }
+    val userUid = Firebase.auth.currentUser?.uid
+    val repository = UserRepository()
     val context = LocalContext.current
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
@@ -89,7 +96,17 @@ fun HouseholdJoinScreen(
                     imageAnalysis.setAnalyzer(
                         ContextCompat.getMainExecutor(context),
                         QrCodeAnalyzer { result ->
-                            code = result
+                            if(result != "") {
+                                Log.d("QrCodeAnalyzer", "Scanned QRCode: $result")
+                                repository.joinHouseholdIfExist(userId = userUid.toString(), householdId = result, onSuccess = {
+                                    navigationController.navigate(route = Screen.UserProfile.route) { //TODO: Weiterleitung Haushalt Übersicht
+                                        popUpTo(id = 0)
+                                    }
+                                },
+                                    notExits = {
+                                    message = "Household does not exist"
+                                })
+                            }
                         }
                     )
                     try {
@@ -107,14 +124,14 @@ fun HouseholdJoinScreen(
                 modifier = Modifier
                     .weight(1f)
             )
+            Text(
+                text = message,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(32.dp)
+            )
         }
-        Text(
-            text = code,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(32.dp)
-        )
     }
 }

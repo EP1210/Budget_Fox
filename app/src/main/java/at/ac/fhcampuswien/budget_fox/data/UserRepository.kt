@@ -166,4 +166,36 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 onSuccess(transactionList)
             }
     }
+
+    override fun joinHouseholdIfExist(
+        userId: String,
+        householdId: String,
+        onSuccess: () -> Unit,
+        notExits: () -> Unit
+    ) {
+        val householdRef = database
+            .collection(DatabaseCollection.Household.collectionName)
+            .document(householdId)
+
+        householdRef.get().addOnSuccessListener { doc ->
+            if (doc.exists()) {
+                getAllDataFromUser(userId,
+                    onSuccess = { user ->
+                        if (user != null) {
+                            user.joinHousehold(householdId)
+                            insertUser(user, userId)
+                            onSuccess()
+                        }
+                    },
+                    onFailure = {})
+            }
+            else
+            {
+                notExits()
+            }
+        }
+            .addOnFailureListener {
+                notExits()
+            }
+    }
 }
