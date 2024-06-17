@@ -86,19 +86,25 @@ fun Navigation() {
         composable(route = Screen.HouseholdWelcome.route) {
             HouseholdWelcomeScreen(
                 navigationController = navigationController,
-                route = Screen.HouseholdWelcome.route
+                route = Screen.HouseholdWelcome.route,
+                viewModel = userViewModel
             )
         }
         composable(route = Screen.HouseholdCreate.route) {
             HouseholdCreateScreen(
                 navigationController = navigationController,
-                viewModel = houseCreateViewModel)
+                viewModel = houseCreateViewModel,
+                userViewModel = userViewModel
+            )
         }
         composable(route = Screen.HouseholdJoin.route) {
             HouseholdJoinScreen(navigationController = navigationController)
         }
         composable(route = Screen.HouseholdTransaction.route) {
-            HouseholdTransactionScreen(navigationController = navigationController)
+            HouseholdTransactionScreen(
+                navigationController = navigationController,
+                route = Screen.HouseholdTransaction.route
+            )
         }
     }
 }

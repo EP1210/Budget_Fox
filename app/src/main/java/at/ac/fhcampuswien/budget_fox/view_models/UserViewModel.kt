@@ -97,4 +97,18 @@ class UserViewModel : ViewModel() {
     fun insertCategory(category: Category) {
         firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
     }
+
+    fun getHousehold() : String {
+        if(user != null && user?.householdId != "") {
+            return user!!.householdId
+        }
+        return ""
+    }
+
+    fun joinHousehold(householdId: String) {
+        //TODO: Check race conditions! - Household is inserted in other VM
+        userRepository.joinHouseholdIfExist(userId = firebaseUser!!.uid, householdId = householdId, onSuccess = {
+            user?.joinHousehold(householdId)
+        }, notExits = {})
+    }
 }

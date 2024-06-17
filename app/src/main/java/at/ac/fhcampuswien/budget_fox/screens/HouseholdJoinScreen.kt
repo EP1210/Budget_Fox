@@ -14,6 +14,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +38,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.helper.QrCodeAnalyzer
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -69,69 +75,87 @@ fun HouseholdJoinScreen(
         //TODO: Better request (https://youtu.be/asl1mFtkMkc?si=k250WM5W2ghBG0R9&t=1220)
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        if (hasCamPermission) {
-            AndroidView(
-                factory = { context ->
-                    val previewView = PreviewView(context)
-                    val preview = Preview.Builder().build()
-                    val selector = CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build()
-                    preview.setSurfaceProvider(previewView.surfaceProvider)
-                    val imageAnalysis = ImageAnalysis.Builder()
-                        .setTargetResolution(
-                            Size(
-                                previewView.width,
-                                previewView.height
-                            )
-                        )
-                        .setBackpressureStrategy(
-                            ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
-                        )
-                        .build()
-                    imageAnalysis.setAnalyzer(
-                        ContextCompat.getMainExecutor(context),
-                        QrCodeAnalyzer { result ->
-                            if(result != "") {
-                                Log.d("QrCodeAnalyzer", "Scanned QRCode: $result")
-                                repository.joinHouseholdIfExist(userId = userUid.toString(), householdId = result, onSuccess = {
-                                    navigationController.navigate(route = Screen.UserProfile.route) { //TODO: Weiterleitung Haushalt Übersicht
-                                        popUpTo(id = 0)
-                                    }
-                                },
-                                    notExits = {
-                                    message = "Household does not exist"
-                                })
-                            }
-                        }
+    Scaffold(
+        topBar = {
+            SimpleTopAppBar(
+                title = "Join a Household"
+            ) {
+                IconButton(onClick = {
+                    navigationController.popBackStack()
+                }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Go back"
                     )
-                    try {
-                        cameraProviderFuture.get().bindToLifecycle( //only use when view is used
-                            lifecycleOwner,
-                            selector,
-                            preview,
-                            imageAnalysis
+                }
+            }
+        }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            if (hasCamPermission) {
+                AndroidView(
+                    factory = { context ->
+                        val previewView = PreviewView(context)
+                        val preview = Preview.Builder().build()
+                        val selector = CameraSelector.Builder()
+                            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                            .build()
+                        preview.setSurfaceProvider(previewView.surfaceProvider)
+                        val imageAnalysis = ImageAnalysis.Builder()
+                            .setTargetResolution(
+                                Size(
+                                    previewView.width,
+                                    previewView.height
+                                )
+                            )
+                            .setBackpressureStrategy(
+                                ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
+                            )
+                            .build()
+                        imageAnalysis.setAnalyzer(
+                            ContextCompat.getMainExecutor(context),
+                            QrCodeAnalyzer { result ->
+                                if(result != "") {
+                                    Log.d("QrCodeAnalyzer", "Scanned QRCode: $result")
+                                    repository.joinHouseholdIfExist(userId = userUid.toString(), householdId = result, onSuccess = {
+                                        navigationController.navigate(route = Screen.UserProfile.route) { //TODO: Weiterleitung Haushalt Übersicht
+                                            popUpTo(id = 0)
+                                        }
+                                    },
+                                        notExits = {
+                                            message = "Household does not exist"
+                                        })
+                                }
+                            }
                         )
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    previewView
-                },
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Text(
-                text = message,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(32.dp)
-            )
+                        try {
+                            cameraProviderFuture.get().bindToLifecycle( //only use when view is used
+                                lifecycleOwner,
+                                selector,
+                                preview,
+                                imageAnalysis
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                        previewView
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                )
+                Text(
+                    text = message,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(32.dp)
+                )
+            }
         }
     }
 }

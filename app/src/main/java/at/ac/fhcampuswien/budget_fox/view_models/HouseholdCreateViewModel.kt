@@ -25,11 +25,12 @@ class HouseholdCreateViewModel : ViewModel() {
         _householdName = householdName
     }
 
-    fun createHousehold() {
+    fun createHousehold() : String {
         val household = Household(name = _householdName)
         _household.value = household
 
-        userRepository.insertHousehold(household = household)
+        userRepository.insertHousehold(household)
+        return household.uuid
     }
 
 }
