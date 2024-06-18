@@ -7,6 +7,7 @@ import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.Calendar
 
 class StatisticsViewModel : ViewModel() {
 
@@ -20,9 +21,22 @@ class StatisticsViewModel : ViewModel() {
     val expenses: StateFlow<Map<Int, Double>>
         get() = _expenses.asStateFlow()
 
+    private var _selectedYear = MutableStateFlow(Calendar.getInstance().get(Calendar.YEAR))
+    val selectedYear: StateFlow<Int>
+        get() = _selectedYear.asStateFlow()
+
+    init {
+        mapTransactionsFromUserToMonths(_selectedYear.value)
+    }
+
+    fun setSelectedYear(year: Int) {
+        _selectedYear.value = year
+        mapTransactionsFromUserToMonths(year)
+    }
+
     fun mapTransactionsFromUserToMonths(
         year: Int,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit = {}
     ) {
         val userId = Firebase.auth.currentUser?.uid ?: ""
 
