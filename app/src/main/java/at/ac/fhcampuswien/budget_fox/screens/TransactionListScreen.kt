@@ -69,7 +69,5 @@ fun TransactionListScreen(
                 Icon(Icons.Filled.Add, "Add transaction")
             }
         }
-
-
     }
 }

@@ -18,6 +18,7 @@ import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
@@ -27,6 +28,7 @@ fun Navigation() {
     val userViewModel: UserViewModel = viewModel()
     val statisticsViewModel: StatisticsViewModel = viewModel()
     val houseCreateViewModel: HouseholdCreateViewModel = viewModel()
+    val householdViewModel : HouseholdViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -103,7 +105,9 @@ fun Navigation() {
         composable(route = Screen.HouseholdTransaction.route) {
             HouseholdTransactionScreen(
                 navigationController = navigationController,
-                route = Screen.HouseholdTransaction.route
+                route = Screen.HouseholdTransaction.route,
+                userViewModel = userViewModel,
+                householdViewModel = householdViewModel
             )
         }
     }
