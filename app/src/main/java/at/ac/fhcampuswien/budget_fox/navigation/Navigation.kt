@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdJoinScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdTransactionAddScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdWelcomeScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
@@ -18,6 +19,7 @@ import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
@@ -29,6 +31,7 @@ fun Navigation() {
     val statisticsViewModel: StatisticsViewModel = viewModel()
     val houseCreateViewModel: HouseholdCreateViewModel = viewModel()
     val householdViewModel : HouseholdViewModel = viewModel()
+    val addTransactionViewModel: HouseholdTransactionAddViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -108,6 +111,13 @@ fun Navigation() {
                 route = Screen.HouseholdTransaction.route,
                 userViewModel = userViewModel,
                 householdViewModel = householdViewModel
+            )
+        }
+        composable(route = Screen.HouseholdAddTransaction.route) {backStackEntry ->
+            HouseholdTransactionAddScreen(
+                viewModel = addTransactionViewModel,
+                navigationController = navigationController,
+                householdId = backStackEntry.arguments?.getString(HOUSEHOLD_ID)
             )
         }
     }
