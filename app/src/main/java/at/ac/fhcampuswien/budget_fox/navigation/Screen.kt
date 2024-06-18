@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.navigation
 
 const val HOUSEHOLD_ID = "HOUSEHOLD"
+const val USER_ID = "USER"
 
 sealed class Screen(val route: String) {
     data object Registration : Screen(route = "registration_screen")
@@ -19,5 +20,11 @@ sealed class Screen(val route: String) {
         fun setHouseholdId(householdId: String): String {
             return this.route.replace(oldValue = "{$HOUSEHOLD_ID}", householdId)
         }
+    }
+    data object HouseholdSettings : Screen(route = "household_settings_screen/{$HOUSEHOLD_ID}/{${USER_ID}}") {
+        fun setArguments(householdId: String, userId: String): String {
+            return this.route.replace(oldValue = "{$HOUSEHOLD_ID}", householdId).replace(oldValue = "{$USER_ID}", userId)
+        }
+
     }
 }

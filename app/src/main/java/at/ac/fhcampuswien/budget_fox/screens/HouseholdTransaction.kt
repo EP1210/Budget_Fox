@@ -58,7 +58,7 @@ fun HouseholdTransactionScreen(
                 .fillMaxSize()
         ) {
             items(items = householdViewModel.getTransactions()) { item: Transaction ->
-                TransactionListItem(navigationController = navigationController, transaction = item)
+                TransactionListItem(transaction = item)
             }
         }
 
@@ -82,7 +82,7 @@ fun HouseholdTransactionScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.HouseholdAddTransaction.setHouseholdId(householdId = userViewModel.getHousehold())
+                    val route = Screen.HouseholdSettings.setArguments(householdId = userViewModel.getHousehold(), userId = userViewModel.getUserId())
                     navigationController.navigate(route)
                 },
                 shape = CircleShape,

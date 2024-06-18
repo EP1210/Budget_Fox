@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdJoinScreen
+import at.ac.fhcampuswien.budget_fox.screens.HouseholdSettingsScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdTransactionAddScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdWelcomeScreen
@@ -118,6 +119,14 @@ fun Navigation() {
                 viewModel = addTransactionViewModel,
                 navigationController = navigationController,
                 householdId = backStackEntry.arguments?.getString(HOUSEHOLD_ID)
+            )
+        }
+        composable(route = Screen.HouseholdSettings.route) {backStackEntry ->
+            HouseholdSettingsScreen(
+                householdId = backStackEntry.arguments?.getString(HOUSEHOLD_ID),
+                userId = backStackEntry.arguments?.getString(USER_ID),
+                navigationController = navigationController,
+                viewModel = userViewModel
             )
         }
     }

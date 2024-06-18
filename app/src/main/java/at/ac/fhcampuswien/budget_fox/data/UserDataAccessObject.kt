@@ -23,5 +23,4 @@ interface UserDataAccessObject {
     fun getCategoriesFromUser(userId: String): List<Category>
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
-
 }

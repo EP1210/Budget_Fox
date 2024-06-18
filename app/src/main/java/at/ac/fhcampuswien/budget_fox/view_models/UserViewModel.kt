@@ -65,6 +65,10 @@ class UserViewModel : ViewModel() {
         _transactionDescription = description
     }
 
+    fun getUserId():String {
+        return firebaseUser?.uid ?: ""
+    }
+
     fun insertTransaction() {
         val format = SimpleDateFormat("yyyy-MM-dd")
         val date: Date? = format.parse(transactionDate)
@@ -110,5 +114,17 @@ class UserViewModel : ViewModel() {
         userRepository.joinHouseholdIfExist(userId = firebaseUser!!.uid, householdId = householdId, onSuccess = {
             user?.joinHousehold(householdId)
         }, notExits = {})
+    }
+
+    fun leaveHousehold(userId: String): Boolean {
+        if(userId == getUserId()) {
+            _user?.householdId = ""
+            _user?.let {
+                userRepository.insertUser(it, userId)
+                return true
+            }
+        }
+
+        return false
     }
 }
