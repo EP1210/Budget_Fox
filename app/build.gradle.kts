@@ -82,4 +82,5 @@ dependencies {
     implementation(libs.vico.core)
     implementation(libs.vico.views)
     implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics.ktx)
 }

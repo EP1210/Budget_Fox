@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,14 +19,30 @@ import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.messaging.FirebaseMessaging
 
 @Composable
 fun WelcomeScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
+    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+        if (!task.isSuccessful) {
+            Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+            return@OnCompleteListener
+        }
+
+        // Get new FCM registration token
+        val token = task.result
+
+        // Log and toast
+        //val msg = getString(R.string.msg_token_fmt, token)
+        Log.d(TAG, token)
+        //Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+    })
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
