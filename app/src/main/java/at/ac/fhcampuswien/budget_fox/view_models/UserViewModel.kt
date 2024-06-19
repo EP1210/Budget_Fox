@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
+import android.util.Log
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +60,33 @@ class UserViewModel : ViewModel() {
     val nextDueDate: Date
         get() = _nextDueDate
 
+    private val _transactions = mutableStateListOf<Transaction>()
+    val transactions: List<Transaction>
+        get() = _transactions
+
+    init {
+        loadTransactions()
+    }
+
+    private fun loadTransactions() {
+        firebaseUser?.uid?.let { userId ->
+            userRepository.getTransactionsFromUser(userId, { fetchedTransactions ->
+                _transactions.clear()
+                _transactions.addAll(fetchedTransactions)
+            }, { exception ->
+                Log.w("UserViewModel", "Error loading transactions: ", exception)
+            })
+        }
+    }
+
+    fun deleteTransaction(transaction: Transaction) {
+        firebaseUser?.uid?.let { userId ->
+            userRepository.deleteTransaction(userId, transaction.uuid) {
+                _transactions.remove(transaction)
+            }
+        }
+    }
+
     fun setUser(user: User) {
         _user = user
     }
@@ -95,6 +123,7 @@ class UserViewModel : ViewModel() {
                 userId = firebaseUser.uid,
                 onSuccess = {
                     user?.addTransaction(transaction)
+                    loadTransactions()
                 })
             //TODO: Display error message
         }
@@ -168,6 +197,7 @@ class UserViewModel : ViewModel() {
                 userId = firebaseUser.uid,
                 onSuccess = {
                     user?.addTransaction(transaction)
+                    loadTransactions()
                 })
         }
     }

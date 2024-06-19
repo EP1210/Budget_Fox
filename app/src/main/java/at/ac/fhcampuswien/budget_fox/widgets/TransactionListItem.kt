@@ -2,7 +2,8 @@ package at.ac.fhcampuswien.budget_fox.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,16 +13,23 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,52 +43,80 @@ import java.util.Locale
 @Composable
 fun TransactionListItem(
     navigationController: NavController,
-    transaction: Transaction
+    transaction: Transaction,
+    onDelete: (Transaction) -> Unit
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    var showDeleteButton by remember { mutableStateOf(false) }
 
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp) //"Margin" https://stackoverflow.com/a/65582416
+            .padding(5.dp)
             .border(0.dp, Color.Transparent)
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
-            .clickable {
-                navigationController.navigate(route = Screen.Category.route)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        showDeleteButton = true
+                    },
+                    onTap = {
+                        navigationController.navigate(route = Screen.Category.route)
+                    }
+                )
             }
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
     ) {
-        Icon(
-            imageVector = if (transaction.amount >= 0) {
-                Icons.Outlined.AddCircle
-            } else {
-                Icons.Outlined.ShoppingCart
-            },
-            contentDescription = transaction.description,
-            modifier = Modifier.size(40.dp),
-            tint = MaterialTheme.colorScheme.inverseOnSurface
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = transaction.description,
-            color = MaterialTheme.colorScheme.inverseOnSurface,
-            fontSize = 16.sp
-        )
-        Column(
-            horizontalAlignment = Alignment.End,
-            modifier = Modifier.weight(weight = 4f)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "${transaction.amount}€",
-                color = MaterialTheme.colorScheme.inverseOnSurface,
-                fontSize = 16.sp,
+            Icon(
+                imageVector = if (transaction.amount >= 0) {
+                    Icons.Outlined.AddCircle
+                } else {
+                    Icons.Outlined.ShoppingCart
+                },
+                contentDescription = transaction.description,
+                modifier = Modifier.size(40.dp),
+                tint = MaterialTheme.colorScheme.inverseOnSurface
             )
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = format.format(transaction.date),
+                text = transaction.description,
                 color = MaterialTheme.colorScheme.inverseOnSurface,
+                fontSize = 16.sp
             )
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier.weight(4f)
+            ) {
+                Text(
+                    text = "${transaction.amount}€",
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                    fontSize = 16.sp,
+                )
+                Text(
+                    text = format.format(transaction.date),
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                )
+            }
+        }
+        if (showDeleteButton) {
+            IconButton(
+                onClick = {
+                    onDelete(transaction)
+                    showDeleteButton = false
+                },
+                modifier = Modifier.align(Alignment.Center)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Transaction",
+                    tint = Color.Red
+                )
+            }
         }
     }
 }

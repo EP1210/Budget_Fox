@@ -60,7 +60,7 @@ fun RegularTransactionScreen(
                 viewModel.setTransactionDate(date)
             }
             SimpleDropdownField(
-                title = "Frequency",
+                title = "",
                 items = listOf("Daily", "Weekly", "Monthly", "Yearly")
             ) { frequency ->
                 viewModel.setTransactionFrequency(frequency)

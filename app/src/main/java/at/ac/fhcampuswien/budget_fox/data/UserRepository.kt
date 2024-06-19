@@ -73,11 +73,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .addOnFailureListener(onFailure)
     }
 
-    override fun deleteTransaction(userId: String, transactionId: String) {
+    override fun deleteTransaction(userId: String, transactionId: String, onComplete: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId).collection(DatabaseCollection.Transactions.collectionName)
             .document(transactionId).delete()
+            .addOnSuccessListener {
+                onComplete()
+            }
     }
 
     override fun insertCategory(userId: String, category: Category) {
