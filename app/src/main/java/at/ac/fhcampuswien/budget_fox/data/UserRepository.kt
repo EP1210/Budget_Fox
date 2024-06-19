@@ -64,7 +64,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .collection(DatabaseCollection.Transactions.collectionName).get()
             .addOnSuccessListener { transactions ->
                 for (transaction in transactions) {
-                    transactionList.add(transaction.toObject<Transaction>())
+                    val data = transaction.data
+                    val parsedTransaction = Transaction.fromDatabase(data)
+                    transactionList.add(parsedTransaction)
                 }
                 onSuccess(transactionList)
             }
@@ -126,7 +128,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                     .collection(DatabaseCollection.Transactions.collectionName).get()
                     .addOnSuccessListener { transactions ->
                         for (transaction in transactions) {
-                            user?.addTransaction(transaction.toObject<Transaction>())
+                            val data = transaction.data
+                            val parsedTransaction = Transaction.fromDatabase(data)
+                            user?.addTransaction(parsedTransaction)
                         }
                         onSuccess(user)
                     }
@@ -183,7 +187,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 val transactionList = mutableListOf<Transaction>()
 
                 transactions.forEach { transaction ->
-                    transactionList.add(transaction.toObject<Transaction>())
+                    val data = transaction.data
+                    val parsedTransaction = Transaction.fromDatabase(data)
+                    transactionList.add(parsedTransaction)
                 }
                 onSuccess(transactionList)
             }

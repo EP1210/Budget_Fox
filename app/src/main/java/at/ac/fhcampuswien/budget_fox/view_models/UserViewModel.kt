@@ -11,6 +11,7 @@ import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 
 class UserViewModel : ViewModel() {
@@ -49,6 +50,14 @@ class UserViewModel : ViewModel() {
     private var _categoriesFromUser = mutableStateListOf<Category>()
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
+
+    private var _transactionFrequency = mutableStateOf(value = "Monthly").value
+    val transactionFrequency: String
+        get() = _transactionFrequency
+
+    private var _nextDueDate = mutableStateOf(value = Date()).value
+    val nextDueDate: Date
+        get() = _nextDueDate
 
     fun setUser(user: User) {
         _user = user
@@ -115,6 +124,51 @@ class UserViewModel : ViewModel() {
                 _categoriesFromUser.clear()
                 _categoriesFromUser.addAll(categories)
             }
+        }
+    }
+
+    fun setTransactionFrequency(frequency: String) {
+        _transactionFrequency = frequency
+        calculateNextDueDate()
+    }
+
+    private fun calculateNextDueDate() {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = format.parse(_transactionDate)
+
+        date?.let {
+            val calendar = Calendar.getInstance()
+            calendar.time = it
+            when (_transactionFrequency) {
+                "Daily" -> calendar.add(Calendar.DAY_OF_YEAR, 1)
+                "Weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                "Monthly" -> calendar.add(Calendar.MONTH, 1)
+                "Yearly" -> calendar.add(Calendar.YEAR, 1)
+            }
+            _nextDueDate = calendar.time
+        }
+    }
+
+    fun insertRegularTransaction() {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = format.parse(transactionDate)
+
+        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && date != null && firebaseUser != null) {
+            val transaction = Transaction(
+                amount = transactionAmount,
+                description = transactionDescription,
+                date = date,
+                isRegular = true,
+                frequency = transactionFrequency,
+                nextDueDate = nextDueDate
+            )
+
+            userRepository.insertTransaction(
+                transaction = transaction,
+                userId = firebaseUser.uid,
+                onSuccess = {
+                    user?.addTransaction(transaction)
+                })
         }
     }
 }
