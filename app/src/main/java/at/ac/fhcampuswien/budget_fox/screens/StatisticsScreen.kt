@@ -1,14 +1,22 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
 import android.graphics.Typeface
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -58,25 +66,29 @@ fun StatisticsScreen(
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val incomes by viewModel.incomes.collectAsState()
     val expenses by viewModel.expenses.collectAsState()
-    viewModel.mapTransactionsFromUserToMonths(Calendar.getInstance().get(Calendar.YEAR), onSuccess = {
-        modelProducer.tryRunTransaction {
-            columnSeries {
-                series(
-                    y = incomes.values,
-                    x = incomes.keys
-                )
-                series(
-                    y = expenses.values,
-                    x = expenses.keys
-                )
+    val selectedYear by viewModel.selectedYear.collectAsState()
+
+    LaunchedEffect(selectedYear) { // coroutine function, when year changes then reload
+        viewModel.mapTransactionsFromUserToMonths(selectedYear) {
+            modelProducer.tryRunTransaction {
+                columnSeries {
+                    series(
+                        y = incomes.values,
+                        x = incomes.keys
+                    )
+                    series(
+                        y = expenses.values,
+                        x = expenses.keys
+                    )
+                }
             }
         }
-    })
+    }
 
     Scaffold(
         topBar = {
             SimpleTopAppBar(
-                title = "Statistics of the current year"
+                title = "Statistics of the year $selectedYear"
             )
         },
         bottomBar = {
@@ -91,10 +103,44 @@ fun StatisticsScreen(
                 .padding(paddingValues = it)
                 .fillMaxSize()
         ) {
+            YearDropdownMenu(
+                selectedYear = selectedYear,
+                onYearSelected = { year -> viewModel.setSelectedYear(year) }
+            )
+
             IncomeExpensesChart(
                 modelProducer = modelProducer,
                 modifier = Modifier.fillMaxSize()
             )
+        }
+    }
+}
+
+@Composable
+fun YearDropdownMenu(
+    selectedYear: Int,
+    onYearSelected: (Int) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val years = (2000..Calendar.getInstance().get(Calendar.YEAR)).toList().reversed()
+
+    Box() {
+        TextButton(onClick = { expanded = true }) {
+            Text("Year: $selectedYear ▼")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            years.forEach { year ->
+                DropdownMenuItem(
+                    text = { Text(year.toString()) },
+                    onClick = {
+                        onYearSelected(year)
+                        expanded = false
+                    }
+                )
+            }
         }
     }
 }

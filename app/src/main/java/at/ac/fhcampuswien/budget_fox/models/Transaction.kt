@@ -16,7 +16,7 @@ class Transaction(
         this.date = date
     }
 
-    fun transactionToDatabase() : Map<String, Any> {
+    fun transactionToDatabase(): Map<String, Any> {
         return mapOf (
             "uuid" to this.uuid,
             "amount" to this.amount,

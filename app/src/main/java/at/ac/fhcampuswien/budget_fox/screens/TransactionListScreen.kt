@@ -46,7 +46,10 @@ fun TransactionListScreen(
         ) {
             viewModel.user?.let { it1 ->
                 items(it1.getTransactions()) { transaction ->
-                    TransactionListItem(transaction = transaction, navigationController = navigationController)
+                    TransactionListItem(
+                        transaction = transaction,
+                        navigationController = navigationController
+                    )
                 }
             }
         }
@@ -55,8 +58,7 @@ fun TransactionListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = it)
-        )
-        {
+        ) {
             FloatingActionButton(
                 onClick = {
                     navigationController.navigate(route = Screen.Transaction.route)
@@ -66,10 +68,11 @@ fun TransactionListScreen(
                     .padding(20.dp)
                     .align(alignment = Alignment.BottomEnd)
             ) {
-                Icon(Icons.Filled.Add, "Add transaction")
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add transaction"
+                )
             }
         }
-
-
     }
 }
