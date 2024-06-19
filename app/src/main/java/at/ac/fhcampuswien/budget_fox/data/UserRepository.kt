@@ -46,14 +46,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(userId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .document(transaction.uuid).set(transaction.transactionToDatabase())
-            .addOnSuccessListener { onSuccess() }
-    }
-
-    override fun deleteTransaction(userId: String, transactionId: String) {
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId).collection(DatabaseCollection.Transactions.collectionName)
-            .document(transactionId).delete()
+            .addOnSuccessListener {
+                onSuccess()
+            }
     }
 
     override fun getTransactionsFromUser(
@@ -62,6 +57,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
         onFailure: (Exception) -> Unit
     ) {
         val transactionList = mutableListOf<Transaction>()
+
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -75,6 +71,13 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .addOnFailureListener(onFailure)
     }
 
+    override fun deleteTransaction(userId: String, transactionId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId).collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId).delete()
+    }
+
     override fun insertCategory(userId: String, category: Category) {
         database
             .collection(DatabaseCollection.Users.collectionName)
@@ -83,8 +86,27 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(category.uuid).set(category)
     }
 
-    override fun getCategoriesFromUser(userId: String): List<Category> {
-        TODO("Not yet implemented")
+    override fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit) {
+        val categoriesFromUser = mutableListOf<Category>()
+
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName).get()
+            .addOnSuccessListener { categories ->
+                categories.forEach { category ->
+                    categoriesFromUser.add(category.toObject<Category>())
+                }
+                onSuccess(categoriesFromUser)
+            }
+    }
+
+    override fun deleteCategory(userId: String, categoryId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).delete()
     }
 
     // TODO: Single responsibility principle!
@@ -117,14 +139,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     override fun insertHousehold(household: Household) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(household.uuid)
             .set(household.householdToDatabase())
     }
 
     override fun getHousehold(householdId: String, onSuccess: (Household?) -> Unit) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .get()
             .addOnSuccessListener { household ->
@@ -134,14 +156,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     override fun deleteHousehold(householdId: String) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .delete()
     }
 
     override fun insertHouseholdTransaction(transaction: Transaction, householdId: String) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .document(transaction.uuid)
@@ -153,7 +175,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
         onSuccess: (List<Transaction>) -> Unit
     ) {
         database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
             .collection(DatabaseCollection.Transactions.collectionName)
             .get()
@@ -174,7 +196,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
         notExits: () -> Unit
     ) {
         val householdRef = database
-            .collection(DatabaseCollection.Household.collectionName)
+            .collection(DatabaseCollection.Households.collectionName)
             .document(householdId)
 
         householdRef.get().addOnSuccessListener { doc ->
