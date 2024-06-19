@@ -17,7 +17,7 @@ class HouseholdCreateViewModel : ViewModel() {
         _householdName = householdName
     }
 
-    fun createHousehold() {
+    fun insertHousehold() {
         val household = Household(name = _householdName)
 
         userRepository.insertHousehold(household = household)

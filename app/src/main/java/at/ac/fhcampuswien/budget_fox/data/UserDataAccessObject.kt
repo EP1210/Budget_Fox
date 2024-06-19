@@ -14,14 +14,15 @@ interface UserDataAccessObject {
 
     fun insertTransaction(userId: String, transaction: Transaction, onSuccess: () -> Unit)
 
-    fun deleteTransaction(userId: String, transactionId: String)
-
     fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit)
+
+    fun deleteTransaction(userId: String, transactionId: String)
 
     fun insertCategory(userId: String, category: Category)
 
-    fun getCategoriesFromUser(userId: String): List<Category>
+    fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit)
+
+    fun deleteCategory(userId: String, categoryId: String)
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
-
 }

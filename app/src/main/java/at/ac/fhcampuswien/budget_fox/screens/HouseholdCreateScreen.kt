@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
@@ -27,13 +26,10 @@ fun HouseholdCreateScreen(
             SimpleTopAppBar(
                 title = "Create a Household"
             ) {
-                IconButton(onClick = {
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack
+                ) {
                     navigationController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
-                    )
                 }
             }
         }
@@ -41,8 +37,8 @@ fun HouseholdCreateScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(paddingValues = it)
                 .fillMaxSize()
+                .padding(paddingValues = it)
         ) {
             SimpleField(
                 title = "Household name"
@@ -50,7 +46,10 @@ fun HouseholdCreateScreen(
                 viewModel.setHouseholdName(householdName = name)
             }
             SimpleButton(name = "Create") {
-                viewModel.createHousehold()
+                if (viewModel.householdName.isNotBlank()) {
+                    viewModel.insertHousehold()
+                    viewModel.setHouseholdName(householdName = "")
+                }
             }
         }
     }

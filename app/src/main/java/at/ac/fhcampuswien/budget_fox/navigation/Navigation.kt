@@ -26,7 +26,7 @@ fun Navigation() {
     val navigationController = rememberNavController()
     val userViewModel: UserViewModel = viewModel()
     val statisticsViewModel: StatisticsViewModel = viewModel()
-    val houseCreateViewModel: HouseholdCreateViewModel = viewModel()
+    val householdCreateViewModel: HouseholdCreateViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -92,7 +92,7 @@ fun Navigation() {
         composable(route = Screen.HouseholdCreate.route) {
             HouseholdCreateScreen(
                 navigationController = navigationController,
-                viewModel = houseCreateViewModel)
+                viewModel = householdCreateViewModel)
         }
         composable(route = Screen.HouseholdJoin.route) {
             HouseholdJoinScreen(navigationController = navigationController)

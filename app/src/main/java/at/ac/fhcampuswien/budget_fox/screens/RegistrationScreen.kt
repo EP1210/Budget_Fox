@@ -28,7 +28,6 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import java.time.LocalDateTime
@@ -59,7 +58,7 @@ fun RegistrationScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 40.dp)
+            .padding(horizontal = 70.dp)
             .imePadding()
     ) {
         SimpleTitle(title = "User registration")
@@ -84,9 +83,9 @@ fun RegistrationScreen(
             if (email.isNotBlank() && password.isNotBlank())
                 registerUser(
                     user = User(firstName, lastName, dateOfBirth, LocalDateTime.now()),
-                    email,
-                    password,
-                    navigationController,
+                    email = email,
+                    password = password,
+                    navigationController = navigationController,
                     viewModel = viewModel
                 )
             else
@@ -108,7 +107,6 @@ fun registerUser(
 ) {
     val auth = Firebase.auth
     val database = Firebase.firestore
-
 
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->

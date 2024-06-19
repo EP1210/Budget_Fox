@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 class UserViewModel : ViewModel() {
+
     private val userRepository = UserRepository()
     private val firebaseUser = Firebase.auth.currentUser
 
@@ -44,6 +46,9 @@ class UserViewModel : ViewModel() {
     val categoryDescription: String
         get() = _categoryDescription
 
+    private var _categoriesFromUser = mutableStateListOf<Category>()
+    val categoriesFromUser: List<Category>
+        get() = _categoriesFromUser
 
     fun setUser(user: User) {
         _user = user
@@ -96,5 +101,20 @@ class UserViewModel : ViewModel() {
 
     fun insertCategory(category: Category) {
         firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
+    }
+
+    fun deleteCategory(categoryId: String) {
+        if (firebaseUser != null) {
+            userRepository.deleteCategory(userId = firebaseUser.uid, categoryId = categoryId)
+        }
+    }
+
+    fun getCategoriesFromUser() {
+        if (firebaseUser != null) {
+            userRepository.getCategoriesFromUser(userId = firebaseUser.uid) { categories ->
+                _categoriesFromUser.clear()
+                _categoriesFromUser.addAll(categories)
+            }
+        }
     }
 }
