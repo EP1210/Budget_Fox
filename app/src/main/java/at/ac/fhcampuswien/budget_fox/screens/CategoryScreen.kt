@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,7 +19,6 @@ import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
@@ -33,10 +34,13 @@ fun CategoryScreen(
             SimpleTopAppBar(
                 title = "Manage your categories"
             ) {
-                SimpleEventIcon(
-                    icon = Icons.AutoMirrored.Filled.ArrowBack
-                ) {
+                IconButton(onClick = {
                     navigationController.popBackStack()
+                }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Localized description"
+                    )
                 }
             }
         }

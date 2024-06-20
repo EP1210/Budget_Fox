@@ -1,9 +1,12 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ButtonColors
@@ -14,8 +17,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
@@ -29,6 +39,9 @@ fun HouseholdSettingsScreen(
     userId: String?,
     navigationController : NavController,
     viewModel: UserViewModel) {
+
+    var size by remember { mutableStateOf(IntSize.Zero) }
+
     if(householdId == null)
     {
         Text("Household not found!")
@@ -47,10 +60,14 @@ fun HouseholdSettingsScreen(
                     )
                 }
             }
+        },
+        modifier = Modifier.onSizeChanged {
+            size = it
         }
     ) {
         Column (
-            modifier = Modifier.padding(it)
+            modifier = Modifier
+                .padding(it)
         ){
             FilledTonalButton(
                 onClick = {
@@ -78,13 +95,24 @@ fun HouseholdSettingsScreen(
             )
             Text (text = "Join code for household:",
                 modifier = Modifier.padding(horizontal = 16.dp))
-            QrCodeView(
-                data = householdId,
-                modifier = Modifier
-                    .padding(all = 16.dp)
-                    .fillMaxWidth()
-                    .fillMaxSize()
-            )
+            Box(modifier = Modifier
+                .then(
+                    with(LocalDensity.current) {
+                        Modifier.size(
+                            width = size.width.toDp(),
+                            height = size.width.toDp(),
+                            )
+                    }
+                )
+                .background(color = Color.White),
+            ) {
+                QrCodeView(
+                    data = householdId,
+                    modifier = Modifier
+                        .padding(all = 16.dp)
+                        .fillMaxSize()
+                )
+            }
         }
     }
 }
