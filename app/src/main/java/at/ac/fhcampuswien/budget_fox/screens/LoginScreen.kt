@@ -42,7 +42,6 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 70.dp)
     ) {
         SimpleTitle(title = "Login")
 

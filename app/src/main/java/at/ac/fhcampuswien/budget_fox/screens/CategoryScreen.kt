@@ -1,12 +1,15 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +40,7 @@ fun CategoryScreen(
         Scaffold(
             topBar = {
                 SimpleTopAppBar(
-                    title = "Manage transaction \"${transaction?.description}\""
+                    title = "Manage \"${transaction?.description}\""
                 ) {
                     SimpleEventIcon(
                         icon = Icons.AutoMirrored.Filled.ArrowBack,
@@ -53,7 +56,6 @@ fun CategoryScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues = it)
-                    .padding(horizontal = 70.dp)
             ) {
                 SimpleField(
                     title = "Category name"
@@ -67,7 +69,7 @@ fun CategoryScreen(
                 }
 
                 SimpleButton(
-                    name = "Add category",
+                    name = "Create category",
                     modifier = Modifier
                         .padding(bottom = 10.dp)
                 ) {
@@ -86,20 +88,36 @@ fun CategoryScreen(
 
                 LazyColumn {
                     items(items = viewModel.categoriesFromUser) { category ->
-                        CategoryItem(
-                            categoryName = category.name,
-                            categoryDescription = category.description,
-                            edit = { // todo: use checkbox to add or remove category from transaction
-                                viewModel.insertCategoryAtTransaction(
-                                    categoryId = category.uuid,
-                                    transactionId = transactionId
-                                )
-                            },
-                            delete = {
-                                viewModel.deleteCategory(categoryId = category.uuid)
-                                viewModel.getCategoriesFromUser()
-                            }
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            CategoryItem(
+                                categoryName = category.name,
+                                categoryDescription = category.description,
+                                edit = {
+                                    // todo: logic to edit the category item
+                                },
+                                delete = {
+                                    viewModel.deleteCategory(categoryId = category.uuid)
+                                    viewModel.getCategoriesFromUser()
+                                }
+                            )
+                            Checkbox(
+                                checked = false,
+                                onCheckedChange = {
+                                    viewModel.insertCategoryAtTransaction(
+                                        categoryId = category.uuid,
+                                        transactionId = transactionId
+                                    )
+                                    viewModel.deleteCategoryAtTransaction(
+                                        transactionId = transactionId,
+                                        categoryId = category.uuid
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }

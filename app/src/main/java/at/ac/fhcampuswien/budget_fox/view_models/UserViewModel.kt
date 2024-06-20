@@ -128,4 +128,14 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    fun deleteCategoryAtTransaction(transactionId: String, categoryId: String) {
+        if (firebaseUser != null) {
+            userRepository.deleteCategoryAtTransaction(
+                userId = firebaseUser.uid,
+                transactionId = transactionId,
+                categoryId = categoryId
+            )
+        }
+    }
+
 }

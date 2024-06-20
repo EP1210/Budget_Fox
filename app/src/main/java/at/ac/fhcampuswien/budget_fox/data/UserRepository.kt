@@ -109,7 +109,11 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(categoryId).delete()
     }
 
-    override fun insertCategoryAtTransaction(userId: String, categoryId: String, transactionId: String) {
+    override fun insertCategoryAtTransaction(
+        userId: String,
+        categoryId: String,
+        transactionId: String
+    ) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -128,6 +132,42 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                         .document(categoryId).set(category)
                 }
             }
+    }
+
+    override fun deleteCategoryAtTransaction(
+        userId: String,
+        transactionId: String,
+        categoryId: String
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).delete()
+    }
+
+    override fun getCategoryAtTransactionCondition(userId: String, transactionId: String, categoryId: String): Boolean {
+        var condition = false
+
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).get()
+            .addOnSuccessListener { categoryDocument ->
+                database
+                    .collection(DatabaseCollection.Users.collectionName)
+                    .document(userId)
+                    .collection(DatabaseCollection.Transactions.collectionName)
+                    .document(transactionId)
+                    .collection(DatabaseCollection.Categories.collectionName).get()
+                    .addOnSuccessListener { categoryDocuments ->
+                        condition = categoryDocuments.contains(categoryDocument)
+                    }
+            }
+        return condition
     }
 
     // TODO: Single responsibility principle!
