@@ -40,13 +40,15 @@ fun CategoryItem(
                         .weight(weight = 1f)
                 )
                 SimpleEventIcon(
-                    icon = Icons.Default.Edit
+                    icon = Icons.Default.Edit,
+                    contentDescription = "An icon to edit the category"
                 ) {
                     edit()
                 }
                 SimpleEventIcon(
                     icon = Icons.Default.Delete,
-                    colour = Color.Red
+                    colour = Color.Red,
+                    contentDescription = "An icon to delete the category"
                 ) {
                     delete()
                 }

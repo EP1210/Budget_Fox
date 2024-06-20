@@ -12,6 +12,7 @@ fun SimpleEventIcon(
     icon: ImageVector,
     modifier: Modifier = Modifier,
     colour: Color = Color.Unspecified,
+    contentDescription: String? = null,
     event: () -> Unit
 ) {
     IconButton(
@@ -20,7 +21,7 @@ fun SimpleEventIcon(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = "Localized description",
+            contentDescription = contentDescription,
             tint = colour
         )
     }
