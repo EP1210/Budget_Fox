@@ -70,10 +70,11 @@ fun Navigation() {
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.Category.route) {
+        composable(route = Screen.Category.route) { backStackEntry ->
             CategoryScreen(
                 navigationController = navigationController,
-                viewModel = userViewModel
+                viewModel = userViewModel,
+                transactionId = backStackEntry.arguments?.getString(TRANSACTION_ID)
             )
         }
         composable(route = Screen.Statistics.route) {

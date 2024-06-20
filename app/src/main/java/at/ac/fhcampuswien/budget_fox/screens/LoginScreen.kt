@@ -88,7 +88,7 @@ fun userLogin(
                     repository.getAllDataFromUser(uid, //TODO: Leon Fragen
                         onSuccess = { user ->
                             if (user != null) {
-                                viewModel.setUser(user)
+                                viewModel.setUser(user = user)
                                 navController.navigate(route = Screen.UserProfile.route) {
                                     popUpTo(id = 0)
                                 }

@@ -117,4 +117,15 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
+    fun insertCategoryAtTransaction(categoryId: String, transactionId: String) {
+        if (firebaseUser != null) {
+            userRepository.insertCategoryAtTransaction(
+                userId = firebaseUser.uid,
+                categoryId = categoryId,
+                transactionId = transactionId
+            )
+        }
+    }
+
 }

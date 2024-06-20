@@ -109,6 +109,25 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(categoryId).delete()
     }
 
+    override fun insertCategoryAtTransaction(userId: String, categoryId: String, transactionId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).get()
+            .addOnSuccessListener { categoryDocument ->
+                val category = categoryDocument.toObject<Category>()
+
+                if (category != null) {
+                    database
+                        .collection(DatabaseCollection.Users.collectionName)
+                        .document(userId)
+                        .collection(DatabaseCollection.Transactions.collectionName)
+                        .document(transactionId).set(category)
+                }
+            }
+    }
+
     // TODO: Single responsibility principle!
     override fun getAllDataFromUser(
         userId: String,

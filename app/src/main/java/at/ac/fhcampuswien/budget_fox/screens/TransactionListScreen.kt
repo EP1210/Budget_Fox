@@ -47,9 +47,10 @@ fun TransactionListScreen(
             viewModel.user?.let { it1 ->
                 items(it1.getTransactions()) { transaction ->
                     TransactionListItem(
-                        transaction = transaction,
-                        navigationController = navigationController
-                    )
+                        transaction = transaction
+                    ) { transactionId ->
+                        navigationController.navigate(route = Screen.Category.passTransactionId(transactionId = transactionId))
+                    }
                 }
             }
         }

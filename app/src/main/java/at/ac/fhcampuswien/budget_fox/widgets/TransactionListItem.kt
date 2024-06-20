@@ -25,17 +25,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Transaction
-import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
 fun TransactionListItem(
-    navigationController: NavController,
-    transaction: Transaction
+    transaction: Transaction,
+    onItemClick: (String) -> Unit
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -47,7 +45,7 @@ fun TransactionListItem(
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
             .clickable {
-                navigationController.navigate(route = Screen.Category.route)
+                onItemClick(transaction.uuid)
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -59,10 +57,14 @@ fun TransactionListItem(
                 Icons.Outlined.ShoppingCart
             },
             contentDescription = transaction.description,
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier
+                .size(40.dp),
             tint = MaterialTheme.colorScheme.inverseOnSurface
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(
+            modifier = Modifier
+                .width(8.dp)
+        )
         Text(
             text = transaction.description,
             color = MaterialTheme.colorScheme.inverseOnSurface,

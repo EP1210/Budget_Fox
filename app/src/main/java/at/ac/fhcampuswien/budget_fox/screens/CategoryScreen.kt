@@ -24,72 +24,83 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 @Composable
 fun CategoryScreen(
     navigationController: NavController,
-    viewModel: UserViewModel
+    viewModel: UserViewModel,
+    transactionId: String?
 ) {
-    viewModel.getCategoriesFromUser()
-
-    Scaffold(
-        topBar = {
-            SimpleTopAppBar(
-                title = "Manage your categories"
-            ) {
-                SimpleEventIcon(
-                    icon = Icons.AutoMirrored.Filled.ArrowBack
-                ) {
-                    navigationController.popBackStack()
-                }
-            }
+    if (transactionId != null) {
+        val transaction = viewModel.user?.getTransactions()?.find { transaction ->
+            transaction.uuid == transactionId
         }
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues = it)
-                .padding(horizontal = 70.dp)
-        ) {
-            SimpleField(
-                title = "Category name"
-            ) { name ->
-                viewModel.setCategoryName(categoryName = name)
-            }
-            SimpleField(
-                title = "Description"
-            ) { description ->
-                viewModel.setCategoryDescription(categoryDescription = description)
-            }
 
-            SimpleButton(
-                name = "Add category",
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-            ) {
-                if (viewModel.categoryName.isNotBlank()) {
-                    viewModel.insertCategory(
-                        category = Category(
-                            name = viewModel.categoryName,
-                            description = viewModel.categoryDescription
-                        )
-                    )
-                    viewModel.setCategoryName(categoryName = "")
-                    viewModel.setCategoryDescription(categoryDescription = "")
+        viewModel.getCategoriesFromUser()
+
+        Scaffold(
+            topBar = {
+                SimpleTopAppBar(
+                    title = "Manage transaction \"${transaction?.description}\""
+                ) {
+                    SimpleEventIcon(
+                        icon = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "An icon to navigate back to the previous screen"
+                    ) {
+                        navigationController.popBackStack()
+                    }
                 }
-                viewModel.getCategoriesFromUser()
             }
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues = it)
+                    .padding(horizontal = 70.dp)
+            ) {
+                SimpleField(
+                    title = "Category name"
+                ) { name ->
+                    viewModel.setCategoryName(categoryName = name)
+                }
+                SimpleField(
+                    title = "Description"
+                ) { description ->
+                    viewModel.setCategoryDescription(categoryDescription = description)
+                }
 
-            LazyColumn {
-                items(items = viewModel.categoriesFromUser) { category ->
-                    CategoryItem(
-                        categoryName = category.name,
-                        categoryDescription = category.description,
-                        edit = {
-                            // todo
-                        },
-                        delete = {
-                            viewModel.deleteCategory(categoryId = category.uuid)
-                            viewModel.getCategoriesFromUser()
-                        }
-                    )
+                SimpleButton(
+                    name = "Add category",
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                ) {
+                    if (viewModel.categoryName.isNotBlank()) {
+                        viewModel.insertCategory(
+                            category = Category(
+                                name = viewModel.categoryName,
+                                description = viewModel.categoryDescription
+                            )
+                        )
+                        viewModel.setCategoryName(categoryName = "")
+                        viewModel.setCategoryDescription(categoryDescription = "")
+                    }
+                    viewModel.getCategoriesFromUser()
+                }
+
+                LazyColumn {
+                    items(items = viewModel.categoriesFromUser) { category ->
+                        CategoryItem(
+                            categoryName = category.name,
+                            categoryDescription = category.description,
+                            edit = {
+                                viewModel.insertCategoryAtTransaction( // todo: there might be a problem
+                                    categoryId = category.uuid,
+                                    transactionId = transactionId
+                                )
+                            },
+                            delete = {
+                                viewModel.deleteCategory(categoryId = category.uuid)
+                                viewModel.getCategoriesFromUser()
+                            }
+                        )
+                    }
                 }
             }
         }
