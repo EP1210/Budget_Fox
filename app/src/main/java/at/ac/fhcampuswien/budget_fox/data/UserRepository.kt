@@ -123,7 +123,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                         .collection(DatabaseCollection.Users.collectionName)
                         .document(userId)
                         .collection(DatabaseCollection.Transactions.collectionName)
-                        .document(transactionId).set(category)
+                        .document(transactionId)
+                        .collection(DatabaseCollection.Categories.collectionName)
+                        .document(categoryId).set(category)
                 }
             }
     }

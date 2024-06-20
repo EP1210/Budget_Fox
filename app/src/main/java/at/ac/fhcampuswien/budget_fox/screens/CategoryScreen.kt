@@ -89,8 +89,8 @@ fun CategoryScreen(
                         CategoryItem(
                             categoryName = category.name,
                             categoryDescription = category.description,
-                            edit = {
-                                viewModel.insertCategoryAtTransaction( // todo: there might be a problem
+                            edit = { // todo: use checkbox to add or remove category from transaction
+                                viewModel.insertCategoryAtTransaction(
                                     categoryId = category.uuid,
                                     transactionId = transactionId
                                 )
