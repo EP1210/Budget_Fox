@@ -148,9 +148,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(categoryId).delete()
     }
 
-    override fun getCategoryAtTransactionCondition(userId: String, transactionId: String, categoryId: String): Boolean {
-        var condition = false
-
+    override fun getCategoryAtTransactionCondition(userId: String, categoryId: String, transactionId: String, onSuccess: (Boolean) -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -164,10 +162,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                     .document(transactionId)
                     .collection(DatabaseCollection.Categories.collectionName).get()
                     .addOnSuccessListener { categoryDocuments ->
-                        condition = categoryDocuments.contains(categoryDocument)
+                        onSuccess(categoryDocuments.contains(categoryDocument))
                     }
             }
-        return condition
     }
 
     // TODO: Single responsibility principle!

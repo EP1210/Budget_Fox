@@ -50,6 +50,10 @@ class UserViewModel : ViewModel() {
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
 
+    private var _categoryAtTransaction = mutableStateOf(value = false).value
+    val categoryAtTransaction: Boolean
+        get() = _categoryAtTransaction
+
     fun setUser(user: User) {
         _user = user
     }
@@ -135,6 +139,18 @@ class UserViewModel : ViewModel() {
                 transactionId = transactionId,
                 categoryId = categoryId
             )
+        }
+    }
+
+    fun setCategoryAtTransaction(categoryId: String, transactionId: String) {
+        if (firebaseUser != null) {
+            userRepository.getCategoryAtTransactionCondition(
+                userId = firebaseUser.uid,
+                categoryId = categoryId,
+                transactionId = transactionId
+            ) { condition ->
+                _categoryAtTransaction = condition
+            }
         }
     }
 

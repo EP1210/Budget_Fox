@@ -28,7 +28,7 @@ interface UserDataAccessObject {
 
     fun deleteCategoryAtTransaction(userId: String, transactionId: String, categoryId: String)
 
-    fun getCategoryAtTransactionCondition(userId: String, transactionId: String, categoryId: String): Boolean
+    fun getCategoryAtTransactionCondition(userId: String, categoryId: String, transactionId: String, onSuccess: (Boolean) -> Unit)
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
 }

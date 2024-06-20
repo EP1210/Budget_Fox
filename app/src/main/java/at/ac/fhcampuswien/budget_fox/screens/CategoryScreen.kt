@@ -105,16 +105,27 @@ fun CategoryScreen(
                                 }
                             )
                             Checkbox(
-                                checked = false,
+                                checked = viewModel.categoryAtTransaction,
                                 onCheckedChange = {
-                                    viewModel.insertCategoryAtTransaction(
-                                        categoryId = category.uuid,
-                                        transactionId = transactionId
-                                    )
-                                    viewModel.deleteCategoryAtTransaction(
-                                        transactionId = transactionId,
-                                        categoryId = category.uuid
-                                    )
+                                    if (viewModel.categoryAtTransaction) {
+                                        viewModel.deleteCategoryAtTransaction(
+                                            transactionId = transactionId,
+                                            categoryId = category.uuid
+                                        )
+                                        viewModel.setCategoryAtTransaction(
+                                            categoryId = category.uuid,
+                                            transactionId = transactionId
+                                        )
+                                    } else {
+                                        viewModel.insertCategoryAtTransaction(
+                                            categoryId = category.uuid,
+                                            transactionId = transactionId
+                                        )
+                                        viewModel.setCategoryAtTransaction(
+                                            categoryId = category.uuid,
+                                            transactionId = transactionId
+                                        )
+                                    }
                                 }
                             )
                         }
