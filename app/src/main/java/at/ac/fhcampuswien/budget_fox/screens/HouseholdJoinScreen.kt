@@ -35,22 +35,19 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.helper.QrCodeAnalyzer
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 
 @Composable
 fun HouseholdJoinScreen(
     navigationController: NavController,
+    viewModel: UserViewModel
 ) {
     var message by remember {
         mutableStateOf("SCAN QR")
     }
-    val userUid = Firebase.auth.currentUser?.uid
-    val repository = UserRepository()
     val context = LocalContext.current
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
@@ -121,14 +118,14 @@ fun HouseholdJoinScreen(
                             QrCodeAnalyzer { result ->
                                 if(result != "") {
                                     Log.d("QrCodeAnalyzer", "Scanned QRCode: $result")
-                                    repository.joinHouseholdIfExist(userId = userUid.toString(), householdId = result, onSuccess = {
-                                        navigationController.navigate(route = Screen.UserProfile.route) { //TODO: Weiterleitung Haushalt Übersicht
+                                    viewModel.joinHousehold(result, onSuccess = {
+                                        navigationController.navigate(route = Screen.HouseholdTransaction.route) {
                                             popUpTo(id = 0)
                                         }
-                                    },
-                                        notExits = {
+                                    }, notExists = {
                                             message = "Household does not exist"
-                                        })
+                                    }
+                                    )
                                 }
                             }
                         )

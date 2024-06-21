@@ -6,7 +6,7 @@ import at.ac.fhcampuswien.budget_fox.models.User
 
 interface UserDataAccessObject {
 
-    fun insertUser(user: User, userId: String)
+    fun insertUser(user: User, userId: String, onSuccess: () -> Unit = {})
 
     fun getUser(userId: String): User?
 

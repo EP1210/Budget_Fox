@@ -104,7 +104,10 @@ fun Navigation() {
             )
         }
         composable(route = Screen.HouseholdJoin.route) {
-            HouseholdJoinScreen(navigationController = navigationController)
+            HouseholdJoinScreen(
+                navigationController = navigationController,
+                viewModel = userViewModel
+            )
         }
         composable(route = Screen.HouseholdTransaction.route) {
             HouseholdTransactionScreen(

@@ -12,10 +12,11 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     private val database = Firebase.firestore
 
-    override fun insertUser(user: User, userId: String) {
+    override fun insertUser(user: User, userId: String, onSuccess: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId).set(user.userToDatabase())
+            .addOnSuccessListener { onSuccess() }
     }
 
     override fun getUser(userId: String): User? {
@@ -205,8 +206,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                     onSuccess = { user ->
                         if (user != null) {
                             user.joinHousehold(householdId)
-                            insertUser(user, userId)
-                            onSuccess()
+                            insertUser(user, userId, onSuccess = {
+                                onSuccess()
+                            })
                         }
                     },
                     onFailure = {})
