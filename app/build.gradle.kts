@@ -81,4 +81,21 @@ dependencies {
     implementation(libs.vico.compose.m3)
     implementation(libs.vico.core)
     implementation(libs.vico.views)
+
+    implementation(libs.compose.qr.code)
+
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    implementation(libs.zxing.core)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-view
+    implementation(libs.androidx.camera.view)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-camera2
+    implementation(libs.androidx.camera.camera2)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-lifecycle
+    implementation(libs.androidx.camera.lifecycle)
+
+    //Guava: Google Core Libraries for Java
+    implementation(libs.guava)
 }

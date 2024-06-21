@@ -34,7 +34,7 @@ import java.util.Locale
 
 @Composable
 fun TransactionListItem(
-    navigationController: NavController,
+    navigationController: NavController? = null,
     transaction: Transaction,
     numbersVisible: MutableState<Boolean> = mutableStateOf(value = true)
 ) {
@@ -48,7 +48,7 @@ fun TransactionListItem(
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
             .clickable {
-                navigationController.navigate(route = Screen.Category.route)
+                navigationController?.navigate(route = Screen.Category.route)
             }
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
