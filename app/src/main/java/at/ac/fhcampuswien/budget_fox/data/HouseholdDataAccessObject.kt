@@ -14,4 +14,6 @@ interface HouseholdDataAccessObject {
     fun insertHouseholdTransaction(transaction: Transaction, householdId: String)
 
     fun getTransactionsFromHousehold(householdId: String, onSuccess: (List<Transaction>) -> Unit)
+
+    fun joinHouseholdIfExist(userId: String, householdId: String, onSuccess: () -> Unit, notExits: () -> Unit)
 }

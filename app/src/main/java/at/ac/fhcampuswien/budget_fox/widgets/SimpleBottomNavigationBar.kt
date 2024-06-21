@@ -16,7 +16,7 @@ fun SimpleBottomNavigationBar(
     NavigationBar {
         getBottomNavigationItems().forEach { navigationItem ->
             NavigationBarItem(
-                selected = navigationItem.route == currentRoute,
+                selected = navigationItem.route == currentRoute || navigationItem.alternativeRoute == currentRoute,
                 onClick = {
                     navigationController.navigate(route = navigationItem.route) {
                         popUpTo(id = 0)
@@ -24,10 +24,11 @@ fun SimpleBottomNavigationBar(
                 },
                 icon = {
                     Icon(
-                        imageVector = when (navigationItem.route) {
-                            currentRoute -> navigationItem.selected
-                            else -> navigationItem.unselected
-                        },
+                        imageVector =
+                            if(navigationItem.route == currentRoute || navigationItem.alternativeRoute == currentRoute)
+                                navigationItem.selected
+                            else
+                                navigationItem.unselected,
                         contentDescription = null
                     )
                 },
