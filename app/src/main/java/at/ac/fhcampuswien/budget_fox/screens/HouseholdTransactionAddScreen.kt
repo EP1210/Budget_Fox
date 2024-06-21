@@ -27,8 +27,7 @@ fun HouseholdTransactionAddScreen(
     navigationController: NavController,
     householdId: String?
 ) {
-    if(householdId == null)
-    {
+    if (householdId == null) {
         Text("Household not found")
         return
     }
@@ -48,45 +47,44 @@ fun HouseholdTransactionAddScreen(
         }
     ) {
         viewModel.findHouseholdById(householdId)
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = it)
+                .padding(horizontal = 70.dp)
+        ) {
+            SimpleNumberField(
+                title = "Amount"
+            ) { amount ->
+                viewModel.setTransactionAmount(amount.toDouble())
+            }
+            SimpleField(
+                title = "Description"
+            ) { description ->
+                viewModel.setTransactionDescription(description)
+            }
+            SimpleField(
+                title = "Date"
+            ) { interval ->
+                viewModel.setTransactionDate(interval)
+            }
 
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            SimpleButton(
+                name = "Add income",
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues = it)
-                    .padding(horizontal = 70.dp)
+                    .padding(bottom = 30.dp)
             ) {
-                SimpleNumberField(
-                    title = "Amount"
-                ) { amount ->
-                    viewModel.setTransactionAmount(amount.toDouble())
-                }
-                SimpleField(
-                    title = "Description"
-                ) { description ->
-                    viewModel.setTransactionDescription(description)
-                }
-                SimpleField(
-                    title = "Date"
-                ) { interval ->
-                    viewModel.setTransactionDate(interval)
-                }
+                viewModel.addHouseholdTransaction()
+            }
 
-                SimpleButton(
-                    name = "Add income",
-                    modifier = Modifier
-                        .padding(bottom = 30.dp)
-                ) {
-                    viewModel.addHouseholdTransaction()
-                }
-
-                SimpleButton(
-                    name = "Add expense"
-                ) {
-                    viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
-                    viewModel.addHouseholdTransaction()
-                }
+            SimpleButton(
+                name = "Add expense"
+            ) {
+                viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
+                viewModel.addHouseholdTransaction()
             }
         }
     }
+}
