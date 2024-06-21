@@ -30,104 +30,103 @@ fun CategoryScreen(
     viewModel: UserViewModel,
     transactionId: String?
 ) {
-    if (transactionId != null) {
-        val transaction = viewModel.user?.getTransactions()?.find { transaction ->
-            transaction.uuid == transactionId
-        }
+    viewModel.user?.getTransactions()?.forEach { transaction ->
+        if (transaction.uuid == transactionId) {
+            viewModel.getCategoriesFromUser()
 
-        viewModel.getCategoriesFromUser()
-
-        Scaffold(
-            topBar = {
-                SimpleTopAppBar(
-                    title = "Manage \"${transaction?.description}\""
-                ) {
-                    SimpleEventIcon(
-                        icon = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "An icon to navigate back to the previous screen"
+            Scaffold(
+                topBar = {
+                    SimpleTopAppBar(
+                        title = "Manage \"${transaction.description}\""
                     ) {
-                        navigationController.popBackStack()
-                    }
-                }
-            }
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues = it)
-            ) {
-                SimpleField(
-                    title = "Category name"
-                ) { name ->
-                    viewModel.setCategoryName(categoryName = name)
-                }
-                SimpleField(
-                    title = "Description"
-                ) { description ->
-                    viewModel.setCategoryDescription(categoryDescription = description)
-                }
-
-                SimpleButton(
-                    name = "Create category",
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                ) {
-                    if (viewModel.categoryName.isNotBlank()) {
-                        viewModel.insertCategory(
-                            category = Category(
-                                name = viewModel.categoryName,
-                                description = viewModel.categoryDescription
-                            )
-                        )
-                        viewModel.setCategoryName(categoryName = "")
-                        viewModel.setCategoryDescription(categoryDescription = "")
-                    }
-                    viewModel.getCategoriesFromUser()
-                }
-
-                LazyColumn {
-                    items(items = viewModel.categoriesFromUser) { category ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
+                        SimpleEventIcon(
+                            icon = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "An icon to navigate back to the previous screen"
                         ) {
-                            CategoryItem(
-                                categoryName = category.name,
-                                categoryDescription = category.description,
-                                edit = {
-                                    // todo: logic to edit the category item
-                                },
-                                delete = {
-                                    viewModel.deleteCategory(categoryId = category.uuid)
-                                    viewModel.getCategoriesFromUser()
-                                }
+                            navigationController.popBackStack()
+                        }
+                    }
+                }
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues = it)
+                ) {
+                    SimpleField(
+                        title = "Category name"
+                    ) { name ->
+                        viewModel.setCategoryName(categoryName = name)
+                    }
+                    SimpleField(
+                        title = "Description"
+                    ) { description ->
+                        viewModel.setCategoryDescription(categoryDescription = description)
+                    }
+
+                    SimpleButton(
+                        name = "Create category",
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                    ) {
+                        if (viewModel.categoryName.isNotBlank()) {
+                            viewModel.insertCategoryAtUser(
+                                category = Category(
+                                    name = viewModel.categoryName,
+                                    description = viewModel.categoryDescription
+                                )
                             )
-                            Checkbox(
-                                checked = viewModel.categoryAtTransaction,
-                                onCheckedChange = {
-                                    if (viewModel.categoryAtTransaction) {
-                                        viewModel.deleteCategoryAtTransaction(
-                                            transactionId = transactionId,
-                                            categoryId = category.uuid
-                                        )
-                                        viewModel.setCategoryAtTransaction(
-                                            categoryId = category.uuid,
-                                            transactionId = transactionId
-                                        )
-                                    } else {
-                                        viewModel.insertCategoryAtTransaction(
-                                            categoryId = category.uuid,
-                                            transactionId = transactionId
-                                        )
-                                        viewModel.setCategoryAtTransaction(
-                                            categoryId = category.uuid,
-                                            transactionId = transactionId
-                                        )
+                            viewModel.setCategoryName(categoryName = "")
+                            viewModel.setCategoryDescription(categoryDescription = "")
+                        }
+                        viewModel.getCategoriesFromUser()
+                    }
+
+                    LazyColumn {
+                        items(items = viewModel.categoriesFromUser) { category ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                CategoryItem(
+                                    categoryName = category.name,
+                                    categoryDescription = category.description,
+                                    edit = {
+                                        // todo: logic to edit the category item
+                                    },
+                                    delete = {
+                                        viewModel.deleteCategoryAtUser(categoryId = category.uuid)
+                                        viewModel.getCategoriesFromUser()
+                                        viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
                                     }
-                                }
-                            )
+                                )
+                                Checkbox(
+                                    checked = viewModel.categoryAtTransaction,
+                                    onCheckedChange = {
+                                        if (viewModel.categoryAtTransaction) {
+                                            viewModel.deleteCategoryAtTransaction( // todo: function works but it seems that it is not called
+                                                transactionId = transaction.uuid,
+                                                categoryId = category.uuid
+                                            )
+                                            viewModel.setCategoryAtTransactionState(
+                                                categoryId = category.uuid,
+                                                transactionId = transaction.uuid
+                                            )
+                                        } else {
+                                            viewModel.insertCategoryAtTransaction(
+                                                categoryId = category.uuid,
+                                                transactionId = transaction.uuid
+                                            )
+                                            viewModel.setCategoryAtTransactionState(
+                                                categoryId = category.uuid,
+                                                transactionId = transaction.uuid
+                                            )
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }

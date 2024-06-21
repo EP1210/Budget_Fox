@@ -43,7 +43,7 @@ fun TransactionListItem(
             .padding(5.dp) //"Margin" https://stackoverflow.com/a/65582416
             .border(0.dp, Color.Transparent)
             .clip(RoundedCornerShape(6.dp))
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.secondary)
             .clickable {
                 onItemClick(transaction.uuid)
             }

@@ -103,13 +103,9 @@ class UserViewModel : ViewModel() {
         _categoryDescription = categoryDescription
     }
 
-    fun insertCategory(category: Category) {
-        firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
-    }
-
-    fun deleteCategory(categoryId: String) {
+    fun insertCategoryAtUser(category: Category) {
         if (firebaseUser != null) {
-            userRepository.deleteCategory(userId = firebaseUser.uid, categoryId = categoryId)
+            userRepository.insertCategoryAtUser(userId = firebaseUser.uid, category = category)
         }
     }
 
@@ -119,6 +115,12 @@ class UserViewModel : ViewModel() {
                 _categoriesFromUser.clear()
                 _categoriesFromUser.addAll(categories)
             }
+        }
+    }
+
+    fun deleteCategoryAtUser(categoryId: String) {
+        if (firebaseUser != null) {
+            userRepository.deleteCategoryAtUser(userId = firebaseUser.uid, categoryId = categoryId)
         }
     }
 
@@ -142,7 +144,16 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun setCategoryAtTransaction(categoryId: String, transactionId: String) {
+    fun deleteCategoryAtAllTransactions(categoryId: String) {
+        if (firebaseUser != null) {
+            userRepository.deleteCategoryAtAllTransactions(
+                userId = firebaseUser.uid,
+                categoryId = categoryId
+            )
+        }
+    }
+
+    fun setCategoryAtTransactionState(categoryId: String, transactionId: String) {
         if (firebaseUser != null) {
             userRepository.getCategoryAtTransactionCondition(
                 userId = firebaseUser.uid,

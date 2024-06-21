@@ -46,6 +46,7 @@ fun CategoryItem(
                 )
                 SimpleEventIcon(
                     icon = Icons.Default.Edit,
+                    colour = Color.Blue,
                     contentDescription = "An icon to edit the category"
                 ) {
                     edit()

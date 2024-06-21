@@ -78,7 +78,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(transactionId).delete()
     }
 
-    override fun insertCategory(userId: String, category: Category) {
+    override fun insertCategoryAtUser(userId: String, category: Category) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -101,7 +101,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun deleteCategory(userId: String, categoryId: String) {
+    override fun deleteCategoryAtUser(userId: String, categoryId: String) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -134,21 +134,12 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun deleteCategoryAtTransaction(
+    override fun getCategoryAtTransactionCondition(
         userId: String,
+        categoryId: String,
         transactionId: String,
-        categoryId: String
+        onSuccess: (Boolean) -> Unit
     ) {
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId)
-            .collection(DatabaseCollection.Transactions.collectionName)
-            .document(transactionId)
-            .collection(DatabaseCollection.Categories.collectionName)
-            .document(categoryId).delete()
-    }
-
-    override fun getCategoryAtTransactionCondition(userId: String, categoryId: String, transactionId: String, onSuccess: (Boolean) -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -164,6 +155,50 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                     .addOnSuccessListener { categoryDocuments ->
                         onSuccess(categoryDocuments.contains(categoryDocument))
                     }
+            }
+    }
+
+    override fun deleteCategoryAtTransaction(
+        userId: String,
+        transactionId: String,
+        categoryId: String
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).delete()
+    }
+
+    override fun deleteCategoryAtAllTransactions(userId: String, categoryId: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName).get()
+            .addOnSuccessListener { transactionDocuments ->
+                transactionDocuments.forEach { transactionDocument ->
+                    database
+                        .collection(DatabaseCollection.Users.collectionName)
+                        .document(userId)
+                        .collection(DatabaseCollection.Transactions.collectionName)
+                        .document(transactionDocument.id)
+                        .collection(DatabaseCollection.Categories.collectionName).get()
+                        .addOnSuccessListener { categoryDocuments ->
+                            categoryDocuments.forEach { categoryDocument ->
+                                if (categoryDocument.id == categoryId) {
+                                    database
+                                        .collection(DatabaseCollection.Users.collectionName)
+                                        .document(userId)
+                                        .collection(DatabaseCollection.Transactions.collectionName)
+                                        .document(transactionDocument.id)
+                                        .collection(DatabaseCollection.Categories.collectionName)
+                                        .document(categoryDocument.id).delete()
+                                }
+                            }
+                        }
+                }
             }
     }
 
