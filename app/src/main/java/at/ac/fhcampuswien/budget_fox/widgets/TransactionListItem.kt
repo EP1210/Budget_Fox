@@ -18,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,7 +35,8 @@ import java.util.Locale
 @Composable
 fun TransactionListItem(
     navigationController: NavController? = null,
-    transaction: Transaction
+    transaction: Transaction,
+    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true)
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -71,7 +74,12 @@ fun TransactionListItem(
             modifier = Modifier.weight(weight = 4f)
         ) {
             Text(
-                text = "${transaction.amount}€",
+                text =
+                if (numbersVisible.value) {
+                    "${transaction.amount}€"
+                } else {
+                    "*** €"
+                },
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontSize = 16.sp,
             )

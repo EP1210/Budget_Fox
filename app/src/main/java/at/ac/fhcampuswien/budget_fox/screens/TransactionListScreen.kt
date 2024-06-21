@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -48,7 +49,8 @@ fun TransactionListScreen(
                 items(it1.getTransactions()) { transaction ->
                     TransactionListItem(
                         transaction = transaction,
-                        navigationController = navigationController
+                        navigationController = navigationController,
+                        numbersVisible = viewModel.numbersVisible
                     )
                 }
             }
@@ -70,6 +72,20 @@ fun TransactionListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
+                    contentDescription = "Add transaction"
+                )
+            }
+            FloatingActionButton(
+                onClick = {
+                    viewModel.numbersVisible.value = !viewModel.numbersVisible.value
+                },
+                shape = CircleShape,
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(alignment = Alignment.BottomStart)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Lock,
                     contentDescription = "Add transaction"
                 )
             }
