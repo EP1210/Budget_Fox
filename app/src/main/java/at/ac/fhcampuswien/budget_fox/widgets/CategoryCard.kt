@@ -3,14 +3,18 @@ package at.ac.fhcampuswien.budget_fox.widgets
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,20 +23,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CategoryItem(
+fun CategoryCard(
     categoryName: String,
     categoryDescription: String,
+    checked: Boolean,
+    modifier: Modifier = Modifier,
     edit: () -> Unit,
-    delete: () -> Unit
+    delete: () -> Unit,
+    checkEvent: () -> Unit
 ) {
+    var isChecked by remember {
+        mutableStateOf(value = checked)
+    }
+
     Card(
-        modifier = Modifier
-            .padding(all = 10.dp)
-            .width(width = 350.dp)
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
+                .padding(start = 5.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -58,6 +67,13 @@ fun CategoryItem(
                 ) {
                     delete()
                 }
+                Checkbox(
+                    checked = isChecked,
+                    onCheckedChange = {
+                        checkEvent()
+                        isChecked = it
+                    }
+                )
             }
             if (categoryDescription.isNotBlank()) {
                 HorizontalDivider(

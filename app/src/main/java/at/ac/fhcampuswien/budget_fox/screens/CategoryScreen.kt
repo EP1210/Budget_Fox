@@ -1,15 +1,12 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
-import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
+import at.ac.fhcampuswien.budget_fox.widgets.CategoryCard
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
@@ -64,7 +61,6 @@ fun CategoryScreen(
                     ) { description ->
                         viewModel.setCategoryDescription(categoryDescription = description)
                     }
-
                     SimpleButton(
                         name = "Create category",
                         modifier = Modifier
@@ -85,48 +81,43 @@ fun CategoryScreen(
 
                     LazyColumn {
                         items(items = viewModel.categoriesFromUser) { category ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
+                            CategoryCard(
+                                categoryName = category.name,
+                                categoryDescription = category.description,
+                                checked = viewModel.categoryAtTransaction,
+                                edit = {
+                                    // todo: logic to edit the category item
+                                },
+                                delete = {
+                                    viewModel.deleteCategoryAtUser(categoryId = category.uuid)
+                                    viewModel.getCategoriesFromUser()
+                                    viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
+                                },
+                                checkEvent = {
+                                    if (viewModel.categoryAtTransaction) {
+                                        viewModel.deleteCategoryAtTransaction(
+                                            transactionId = transaction.uuid,
+                                            categoryId = category.uuid
+                                        )
+                                        viewModel.setCategoryAtTransaction(
+                                            categoryId = category.uuid,
+                                            transactionId = transaction.uuid
+                                        )
+                                    } else {
+                                        viewModel.insertCategoryAtTransaction(
+                                            categoryId = category.uuid,
+                                            transactionId = transaction.uuid
+                                        )
+                                        viewModel.setCategoryAtTransaction(
+                                            categoryId = category.uuid,
+                                            transactionId = transaction.uuid
+                                        )
+                                    }
+
+                                },
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                CategoryItem(
-                                    categoryName = category.name,
-                                    categoryDescription = category.description,
-                                    edit = {
-                                        // todo: logic to edit the category item
-                                    },
-                                    delete = {
-                                        viewModel.deleteCategoryAtUser(categoryId = category.uuid)
-                                        viewModel.getCategoriesFromUser()
-                                        viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
-                                    }
-                                )
-                                Checkbox(
-                                    checked = viewModel.categoryAtTransaction,
-                                    onCheckedChange = {
-                                        if (viewModel.categoryAtTransaction) {
-                                            viewModel.deleteCategoryAtTransaction( // todo: function works but it seems that it is not called
-                                                transactionId = transaction.uuid,
-                                                categoryId = category.uuid
-                                            )
-                                            viewModel.setCategoryAtTransactionState(
-                                                categoryId = category.uuid,
-                                                transactionId = transaction.uuid
-                                            )
-                                        } else {
-                                            viewModel.insertCategoryAtTransaction(
-                                                categoryId = category.uuid,
-                                                transactionId = transaction.uuid
-                                            )
-                                            viewModel.setCategoryAtTransactionState(
-                                                categoryId = category.uuid,
-                                                transactionId = transaction.uuid
-                                            )
-                                        }
-                                    }
-                                )
-                            }
+                                    .padding(horizontal = 20.dp, vertical = 10.dp)
+                            )
                         }
                     }
                 }

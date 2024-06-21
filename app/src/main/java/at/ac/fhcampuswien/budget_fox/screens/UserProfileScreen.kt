@@ -73,7 +73,7 @@ fun UserProfileScreen(
             }, ZoneOffset.UTC)
 
             SimpleTitle(
-                title = when (viewModel.newUser) {
+                title = when (viewModel.firstLogin) {
                     true -> "Registration successful!"
                     false -> "Personal information"
                 }

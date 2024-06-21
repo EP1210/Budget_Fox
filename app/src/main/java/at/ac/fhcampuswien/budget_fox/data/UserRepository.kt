@@ -93,9 +93,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Categories.collectionName).get()
-            .addOnSuccessListener { categories ->
-                categories.forEach { category ->
-                    categoriesFromUser.add(category.toObject<Category>())
+            .addOnSuccessListener { categoryDocuments ->
+                categoryDocuments.forEach { categoryDocument ->
+                    categoriesFromUser.add(categoryDocument.toObject<Category>())
                 }
                 onSuccess(categoriesFromUser)
             }
@@ -140,20 +140,27 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
         transactionId: String,
         onSuccess: (Boolean) -> Unit
     ) {
+        var categoryAtTransaction = false
+
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Categories.collectionName)
             .document(categoryId).get()
-            .addOnSuccessListener { categoryDocument ->
+            .addOnSuccessListener { categoryDocumentAtUser ->
                 database
                     .collection(DatabaseCollection.Users.collectionName)
                     .document(userId)
                     .collection(DatabaseCollection.Transactions.collectionName)
                     .document(transactionId)
                     .collection(DatabaseCollection.Categories.collectionName).get()
-                    .addOnSuccessListener { categoryDocuments ->
-                        onSuccess(categoryDocuments.contains(categoryDocument))
+                    .addOnSuccessListener { categoryDocumentsAtTransaction ->
+                        categoryDocumentsAtTransaction.forEach { categoryDocumentAtTransaction ->
+                            if (categoryDocumentAtTransaction.id == categoryDocumentAtUser.id) {
+                                categoryAtTransaction = true
+                            }
+                        }
+                        onSuccess(categoryAtTransaction)
                     }
             }
     }

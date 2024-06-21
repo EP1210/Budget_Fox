@@ -22,9 +22,9 @@ class UserViewModel : ViewModel() {
     val user: User?
         get() = _user
 
-    private var _newUser = mutableStateOf(value = false).value
-    val newUser: Boolean
-        get() = _newUser
+    private var _firstLogin = mutableStateOf(value = false).value
+    val firstLogin: Boolean
+        get() = _firstLogin
 
     private var _transactionDate = mutableStateOf(value = "").value
     val transactionDate: String
@@ -59,7 +59,7 @@ class UserViewModel : ViewModel() {
     }
 
     fun setUserState(firstLogin: Boolean?) {
-        _newUser = firstLogin ?: return
+        _firstLogin = firstLogin ?: return
     }
 
     fun setTransactionDate(date: String) {
@@ -153,7 +153,7 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun setCategoryAtTransactionState(categoryId: String, transactionId: String) {
+    fun setCategoryAtTransaction(categoryId: String, transactionId: String) {
         if (firebaseUser != null) {
             userRepository.getCategoryAtTransactionCondition(
                 userId = firebaseUser.uid,
