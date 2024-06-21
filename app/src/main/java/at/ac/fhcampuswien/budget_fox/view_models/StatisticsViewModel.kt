@@ -25,10 +25,6 @@ class StatisticsViewModel : ViewModel() {
     val selectedYear: StateFlow<Int>
         get() = _selectedYear.asStateFlow()
 
-    init {
-        mapTransactionsFromUserToMonths(_selectedYear.value)
-    }
-
     fun setSelectedYear(year: Int) {
         _selectedYear.value = year
         mapTransactionsFromUserToMonths(year)
