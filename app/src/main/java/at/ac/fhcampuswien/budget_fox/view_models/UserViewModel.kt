@@ -18,6 +18,8 @@ class UserViewModel : ViewModel() {
     private val userRepository = UserRepository()
     private val firebaseUser = Firebase.auth.currentUser
 
+    val numbersVisible = mutableStateOf(value = true)
+
     private var _user = mutableStateOf<User?>(value = null).value
     val user: User?
         get() = _user
