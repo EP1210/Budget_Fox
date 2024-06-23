@@ -64,11 +64,7 @@ class UserViewModel : ViewModel() {
     val transactions: List<Transaction>
         get() = _transactions
 
-    init {
-        loadTransactions()
-    }
-
-    private fun loadTransactions() {
+    fun loadTransactions() {
         firebaseUser?.uid?.let { userId ->
             userRepository.getTransactionsFromUser(userId, { fetchedTransactions ->
                 _transactions.clear()

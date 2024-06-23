@@ -13,6 +13,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,9 +34,9 @@ fun TransactionListScreen(
     viewModel: UserViewModel
 ) {
 
-    val transactions = remember { mutableStateListOf<Transaction>() }
-    transactions.clear()
-    transactions.addAll(viewModel.user?.getTransactions() ?: emptyList())
+    LaunchedEffect(Unit) {
+        viewModel.loadTransactions()
+    }
 
     Scaffold(
         topBar = {
