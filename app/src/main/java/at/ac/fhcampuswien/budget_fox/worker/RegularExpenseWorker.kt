@@ -34,19 +34,24 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
                         val transactionData = document.data
                         val transaction = Transaction.fromDatabase(transactionData)
                         if (transaction.nextDueDate != null && transaction.nextDueDate!!.before(currentTime)) {
-                            val newNextDueDate = calculateNextDueDate(transaction.nextDueDate!!, transaction.frequency!!)
+                            var nextDueDate = transaction.nextDueDate!!
+
+                            while (nextDueDate.before(currentTime)) {
+                                val newTransaction = Transaction(
+                                    amount = transaction.amount,
+                                    description = transaction.description,
+                                    date = nextDueDate,
+                                    isRegular = false
+                                )
+                                newTransaction.uuid = UUID.randomUUID().toString()
+                                insertNewTransaction(newTransaction, userId)
+
+                                nextDueDate = calculateNextDueDate(nextDueDate, transaction.frequency!!)
+                            }
+
                             db.collection("users").document(userId)
                                 .collection("transactions").document(document.id)
-                                .update("nextDueDate", newNextDueDate?.let { Timestamp(it) })
-
-                            val newTransaction = Transaction(
-                                amount = transaction.amount,
-                                description = transaction.description,
-                                date = Date(),
-                                isRegular = false,
-                            )
-                            newTransaction.uuid = UUID.randomUUID().toString()
-                            insertNewTransaction(newTransaction, userId)
+                                .update("nextDueDate", nextDueDate.let { Timestamp(it) })
                         }
                     }
                 }
