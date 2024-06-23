@@ -69,7 +69,7 @@ class UserViewModel : ViewModel() {
         firebaseUser?.uid?.let { userId ->
             userRepository.getTransactionsFromUser(userId, { fetchedTransactions ->
                 _transactions.clear()
-                _transactions.addAll(fetchedTransactions)
+                _transactions.addAll(fetchedTransactions.sortedBy { it.date })
             }, { exception ->
                 Log.w("UserViewModel", "Error loading transactions: ", exception)
             })
