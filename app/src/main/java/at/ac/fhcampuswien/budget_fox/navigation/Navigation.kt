@@ -13,7 +13,7 @@ import at.ac.fhcampuswien.budget_fox.screens.HouseholdWelcomeScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
-import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
+import at.ac.fhcampuswien.budget_fox.screens.TransactionCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
@@ -57,16 +57,16 @@ fun Navigation() {
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.Transaction.route) {
-            TransactionScreen(
+        composable(route = Screen.TransactionCreate.route) {
+            TransactionCreateScreen(
                 navigationController = navigationController,
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.TransactionList.route) {
-            TransactionListScreen(
+        composable(route = Screen.Transaction.route) {
+            TransactionScreen(
                 navigationController = navigationController,
-                route = Screen.TransactionList.route,
+                route = Screen.Transaction.route,
                 viewModel = userViewModel
             )
         }
@@ -93,7 +93,8 @@ fun Navigation() {
         composable(route = Screen.HouseholdCreate.route) {
             HouseholdCreateScreen(
                 navigationController = navigationController,
-                viewModel = householdCreateViewModel)
+                viewModel = householdCreateViewModel
+            )
         }
         composable(route = Screen.HouseholdJoin.route) {
             HouseholdJoinScreen(navigationController = navigationController)

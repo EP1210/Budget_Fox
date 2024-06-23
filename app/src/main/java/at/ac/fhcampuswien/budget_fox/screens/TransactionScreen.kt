@@ -1,72 +1,78 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
+import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
 @Composable
 fun TransactionScreen(
     navigationController: NavController,
+    route: String,
     viewModel: UserViewModel
 ) {
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "Add transaction") {
-                SimpleEventIcon(
-                    icon = Icons.AutoMirrored.Filled.ArrowBack
-                ) {
-                    navigationController.popBackStack()
+            SimpleTopAppBar(title = "Your transactions")
+        },
+        bottomBar = {
+            SimpleBottomNavigationBar(
+                navigationController = navigationController,
+                currentRoute = route
+            )
+        }
+    ) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(paddingValues = it)
+        ) {
+            viewModel.user?.let { it1 ->
+                items(it1.getTransactions()) { transaction ->
+                    TransactionListItem(
+                        transaction = transaction
+                    ) { transactionId ->
+                        navigationController.navigate(route = Screen.Category.passTransactionId(transactionId = transactionId))
+                    }
                 }
             }
         }
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = it)
         ) {
-            SimpleNumberField(
-                title = "Amount"
-            ) { amount ->
-                viewModel.setTransactionAmount(amount = amount.toDouble())
-            }
-            SimpleField(
-                title = "Description"
-            ) { description ->
-                viewModel.setTransactionDescription(description = description)
-            }
-            SimpleField(
-                title = "Date"
-            ) { interval ->
-                viewModel.setTransactionDate(date = interval)
-            }
-
-            SimpleButton(
-                name = "Add income"
+            FloatingActionButton(
+                onClick = {
+                    navigationController.navigate(route = Screen.TransactionCreate.route)
+                },
+                shape = CircleShape,
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(alignment = Alignment.BottomEnd)
             ) {
-                viewModel.insertTransaction()
-            }
-            SimpleButton(
-                name = "Add expense"
-            ) {
-                viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
-                viewModel.insertTransaction()
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Add transaction"
+                )
             }
         }
     }

@@ -134,34 +134,41 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun getCategoryAtTransactionCondition(
-        userId: String,
-        categoryId: String,
-        transactionId: String,
-        onSuccess: (Boolean) -> Unit
-    ) {
-        var categoryAtTransaction = false
+    override fun getCategoriesFromTransaction(userId: String, transactionId: String, onSuccess: (List<Category>) -> Unit) {
+        val categories = mutableListOf<Category>()
 
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
-            .collection(DatabaseCollection.Categories.collectionName)
-            .document(categoryId).get()
-            .addOnSuccessListener { categoryDocumentAtUser ->
-                database
-                    .collection(DatabaseCollection.Users.collectionName)
-                    .document(userId)
-                    .collection(DatabaseCollection.Transactions.collectionName)
-                    .document(transactionId)
-                    .collection(DatabaseCollection.Categories.collectionName).get()
-                    .addOnSuccessListener { categoryDocumentsAtTransaction ->
-                        categoryDocumentsAtTransaction.forEach { categoryDocumentAtTransaction ->
-                            if (categoryDocumentAtTransaction.id == categoryDocumentAtUser.id) {
-                                categoryAtTransaction = true
-                            }
-                        }
-                        onSuccess(categoryAtTransaction)
-                    }
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId)
+            .collection(DatabaseCollection.Categories.collectionName).get()
+            .addOnSuccessListener { categoryDocuments ->
+                categoryDocuments.forEach { categoryDocument ->
+                    categories.add(categoryDocument.toObject<Category>())
+                }
+                onSuccess(categories)
+            }
+    }
+
+    override fun getIdsFromCategoriesAtTransaction(
+        userId: String,
+        transactionId: String,
+        onSuccess: (List<String>) -> Unit
+    ) {
+        val categoryIds = mutableListOf<String>()
+
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId)
+            .collection(DatabaseCollection.Categories.collectionName).get()
+            .addOnSuccessListener { categoryDocuments ->
+                categoryDocuments.forEach { categoryDocument ->
+                    categoryIds.add(categoryDocument.id)
+                }
+                onSuccess(categoryIds)
             }
     }
 

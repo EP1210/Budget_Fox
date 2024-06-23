@@ -50,9 +50,13 @@ class UserViewModel : ViewModel() {
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
 
-    private var _categoryAtTransaction = mutableStateOf(value = false).value
-    val categoryAtTransaction: Boolean
-        get() = _categoryAtTransaction
+    private var _categoriesFromTransaction = mutableStateListOf<Category>()
+    val categoriesFromTransaction: List<Category>
+        get() = _categoriesFromTransaction
+
+    private var _categoryIdsAtTransaction = mutableStateListOf<String>()
+    val categoryIdsAtTransaction: List<String>
+        get() = _categoryIdsAtTransaction
 
     fun setUser(user: User) {
         _user = user
@@ -134,6 +138,30 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    fun getCategoriesFromTransaction(transactionId: String) {
+        if (firebaseUser != null) {
+            userRepository.getCategoriesFromTransaction(
+                userId = firebaseUser.uid,
+                transactionId = transactionId,
+            ) { categories ->
+                _categoriesFromTransaction.clear()
+                _categoriesFromTransaction.addAll(categories)
+            }
+        }
+    }
+
+    fun getIdsFromCategoriesAtTransaction(transactionId: String) {
+        if (firebaseUser != null) {
+            userRepository.getIdsFromCategoriesAtTransaction(
+                userId = firebaseUser.uid,
+                transactionId = transactionId
+            ) { categoryIds ->
+                _categoryIdsAtTransaction.clear()
+                _categoryIdsAtTransaction.addAll(categoryIds)
+            }
+        }
+    }
+
     fun deleteCategoryAtTransaction(transactionId: String, categoryId: String) {
         if (firebaseUser != null) {
             userRepository.deleteCategoryAtTransaction(
@@ -150,18 +178,6 @@ class UserViewModel : ViewModel() {
                 userId = firebaseUser.uid,
                 categoryId = categoryId
             )
-        }
-    }
-
-    fun setCategoryAtTransaction(categoryId: String, transactionId: String) {
-        if (firebaseUser != null) {
-            userRepository.getCategoryAtTransactionCondition(
-                userId = firebaseUser.uid,
-                categoryId = categoryId,
-                transactionId = transactionId
-            ) { condition ->
-                _categoryAtTransaction = condition
-            }
         }
     }
 

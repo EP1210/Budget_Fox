@@ -7,10 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Category
@@ -30,11 +34,12 @@ fun CategoryScreen(
     viewModel.user?.getTransactions()?.forEach { transaction ->
         if (transaction.uuid == transactionId) {
             viewModel.getCategoriesFromUser()
+            viewModel.getIdsFromCategoriesAtTransaction(transactionId = transaction.uuid)
 
             Scaffold(
                 topBar = {
                     SimpleTopAppBar(
-                        title = "Manage \"${transaction.description}\""
+                        title = transaction.description
                     ) {
                         SimpleEventIcon(
                             icon = Icons.AutoMirrored.Filled.ArrowBack,
@@ -78,50 +83,66 @@ fun CategoryScreen(
                         }
                         viewModel.getCategoriesFromUser()
                     }
-
-                    LazyColumn {
-                        items(items = viewModel.categoriesFromUser) { category ->
-                            CategoryCard(
-                                categoryName = category.name,
-                                categoryDescription = category.description,
-                                checked = viewModel.categoryAtTransaction,
-                                edit = {
-                                    // todo: logic to edit the category item
-                                },
-                                delete = {
-                                    viewModel.deleteCategoryAtUser(categoryId = category.uuid)
-                                    viewModel.getCategoriesFromUser()
-                                    viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
-                                },
-                                checkEvent = {
-                                    if (viewModel.categoryAtTransaction) {
-                                        viewModel.deleteCategoryAtTransaction(
-                                            transactionId = transaction.uuid,
-                                            categoryId = category.uuid
-                                        )
-                                        viewModel.setCategoryAtTransaction(
-                                            categoryId = category.uuid,
-                                            transactionId = transaction.uuid
-                                        )
-                                    } else {
-                                        viewModel.insertCategoryAtTransaction(
-                                            categoryId = category.uuid,
-                                            transactionId = transaction.uuid
-                                        )
-                                        viewModel.setCategoryAtTransaction(
-                                            categoryId = category.uuid,
-                                            transactionId = transaction.uuid
-                                        )
-                                    }
-
-                                },
-                                modifier = Modifier
-                                    .padding(horizontal = 20.dp, vertical = 10.dp)
-                            )
-                        }
-                    }
+                    CategoryList(transactionId = transaction.uuid, viewModel = viewModel)
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun CategoryList(
+    viewModel: UserViewModel,
+    transactionId: String
+) {
+    LazyColumn {
+        items(items = viewModel.categoriesFromUser) { category ->
+            CategoryCard(
+                categoryName = category.name,
+                categoryDescription = category.description,
+                edit = {
+                    SimpleEventIcon(
+                        icon = Icons.Default.Edit,
+                        colour = Color.Blue,
+                        contentDescription = "An icon to edit the category"
+                    ) {
+                        // todo: logic to edit the category item
+                    }
+                },
+                delete = {
+                    SimpleEventIcon(
+                        icon = Icons.Default.Delete,
+                        colour = Color.Red,
+                        contentDescription = "An icon to delete the category"
+                    ) {
+                        viewModel.deleteCategoryAtUser(categoryId = category.uuid)
+                        viewModel.getCategoriesFromUser()
+                        viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
+                    }
+                },
+                check = {
+                    Checkbox(
+                        checked = category.uuid in viewModel.categoryIdsAtTransaction,
+                        onCheckedChange = {
+                            if (category.uuid in viewModel.categoryIdsAtTransaction) {
+                                viewModel.deleteCategoryAtTransaction(
+                                    transactionId = transactionId,
+                                    categoryId = category.uuid
+                                )
+                                viewModel.getIdsFromCategoriesAtTransaction(transactionId = transactionId)
+                            } else {
+                                viewModel.insertCategoryAtTransaction(
+                                    categoryId = category.uuid,
+                                    transactionId = transactionId
+                                )
+                                viewModel.getIdsFromCategoriesAtTransaction(transactionId = transactionId)
+                            }
+                        }
+                    )
+                },
+                modifier = Modifier
+                    .padding(horizontal = 20.dp, vertical = 5.dp)
+            )
         }
     }
 }
