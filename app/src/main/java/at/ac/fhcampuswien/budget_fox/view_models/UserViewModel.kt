@@ -14,7 +14,6 @@ import com.google.firebase.auth.auth
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 class UserViewModel : ViewModel() {
 
@@ -65,25 +64,6 @@ class UserViewModel : ViewModel() {
     val transactions: List<Transaction>
         get() = _transactions
 
-    fun loadTransactions() {
-        firebaseUser?.uid?.let { userId ->
-            userRepository.getTransactionsFromUser(userId, { fetchedTransactions ->
-                _transactions.clear()
-                _transactions.addAll(fetchedTransactions.sortedBy { it.date })
-            }, { exception ->
-                Log.w("UserViewModel", "Error loading transactions: ", exception)
-            })
-        }
-    }
-
-    fun deleteTransaction(transaction: Transaction) {
-        firebaseUser?.uid?.let { userId ->
-            userRepository.deleteTransaction(userId, transaction.uuid) {
-                _transactions.remove(transaction)
-            }
-        }
-    }
-
     fun setUser(user: User) {
         _user = user
     }
@@ -102,28 +82,6 @@ class UserViewModel : ViewModel() {
 
     fun setTransactionDescription(description: String) {
         _transactionDescription = description
-    }
-
-    fun insertTransaction() {
-        val format = SimpleDateFormat("yyyy-MM-dd")
-        val date: Date? = format.parse(transactionDate)
-
-        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && date != null && firebaseUser != null) {
-            val transaction = Transaction(
-                amount = transactionAmount,
-                description = transactionDescription,
-                date = date
-            )
-
-            userRepository.insertTransaction(
-                transaction = transaction,
-                userId = firebaseUser.uid,
-                onSuccess = {
-                    user?.addTransaction(transaction)
-                    loadTransactions()
-                })
-            //TODO: Display error message
-        }
     }
 
     fun setCategoryName(categoryName: String) {
@@ -158,20 +116,44 @@ class UserViewModel : ViewModel() {
         calculateNextDueDate()
     }
 
-    private fun calculateNextDueDate() {
-        val format = SimpleDateFormat("yyyy-MM-dd")
-        val date: Date? = format.parse(_transactionDate)
+    fun loadTransactions() {
+        firebaseUser?.uid?.let { userId ->
+            userRepository.getTransactionsFromUser(userId, { fetchedTransactions ->
+                _transactions.clear()
+                _transactions.addAll(fetchedTransactions.sortedBy { it.date })
+            }, { exception ->
+                Log.w("UserViewModel", "Error loading transactions: ", exception)
+            })
+        }
+    }
 
-        date?.let {
-            val calendar = Calendar.getInstance()
-            calendar.time = it
-            when (_transactionFrequency) {
-                "Daily" -> calendar.add(Calendar.DAY_OF_YEAR, 1)
-                "Weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
-                "Monthly" -> calendar.add(Calendar.MONTH, 1)
-                "Yearly" -> calendar.add(Calendar.YEAR, 1)
+    fun deleteTransaction(transaction: Transaction) {
+        firebaseUser?.uid?.let { userId ->
+            userRepository.deleteTransaction(userId, transaction.uuid) {
+                _transactions.remove(transaction)
             }
-            _nextDueDate = calendar.time
+        }
+    }
+
+    fun insertTransaction() {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = format.parse(transactionDate)
+
+        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && date != null && firebaseUser != null) {
+            val transaction = Transaction(
+                amount = transactionAmount,
+                description = transactionDescription,
+                date = date
+            )
+
+            userRepository.insertTransaction(
+                transaction = transaction,
+                userId = firebaseUser.uid,
+                onSuccess = {
+                    user?.addTransaction(transaction)
+                    loadTransactions()
+                })
+            //TODO: Display error message
         }
     }
 
@@ -196,6 +178,23 @@ class UserViewModel : ViewModel() {
                     user?.addTransaction(transaction)
                     loadTransactions()
                 })
+        }
+    }
+
+    private fun calculateNextDueDate() {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = format.parse(_transactionDate)
+
+        date?.let {
+            val calendar = Calendar.getInstance()
+            calendar.time = it
+            when (_transactionFrequency) {
+                "Daily" -> calendar.add(Calendar.DAY_OF_YEAR, 1)
+                "Weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
+                "Monthly" -> calendar.add(Calendar.MONTH, 1)
+                "Yearly" -> calendar.add(Calendar.YEAR, 1)
+            }
+            _nextDueDate = calendar.time
         }
     }
 }

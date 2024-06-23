@@ -3,11 +3,9 @@ package at.ac.fhcampuswien.budget_fox.worker
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import at.ac.fhcampuswien.budget_fox.models.Transaction
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.auth
@@ -30,6 +28,7 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
                 .whereEqualTo("isRegular", true)
                 .get()
                 .addOnSuccessListener { documents ->
+
                     for (document in documents) {
                         val transactionData = document.data
                         val transaction = Transaction.fromDatabase(transactionData)
@@ -87,6 +86,4 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
                 Log.w(TAG, "Error adding regular transaction", e)
             }
     }
-
 }
-
