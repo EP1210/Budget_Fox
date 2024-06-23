@@ -3,54 +3,64 @@ package at.ac.fhcampuswien.budget_fox.worker
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import at.ac.fhcampuswien.budget_fox.models.Transaction
+import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
+import java.util.UUID
 
 class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
         val db = Firebase.firestore
         val currentTime = Date()
+        val firebaseUser = Firebase.auth.currentUser
 
-        db.collection("transactions")
-            .whereEqualTo("isRegular", true)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    val transactionData = document.data
-                    val transaction = Transaction.fromDatabase(transactionData)
-                    if (transaction.nextDueDate != null && transaction.nextDueDate!!.before(currentTime)) {
-                        val newTransaction = Transaction(
-                            amount = transaction.amount,
-                            description = transaction.description,
-                            date = Date(),
-                            isRegular = transaction.isRegular,
-                            frequency = transaction.frequency,
-                            nextDueDate = calculateNextDueDate(Date(), transaction.frequency!!)
-                        )
-                        insertNewTransaction(newTransaction)
-                        db.collection("transactions").document(document.id)
-                            .update("nextDueDate", newTransaction.nextDueDate?.let { Timestamp(it) })
+        firebaseUser?.uid?.let { userId ->
+            db.collection("users").document(userId)
+                .collection("transactions")
+                .whereEqualTo("isRegular", true)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val transactionData = document.data
+                        val transaction = Transaction.fromDatabase(transactionData)
+                        if (transaction.nextDueDate != null && transaction.nextDueDate!!.before(currentTime)) {
+                            val newNextDueDate = calculateNextDueDate(transaction.nextDueDate!!, transaction.frequency!!)
+                            db.collection("users").document(userId)
+                                .collection("transactions").document(document.id)
+                                .update("nextDueDate", newNextDueDate?.let { Timestamp(it) })
+
+                            val newTransaction = Transaction(
+                                amount = transaction.amount,
+                                description = transaction.description,
+                                date = Date(),
+                                isRegular = false,
+                            )
+                            newTransaction.uuid = UUID.randomUUID().toString()
+                            insertNewTransaction(newTransaction, userId)
+                        }
                     }
                 }
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error getting documents", e)
-            }
-
-        return Result.success()
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error getting documents", e)
+                }
+        }
+            return Result.success()
     }
 
     private fun calculateNextDueDate(currentDate: Date, frequency: String): Date {
         val calendar = Calendar.getInstance()
         calendar.time = currentDate
-        when (frequency) {
+        when (frequency.lowercase(Locale.ROOT)) {
             "daily" -> calendar.add(Calendar.DAY_OF_YEAR, 1)
             "weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
             "monthly" -> calendar.add(Calendar.MONTH, 1)
@@ -59,16 +69,19 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
         return calendar.time
     }
 
-    private fun insertNewTransaction(transaction: Transaction) {
+    private fun insertNewTransaction(transaction: Transaction, userId: String) {
         val db = Firebase.firestore
-        db.collection("transactions")
-            .add(transaction.transactionToDatabase())
+        db.collection("users").document(userId)
+            .collection("transactions")
+            .document(transaction.uuid)
+            .set(transaction.transactionToDatabase())
             .addOnSuccessListener {
-                Log.d(TAG, "Regular transaction added with ID: ${it.id}")
+                Log.d(TAG, "Regular transaction added with ID: ${transaction.uuid}")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding regular transaction", e)
             }
     }
+
 }
 
