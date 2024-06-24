@@ -23,7 +23,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
 @Composable
-fun TransactionScreen(
+fun TransactionListScreen(
     navigationController: NavController,
     route: String,
     viewModel: UserViewModel

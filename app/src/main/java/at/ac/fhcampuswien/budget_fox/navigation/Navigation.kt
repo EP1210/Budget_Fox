@@ -14,7 +14,7 @@ import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionCreateScreen
-import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
+import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
@@ -64,7 +64,7 @@ fun Navigation() {
             )
         }
         composable(route = Screen.Transaction.route) {
-            TransactionScreen(
+            TransactionListScreen(
                 navigationController = navigationController,
                 route = Screen.Transaction.route,
                 viewModel = userViewModel
