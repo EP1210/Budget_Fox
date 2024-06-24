@@ -134,23 +134,6 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun getCategoriesFromTransaction(userId: String, transactionId: String, onSuccess: (List<Category>) -> Unit) {
-        val categories = mutableListOf<Category>()
-
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId)
-            .collection(DatabaseCollection.Transactions.collectionName)
-            .document(transactionId)
-            .collection(DatabaseCollection.Categories.collectionName).get()
-            .addOnSuccessListener { categoryDocuments ->
-                categoryDocuments.forEach { categoryDocument ->
-                    categories.add(categoryDocument.toObject<Category>())
-                }
-                onSuccess(categories)
-            }
-    }
-
     override fun getIdsFromCategoriesAtTransaction(
         userId: String,
         transactionId: String,

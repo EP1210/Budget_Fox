@@ -129,14 +129,13 @@ fun CategoryList(
                                     transactionId = transactionId,
                                     categoryId = category.uuid
                                 )
-                                viewModel.getIdsFromCategoriesAtTransaction(transactionId = transactionId)
                             } else {
                                 viewModel.insertCategoryAtTransaction(
                                     categoryId = category.uuid,
                                     transactionId = transactionId
                                 )
-                                viewModel.getIdsFromCategoriesAtTransaction(transactionId = transactionId)
                             }
+                            viewModel.getIdsFromCategoriesAtTransaction(transactionId = transactionId)
                         }
                     )
                 },

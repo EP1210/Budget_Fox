@@ -50,10 +50,6 @@ class UserViewModel : ViewModel() {
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
 
-    private var _categoriesFromTransaction = mutableStateListOf<Category>()
-    val categoriesFromTransaction: List<Category>
-        get() = _categoriesFromTransaction
-
     private var _categoryIdsAtTransaction = mutableStateListOf<String>()
     val categoryIdsAtTransaction: List<String>
         get() = _categoryIdsAtTransaction
@@ -135,18 +131,6 @@ class UserViewModel : ViewModel() {
                 categoryId = categoryId,
                 transactionId = transactionId
             )
-        }
-    }
-
-    fun getCategoriesFromTransaction(transactionId: String) {
-        if (firebaseUser != null) {
-            userRepository.getCategoriesFromTransaction(
-                userId = firebaseUser.uid,
-                transactionId = transactionId,
-            ) { categories ->
-                _categoriesFromTransaction.clear()
-                _categoriesFromTransaction.addAll(categories)
-            }
         }
     }
 
