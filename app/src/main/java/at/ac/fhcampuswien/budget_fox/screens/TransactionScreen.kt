@@ -19,7 +19,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
 @Composable
-fun TransactionCreateScreen(
+fun TransactionScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
