@@ -33,8 +33,8 @@ import java.util.Locale
 @Composable
 fun TransactionListItem(
     transaction: Transaction,
-    onItemClick: (String) -> Unit,
-    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true)
+    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true),
+    onItemClick: (String) -> Unit
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 

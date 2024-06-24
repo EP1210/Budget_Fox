@@ -53,7 +53,6 @@ fun HouseholdTransactionAddScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = it)
-                .padding(horizontal = 70.dp)
         ) {
             SimpleNumberField(
                 title = "Amount"

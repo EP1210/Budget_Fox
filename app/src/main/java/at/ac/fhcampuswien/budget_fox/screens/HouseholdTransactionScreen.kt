@@ -59,7 +59,9 @@ fun HouseholdTransactionScreen(
                 .fillMaxSize()
         ) {
             items(items = householdViewModel.getTransactions()) { item: Transaction ->
-                TransactionListItem(transaction = item, numbersVisible = userViewModel.numbersVisible)
+                TransactionListItem(transaction = item, numbersVisible = userViewModel.numbersVisible) {
+
+                }
             }
         }
 
