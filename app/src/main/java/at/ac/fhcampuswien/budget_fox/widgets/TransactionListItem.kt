@@ -18,22 +18,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Composable
 fun TransactionListItem(
     transaction: Transaction,
-    onItemClick: (String) -> Unit
+    onItemClick: (String) -> Unit,
+    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true)
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
@@ -43,7 +44,7 @@ fun TransactionListItem(
             .padding(5.dp) //"Margin" https://stackoverflow.com/a/65582416
             .border(0.dp, Color.Transparent)
             .clip(RoundedCornerShape(6.dp))
-            .background(MaterialTheme.colorScheme.secondary)
+            .background(MaterialTheme.colorScheme.primary)
             .clickable {
                 onItemClick(transaction.uuid)
             }
@@ -75,7 +76,12 @@ fun TransactionListItem(
             modifier = Modifier.weight(weight = 4f)
         ) {
             Text(
-                text = "${transaction.amount}€",
+                text =
+                if (numbersVisible.value) {
+                    "${transaction.amount}€"
+                } else {
+                    "*** €"
+                },
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontSize = 16.sp,
             )
@@ -85,13 +91,4 @@ fun TransactionListItem(
             )
         }
     }
-}
-
-@Composable
-@Preview
-fun DefaultPreview() {
-    val currentTimeInMillis = System.currentTimeMillis()
-    val currentDate = Date(currentTimeInMillis)
-
-    //TransactionListItem(Transaction(amount = 10.78 * -1, description = "FHCW", date = currentDate))
 }

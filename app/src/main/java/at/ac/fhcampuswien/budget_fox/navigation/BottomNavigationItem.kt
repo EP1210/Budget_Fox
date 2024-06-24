@@ -15,8 +15,10 @@ data class BottomNavigationItem(
     val label: String,
     val selected: ImageVector,
     val unselected: ImageVector,
-    val route: String
-)
+    val route: String,
+    val alternativeRoute: String = ""
+) {
+}
 
 fun getBottomNavigationItems(): List<BottomNavigationItem> {
     return listOf(
@@ -42,7 +44,8 @@ fun getBottomNavigationItems(): List<BottomNavigationItem> {
             label = "Household",
             selected = Icons.Filled.Home,
             unselected = Icons.Outlined.Home,
-            route = Screen.HouseholdWelcome.route
+            route = Screen.HouseholdWelcome.route,
+            alternativeRoute = Screen.HouseholdTransaction.route
         )
     )
 }

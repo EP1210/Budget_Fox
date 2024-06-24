@@ -10,6 +10,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,11 +43,13 @@ fun CategoryScreen(
                     SimpleTopAppBar(
                         title = transaction.description
                     ) {
-                        SimpleEventIcon(
-                            icon = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "An icon to navigate back to the previous screen"
-                        ) {
+                        IconButton(onClick = {
                             navigationController.popBackStack()
+                        }) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Localized description"
+                            )
                         }
                     }
                 }
