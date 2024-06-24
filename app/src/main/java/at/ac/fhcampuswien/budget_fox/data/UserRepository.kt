@@ -12,10 +12,11 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     private val database = Firebase.firestore
 
-    override fun insertUser(user: User, userId: String) {
+    override fun insertUser(user: User, userId: String, onSuccess: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId).set(user.userToDatabase())
+            .addOnSuccessListener { onSuccess() }
     }
 
     override fun getUser(userId: String): User? {
@@ -198,4 +199,36 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
+    override fun joinHouseholdIfExist(
+        userId: String,
+        householdId: String,
+        onSuccess: () -> Unit,
+        notExits: () -> Unit
+    ) {
+        val householdRef = database
+            .collection(DatabaseCollection.Households.collectionName)
+            .document(householdId)
+
+        householdRef.get().addOnSuccessListener { doc ->
+            if (doc.exists()) {
+                getAllDataFromUser(userId,
+                    onSuccess = { user ->
+                        if (user != null) {
+                            user.joinHousehold(householdId)
+                            insertUser(user, userId, onSuccess = {
+                                onSuccess()
+                            })
+                        }
+                    },
+                    onFailure = {})
+            }
+            else
+            {
+                notExits()
+            }
+        }
+            .addOnFailureListener {
+                notExits()
+            }
+    }
 }

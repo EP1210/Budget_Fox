@@ -9,22 +9,29 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
 @Composable
-fun TransactionScreen(
+fun HouseholdTransactionAddScreen(
+    viewModel: HouseholdTransactionAddViewModel,
     navigationController: NavController,
-    viewModel: UserViewModel
+    householdId: String?
 ) {
+    if (householdId == null) {
+        Text("Household not found")
+        return
+    }
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add transaction") {
@@ -39,6 +46,7 @@ fun TransactionScreen(
             }
         }
     ) {
+        viewModel.findHouseholdById(householdId)
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,29 +58,32 @@ fun TransactionScreen(
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->
-                viewModel.setTransactionAmount(amount = amount.toDouble())
+                viewModel.setTransactionAmount(amount.toDouble())
             }
             SimpleField(
                 title = "Description"
             ) { description ->
-                viewModel.setTransactionDescription(description = description)
+                viewModel.setTransactionDescription(description)
             }
             SimpleField(
                 title = "Date"
-            ) { date ->
-                viewModel.setTransactionDate(date = date)
+            ) { interval ->
+                viewModel.setTransactionDate(interval)
             }
 
             SimpleButton(
-                name = "Add income"
+                name = "Add income",
+                modifier = Modifier
+                    .padding(bottom = 30.dp)
             ) {
-                viewModel.insertTransaction()
+                viewModel.addHouseholdTransaction()
             }
+
             SimpleButton(
                 name = "Add expense"
             ) {
                 viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
-                viewModel.insertTransaction()
+                viewModel.addHouseholdTransaction()
             }
         }
     }

@@ -21,6 +21,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,14 +39,14 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Composable
 fun TransactionListItem(
-    navigationController: NavController,
+    navigationController: NavController? = null,
     transaction: Transaction,
-    onDelete: (Transaction) -> Unit
+    onDelete: (Transaction) -> Unit,
+    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true)
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     var showDeleteButton by remember { mutableStateOf(false) }
@@ -52,7 +54,7 @@ fun TransactionListItem(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp)
+            .padding(5.dp) //"Margin" https://stackoverflow.com/a/65582416
             .border(0.dp, Color.Transparent)
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
@@ -62,7 +64,7 @@ fun TransactionListItem(
                         showDeleteButton = true
                     },
                     onTap = {
-                        navigationController.navigate(route = Screen.Category.route)
+                        navigationController?.navigate(route = Screen.Category.route)
                     }
                 )
             }
@@ -93,7 +95,12 @@ fun TransactionListItem(
                 modifier = Modifier.weight(4f)
             ) {
                 Text(
-                    text = "${transaction.amount}€",
+                    text =
+                        if (numbersVisible.value) {
+                            "${transaction.amount}€"
+                        } else {
+                            "*** €"
+                        },
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp,
                 )
@@ -119,13 +126,4 @@ fun TransactionListItem(
             }
         }
     }
-}
-
-@Composable
-@Preview
-fun DefaultPreview() {
-    val currentTimeInMillis = System.currentTimeMillis()
-    val currentDate = Date(currentTimeInMillis)
-
-    //TransactionListItem(Transaction(amount = 10.78 * -1, description = "FHCW", date = currentDate))
 }

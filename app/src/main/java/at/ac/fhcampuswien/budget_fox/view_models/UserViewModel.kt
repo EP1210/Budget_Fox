@@ -16,9 +16,10 @@ import java.util.Calendar
 import java.util.Date
 
 class UserViewModel : ViewModel() {
-
     private val userRepository = UserRepository()
     private val firebaseUser = Firebase.auth.currentUser
+
+    val numbersVisible = mutableStateOf(value = true)
 
     private var _user = mutableStateOf<User?>(value = null).value
     val user: User?
@@ -82,6 +83,10 @@ class UserViewModel : ViewModel() {
 
     fun setTransactionDescription(description: String) {
         _transactionDescription = description
+    }
+
+    fun getUserId():String {
+        return firebaseUser?.uid ?: ""
     }
 
     fun setCategoryName(categoryName: String) {
@@ -196,5 +201,34 @@ class UserViewModel : ViewModel() {
             }
             _nextDueDate = calendar.time
         }
+    }
+
+    fun getHousehold() : String {
+        if(user != null && user?.householdId != "") {
+            return user!!.householdId
+        }
+        return ""
+    }
+
+    fun joinHousehold(householdId: String, onSuccess: ()->Unit = {}, notExists: ()->Unit = {}) {
+        //TODO: Check race conditions! - Household is inserted in other VM
+        userRepository.joinHouseholdIfExist(userId = firebaseUser!!.uid, householdId = householdId, onSuccess = {
+            user?.joinHousehold(householdId)
+            onSuccess()
+        }, notExits = {
+            notExists()
+        })
+    }
+
+    fun leaveHousehold(userId: String): Boolean {
+        if(userId == getUserId()) {
+            _user?.householdId = ""
+            _user?.let {
+                userRepository.insertUser(it, userId)
+                return true
+            }
+        }
+
+        return false
     }
 }
