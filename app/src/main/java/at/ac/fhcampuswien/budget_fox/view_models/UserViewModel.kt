@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -20,6 +21,9 @@ class UserViewModel : ViewModel() {
     private val firebaseUser = Firebase.auth.currentUser
 
     val numbersVisible = mutableStateOf(value = true)
+
+    var transactionMessage = mutableStateOf<String?>(null)
+        private set
 
     private var _user = mutableStateOf<User?>(value = null).value
     val user: User?
@@ -157,20 +161,40 @@ class UserViewModel : ViewModel() {
                 onSuccess = {
                     user?.addTransaction(transaction)
                     loadTransactions()
-                })
-            //TODO: Display error message
+                    transactionMessage.value = "Transaction added successfully!"
+                },
+                onFailure = {
+                    transactionMessage.value = "Error adding transaction: ${it.message}."
+                }
+            )
+        } else {
+            transactionMessage.value = "Invalid transaction data."
         }
     }
 
     fun insertRegularTransaction() {
-        val format = SimpleDateFormat("yyyy-MM-dd")
-        val date: Date? = format.parse(transactionDate)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val inputDate: Date? = dateFormat.parse(transactionDate)
 
-        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && date != null && firebaseUser != null) {
+        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && inputDate != null && firebaseUser != null) {
+            val calendar = Calendar.getInstance()
+            val currentTime = calendar.time
+
+            val calendarDate = Calendar.getInstance()
+            calendarDate.time = inputDate
+            val calendarTime = Calendar.getInstance()
+            calendarTime.time = currentTime
+
+            calendarDate.set(Calendar.HOUR_OF_DAY, calendarTime.get(Calendar.HOUR_OF_DAY))
+            calendarDate.set(Calendar.MINUTE, calendarTime.get(Calendar.MINUTE))
+            calendarDate.set(Calendar.SECOND, calendarTime.get(Calendar.SECOND))
+
+            val combinedDateTime = calendarDate.time
+
             val transaction = Transaction(
                 amount = transactionAmount,
                 description = transactionDescription,
-                date = date,
+                date = combinedDateTime,
                 isRegular = true,
                 frequency = transactionFrequency,
                 nextDueDate = nextDueDate
@@ -182,7 +206,14 @@ class UserViewModel : ViewModel() {
                 onSuccess = {
                     user?.addTransaction(transaction)
                     loadTransactions()
-                })
+                    transactionMessage.value = "Regular transaction added successfully!"
+                },
+                onFailure = {
+                    transactionMessage.value = "Error adding regular transaction: ${it.message}"
+                }
+            )
+        } else {
+            transactionMessage.value = "Invalid regular transaction data."
         }
     }
 

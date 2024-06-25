@@ -12,7 +12,7 @@ interface UserDataAccessObject {
 
     fun deleteUser(userId: String)
 
-    fun insertTransaction(userId: String, transaction: Transaction, onSuccess: () -> Unit)
+    fun insertTransaction(userId: String, transaction: Transaction, onSuccess: () -> Unit, onFailure: (Exception) -> Unit)
 
     fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit)
 

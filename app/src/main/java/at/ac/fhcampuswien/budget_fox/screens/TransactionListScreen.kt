@@ -94,7 +94,7 @@ fun TransactionListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Lock,
-                    contentDescription = "Add transaction"
+                    contentDescription = "Numbers Visible"
                 )
             }
             FloatingActionButton(
@@ -103,8 +103,8 @@ fun TransactionListScreen(
                 },
                 shape = CircleShape,
                 modifier = Modifier
-                    .padding(bottom = 85.dp, top = 20.dp, end = 20.dp)
-                    .align(alignment = Alignment.BottomEnd)
+                    .padding(20.dp)
+                    .align(alignment = Alignment.BottomCenter)
             ) {
                 Icon(
                     imageVector = Icons.Filled.DateRange,

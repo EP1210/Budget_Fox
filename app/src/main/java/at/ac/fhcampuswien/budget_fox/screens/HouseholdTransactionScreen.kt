@@ -88,7 +88,7 @@ fun HouseholdTransactionScreen(
                 shape = CircleShape,
                 modifier = Modifier
                     .padding(20.dp)
-                    .align(alignment = Alignment.BottomCenter)
+                    .align(alignment = Alignment.BottomStart)
             ) {
                 Icon(Icons.Filled.Lock, "Hide numbers")
             }
@@ -100,7 +100,7 @@ fun HouseholdTransactionScreen(
                 shape = CircleShape,
                 modifier = Modifier
                     .padding(20.dp)
-                    .align(alignment = Alignment.BottomStart)
+                    .align(alignment = Alignment.BottomCenter)
             ) {
                 Icon(Icons.Filled.Settings, "Household settings")
             }

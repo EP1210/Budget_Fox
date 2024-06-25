@@ -40,7 +40,8 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
     override fun insertTransaction(
         userId: String,
         transaction: Transaction,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
     ) {
         database
             .collection(DatabaseCollection.Users.collectionName)
@@ -49,6 +50,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(transaction.uuid).set(transaction.transactionToDatabase())
             .addOnSuccessListener {
                 onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
             }
     }
 

@@ -64,11 +64,11 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
     private fun calculateNextDueDate(currentDate: Date, frequency: String): Date {
         val calendar = Calendar.getInstance()
         calendar.time = currentDate
-        when (frequency.lowercase(Locale.ROOT)) {
-            "daily" -> calendar.add(Calendar.DAY_OF_YEAR, 1)
-            "weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
-            "monthly" -> calendar.add(Calendar.MONTH, 1)
-            "yearly" -> calendar.add(Calendar.YEAR, 1)
+        when (frequency) {
+            "Daily" -> calendar.add(Calendar.DAY_OF_YEAR, 1)
+            "Weekly" -> calendar.add(Calendar.WEEK_OF_YEAR, 1)
+            "Monthly" -> calendar.add(Calendar.MONTH, 1)
+            "Yearly" -> calendar.add(Calendar.YEAR, 1)
         }
         return calendar.time
     }
