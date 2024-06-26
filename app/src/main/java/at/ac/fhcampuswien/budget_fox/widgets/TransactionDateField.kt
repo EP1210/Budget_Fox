@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -68,12 +69,12 @@ fun TransactionDateField(
             showDialog.value = true
         },
         enabled = false,
-        label = { Text("Date", color = Color.Black) },
-        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+        label = { Text("Date") },
+        textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Black,
-            disabledBorderColor = Color.Black
+            focusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }

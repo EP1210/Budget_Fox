@@ -32,7 +32,7 @@ fun SimpleDropdownField(
         Box(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) {
             BasicText(
                 text = selectedItem ?: placeholder,
-                style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black),
+                style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                 modifier = Modifier
                     .clickable { expanded = true }
                     .padding(20.dp)
@@ -44,7 +44,7 @@ fun SimpleDropdownField(
             ) {
                 items.forEach { label ->
                     DropdownMenuItem(
-                        { BasicText(text = label) },
+                        { Text(text = label, color = MaterialTheme.colorScheme.onSurfaceVariant) },
                         onClick = {
                         selectedItem = label
                         expanded = false
