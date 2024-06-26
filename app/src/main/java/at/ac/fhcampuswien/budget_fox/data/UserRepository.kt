@@ -159,10 +159,25 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .get()
             .addOnSuccessListener { savingGoals ->
                 val goals = mutableListOf<SavingGoal>()
-                savingGoals.forEach { savingGoal ->
-                    goals.add(savingGoal.toObject<SavingGoal>())
+                for (i in 0..<savingGoals.size()) {
+                    savingGoals.forEach { savingGoal ->
+                        val goal = savingGoal.toObject<SavingGoal>()
+                        database
+                            .collection(DatabaseCollection.Users.collectionName)
+                            .document(userId)
+                            .collection(DatabaseCollection.SavingGoals.collectionName)
+                            .document(goal.uuid)
+                            .collection(DatabaseCollection.Transactions.collectionName)
+                            .get()
+                            .addOnSuccessListener { transactions ->
+                                transactions.forEach { transaction ->
+                                    goal.addTransaction(transaction.toObject<Transaction>())
+                                }
+                            }
+                        goals.add(goal)
+                    }
                 }
-                onSuccess(goals)
+                onSuccess(goals) //TODO Race condition
             }
     }
 
@@ -197,6 +212,8 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                             Log.d("FIREBASE", exception.toString())
                         }
                 }
+                if(transactions.isEmpty())
+                    onSuccess()
             }
             .addOnFailureListener { exception ->
                 Log.d("FIREBASE", exception.toString())

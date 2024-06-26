@@ -12,6 +12,7 @@ class SavingGoalOverviewViewModel (
         val userRepository = UserRepository()
         if(userId != null) {
             userRepository.getSavingGoalsFromUser(userId, onSuccess = { goals ->
+                _savingGoals.clear()
                 _savingGoals.addAll(goals)
             })
         }
