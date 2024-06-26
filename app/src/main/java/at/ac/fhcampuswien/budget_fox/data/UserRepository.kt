@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.data
 
+import android.util.Log
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Household
 import at.ac.fhcampuswien.budget_fox.models.SavingGoal
@@ -151,6 +152,43 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                     goals.add(savingGoal.toObject<SavingGoal>())
                 }
                 onSuccess(goals)
+            }
+    }
+
+    override fun savingGoalToDatabase(
+        userId: String,
+        savingGoal: SavingGoal,
+        onSuccess: () -> Unit
+    ) {
+        val transactions = savingGoal.getTransactions()
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .document(savingGoal.uuid)
+            .set(savingGoal.savingGoalToDatabase())
+            .addOnSuccessListener {
+                for (i in transactions.indices) {
+                    database
+                        .collection(DatabaseCollection.Users.collectionName)
+                        .document(userId)
+                        .collection(DatabaseCollection.SavingGoals.collectionName)
+                        .document(savingGoal.uuid)
+                        .collection(DatabaseCollection.Transactions.collectionName)
+                        .document(transactions[i].uuid)
+                        .set(transactions[i].transactionToDatabase())
+                        .addOnSuccessListener {
+                            if(i == transactions.size - 1) {
+                                onSuccess()
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("FIREBASE", exception.toString())
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("FIREBASE", exception.toString())
             }
     }
 

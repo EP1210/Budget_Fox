@@ -25,4 +25,16 @@ class SavingGoal(
     fun addTransaction(transaction: Transaction) {
         _transactions.add(transaction)
     }
+
+    fun getTransactions(): List<Transaction> {
+        return _transactions
+    }
+
+    fun savingGoalToDatabase(): Map<String, Any> {
+        return mapOf (
+            "uuid" to this.uuid,
+            "name" to this.name,
+            "amount" to this.amount
+        )
+    }
 }

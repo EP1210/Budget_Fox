@@ -55,7 +55,7 @@ fun SavingGoalOverviewScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.SavingGoalOverview.setArguments(userId = viewModel.userId)
+                    val route = Screen.SavingGoalAdd.setArguments(userId = viewModel.userId)
                     navController.navigate(route)
                 },
                 shape = CircleShape,

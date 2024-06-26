@@ -28,4 +28,6 @@ interface UserDataAccessObject {
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
 
     fun getSavingGoalsFromUser(userId: String, onSuccess: (List<SavingGoal>) -> Unit)
+
+    fun savingGoalToDatabase(userId: String, savingGoal: SavingGoal, onSuccess: () -> Unit)
 }
