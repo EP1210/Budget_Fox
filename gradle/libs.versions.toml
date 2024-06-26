@@ -20,6 +20,8 @@ firebaseAuthKtx = "23.0.0"
 lifecycleVersion = "2.8.2"
 navigationCompose = "2.7.7"
 vico = "2.0.0-alpha.21"
+workRuntimeKtx = "2.9.0"
+roomKtx = "2.6.1"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraView" }
@@ -62,6 +64,8 @@ vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = 
 
 # For the view system.
 vico-views = { group = "com.patrykandpatrick.vico", name = "views", version.ref = "vico" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

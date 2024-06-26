@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleDropdownField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -34,7 +35,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun TransactionScreen(
+fun RegularTransactionScreen(
     navigationController: NavController,
     viewModel: UserViewModel
 ) {
@@ -44,7 +45,7 @@ fun TransactionScreen(
 
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "Add transaction") {
+            SimpleTopAppBar(title = "Add Regular Transaction") {
                 IconButton(onClick = {
                     navigationController.popBackStack()
                 }) {
@@ -67,12 +68,12 @@ fun TransactionScreen(
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->
-                viewModel.setTransactionAmount(amount = amount.toDouble())
+                viewModel.setTransactionAmount(amount.toDouble())
             }
             SimpleField(
                 title = "Description"
             ) { description ->
-                viewModel.setTransactionDescription(description = description)
+                viewModel.setTransactionDescription(description)
             }
             TransactionDateField(
                 onValueChanged = { date ->
@@ -80,17 +81,18 @@ fun TransactionScreen(
                     viewModel.setTransactionDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 }
             )
+            SimpleDropdownField(
+                placeholder = "Select Frequency ▼",
+                items = listOf("Daily", "Weekly", "Monthly", "Yearly")
+            ) { frequency ->
+                viewModel.setTransactionFrequency(frequency)
+            }
 
             SimpleButton(
-                name = "Add income"
-            ) {
-                viewModel.insertTransaction()
-            }
-            SimpleButton(
-                name = "Add expense"
+                name = "Add Regular Expense"
             ) {
                 viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
-                viewModel.insertTransaction()
+                viewModel.insertRegularTransaction()
             }
 
             transactionMessage?.let { message ->

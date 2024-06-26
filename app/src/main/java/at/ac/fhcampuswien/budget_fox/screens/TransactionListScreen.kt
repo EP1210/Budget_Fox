@@ -8,11 +8,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,11 @@ fun TransactionListScreen(
     route: String,
     viewModel: UserViewModel
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.loadTransactions()
+    }
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Your transactions")
@@ -45,14 +52,15 @@ fun TransactionListScreen(
             modifier = Modifier
                 .padding(paddingValues = it)
         ) {
-            viewModel.user?.let { it1 ->
-                items(it1.getTransactions()) { transaction ->
-                    TransactionListItem(
-                        transaction = transaction,
-                        navigationController = navigationController,
-                        numbersVisible = viewModel.numbersVisible
-                    )
-                }
+            items(viewModel.transactions) { transaction ->
+                TransactionListItem(
+                    navigationController = navigationController,
+                    transaction = transaction,
+                    numbersVisible = viewModel.numbersVisible,
+                    onDelete = {
+                        viewModel.deleteTransaction(it)
+                    }
+                )
             }
         }
 
@@ -86,7 +94,21 @@ fun TransactionListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Lock,
-                    contentDescription = "Add transaction"
+                    contentDescription = "Numbers Visible"
+                )
+            }
+            FloatingActionButton(
+                onClick = {
+                    navigationController.navigate(route = Screen.RegularTransaction.route)
+                },
+                shape = CircleShape,
+                modifier = Modifier
+                    .padding(20.dp)
+                    .align(alignment = Alignment.BottomCenter)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.DateRange,
+                    contentDescription = "Add regular transaction"
                 )
             }
         }
