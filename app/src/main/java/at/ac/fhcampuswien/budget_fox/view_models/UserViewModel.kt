@@ -1,6 +1,5 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
-import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf

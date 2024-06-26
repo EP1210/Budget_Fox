@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -70,59 +68,76 @@ fun TransactionListItem(
             }
             .padding(16.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                imageVector = if (transaction.amount >= 0) {
-                    Icons.Outlined.AddCircle
-                } else {
-                    Icons.Outlined.ShoppingCart
-                },
-                contentDescription = transaction.description,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.inverseOnSurface
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = transaction.description,
-                color = MaterialTheme.colorScheme.inverseOnSurface,
-                fontSize = 16.sp
-            )
-            Column(
-                horizontalAlignment = Alignment.End,
-                modifier = Modifier.weight(4f)
+        Column {
+            if (transaction.isRegular) {
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFFFEBEE))
+                        .border(1.dp, Color.Red, RoundedCornerShape(50))
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = "First regular",
+                        color = Color.Black,
+                        fontSize = 12.sp
+                    )
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
+                Icon(
+                    imageVector = if (transaction.amount >= 0) {
+                        Icons.Outlined.AddCircle
+                    } else {
+                        Icons.Outlined.ShoppingCart
+                    },
+                    contentDescription = transaction.description,
+                    modifier = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.inverseOnSurface
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text =
+                    text = transaction.description,
+                    color = MaterialTheme.colorScheme.inverseOnSurface,
+                    fontSize = 16.sp
+                )
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    modifier = Modifier.weight(4f)
+                ) {
+                    Text(
+                        text =
                         if (numbersVisible.value) {
                             "${transaction.amount}€"
                         } else {
                             "*** €"
                         },
-                    color = MaterialTheme.colorScheme.inverseOnSurface,
-                    fontSize = 16.sp,
-                )
-                Text(
-                    text = format.format(transaction.date),
-                    color = MaterialTheme.colorScheme.inverseOnSurface,
-                )
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                        fontSize = 16.sp,
+                    )
+                    Text(
+                        text = format.format(transaction.date),
+                        color = MaterialTheme.colorScheme.inverseOnSurface,
+                    )
+                }
             }
-        }
-        if (showDeleteButton) {
-            IconButton(
-                onClick = {
-                    onDelete(transaction)
-                    showDeleteButton = false
-                },
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete Transaction",
-                    tint = Color.Red
-                )
+            if (showDeleteButton) {
+                IconButton(
+                    onClick = {
+                        onDelete(transaction)
+                        showDeleteButton = false
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Transaction",
+                        tint = Color.Red
+                    )
+                }
             }
         }
     }
