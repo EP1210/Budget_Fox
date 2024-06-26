@@ -27,4 +27,14 @@ sealed class Screen(val route: String) {
         }
 
     }
+    data object SavingGoalOverview : Screen(route = "saving_goal_overview_screen/{$USER_ID}") {
+        fun setArguments(userId: String): String {
+            return this.route.replace(oldValue = "{$USER_ID}", userId)
+        }
+    }
+    data object SavingGoalAdd : Screen(route = "saving_goal_add_screen/{$USER_ID}") {
+        fun setArguments(userId: String): String {
+            return this.route.replace(oldValue = "{$USER_ID}", userId)
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.data
 
 import at.ac.fhcampuswien.budget_fox.models.Category
+import at.ac.fhcampuswien.budget_fox.models.SavingGoal
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 
@@ -25,4 +26,6 @@ interface UserDataAccessObject {
     fun deleteCategory(userId: String, categoryId: String)
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
+
+    fun getSavingGoalsFromUser(userId: String, onSuccess: (List<SavingGoal>) -> Unit)
 }

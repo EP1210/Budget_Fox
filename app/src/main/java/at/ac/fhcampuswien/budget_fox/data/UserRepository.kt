@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.budget_fox.data
 
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Household
+import at.ac.fhcampuswien.budget_fox.models.SavingGoal
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
@@ -135,6 +136,21 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
             .addOnFailureListener {
                 onFailure(it)
+            }
+    }
+
+    override fun getSavingGoalsFromUser(userId: String, onSuccess: (List<SavingGoal>) -> Unit) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .get()
+            .addOnSuccessListener { savingGoals ->
+                val goals = mutableListOf<SavingGoal>()
+                savingGoals.forEach { savingGoal ->
+                    goals.add(savingGoal.toObject<SavingGoal>())
+                }
+                onSuccess(goals)
             }
     }
 
