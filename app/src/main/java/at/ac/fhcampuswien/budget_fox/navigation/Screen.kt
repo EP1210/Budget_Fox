@@ -16,6 +16,7 @@ sealed class Screen(val route: String) {
     data object HouseholdJoin : Screen(route = "household_join_screen")
     data object HouseholdCreate : Screen(route = "household_register_screen")
     data object HouseholdTransaction : Screen(route = "household_transaction_screen")
+    data object RegularTransaction : Screen(route = "regular_transaction_screen")
     data object HouseholdAddTransaction : Screen(route = "household_add_transaction_screen/{${HOUSEHOLD_ID}}") {
         fun setHouseholdId(householdId: String): String {
             return this.route.replace(oldValue = "{$HOUSEHOLD_ID}", householdId)
