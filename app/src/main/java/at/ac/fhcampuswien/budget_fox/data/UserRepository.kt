@@ -159,26 +159,34 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .get()
             .addOnSuccessListener { savingGoals ->
                 val goals = mutableListOf<SavingGoal>()
-                for (i in 0..<savingGoals.size()) {
-                    savingGoals.forEach { savingGoal ->
-                        val goal = savingGoal.toObject<SavingGoal>()
-                        database
-                            .collection(DatabaseCollection.Users.collectionName)
-                            .document(userId)
-                            .collection(DatabaseCollection.SavingGoals.collectionName)
-                            .document(goal.uuid)
-                            .collection(DatabaseCollection.Transactions.collectionName)
-                            .get()
-                            .addOnSuccessListener { transactions ->
-                                transactions.forEach { transaction ->
-                                    goal.addTransaction(transaction.toObject<Transaction>())
-                                }
-                            }
-                        goals.add(goal)
-                    }
+                savingGoals.forEach { goal ->
+                    goals.add(goal.toObject<SavingGoal>())
                 }
-                onSuccess(goals) //TODO Race condition
+                getSavingGoalsTransactions(userId = userId, goals = goals, onSuccess = onSuccess)
             }
+    }
+
+    override fun getSavingGoalsTransactions(
+        userId: String,
+        goals: List<SavingGoal>,
+        onSuccess: (List<SavingGoal>) -> Unit
+    ) {
+        for (i in goals.indices) {
+            database
+                .collection(DatabaseCollection.Users.collectionName)
+                .document(userId)
+                .collection(DatabaseCollection.SavingGoals.collectionName)
+                .document(goals[i].uuid)
+                .collection(DatabaseCollection.Transactions.collectionName)
+                .get()
+                .addOnSuccessListener { transactions ->
+                    transactions.forEach { transaction ->
+                        goals[i].addTransaction(transaction.toObject<Transaction>())
+                    }
+                    if (i == goals.size - 1)
+                        onSuccess(goals)
+                }
+        }
     }
 
     override fun savingGoalToDatabase(
@@ -204,7 +212,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                         .document(transactions[i].uuid)
                         .set(transactions[i].transactionToDatabase())
                         .addOnSuccessListener {
-                            if(i == transactions.size - 1) {
+                            if (i == transactions.size - 1) {
                                 onSuccess()
                             }
                         }
@@ -212,7 +220,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                             Log.d("FIREBASE", exception.toString())
                         }
                 }
-                if(transactions.isEmpty())
+                if (transactions.isEmpty())
                     onSuccess()
             }
             .addOnFailureListener { exception ->
@@ -296,9 +304,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                         }
                     },
                     onFailure = {})
-            }
-            else
-            {
+            } else {
                 notExits()
             }
         }

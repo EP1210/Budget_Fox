@@ -8,11 +8,11 @@ import at.ac.fhcampuswien.budget_fox.models.SavingGoal
 class SavingGoalOverviewViewModel (
     val userId: String?
 ): ViewModel() {
-    init {
-        val userRepository = UserRepository()
+    val userRepository = UserRepository()
+
+    fun loadSavingGoals() {
         if(userId != null) {
             userRepository.getSavingGoalsFromUser(userId, onSuccess = { goals ->
-                _savingGoals.clear()
                 _savingGoals.addAll(goals)
             })
         }
