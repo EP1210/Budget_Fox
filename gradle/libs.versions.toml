@@ -6,22 +6,24 @@ coilCompose = "2.6.0"
 composeQrCode = "1.0.1"
 guava = "32.0.1-android"
 zxingCore = "3.5.3"
-firebaseBom = "33.1.0"
+firebaseBom = "33.1.1"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
 kotlinxDatetime = "0.6.0-RC.2"
-lifecycleRuntimeKtx = "2.8.2"
+lifecycleRuntimeKtx = "2.8.3"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 firebaseAuthKtx = "23.0.0"
-lifecycleVersion = "2.8.2"
+lifecycleVersion = "2.8.3"
 navigationCompose = "2.7.7"
 vico = "2.0.0-alpha.21"
 workRuntimeKtx = "2.9.0"
 roomKtx = "2.6.1"
+firebaseMessaging = "24.0.0"
+googleServices = "4.4.2"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraView" }
@@ -31,6 +33,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleVersion" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx" }
 compose-qr-code = { module = "com.lightspark:compose-qr-code", version.ref = "composeQrCode" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
@@ -52,6 +55,8 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+google-services = { group = "com.google.gms", name = "google-services", version.ref = "googleServices" }
 
 # For Jetpack Compose.
 vico-compose = { group = "com.patrykandpatrick.vico", name = "compose", version.ref = "vico" }
