@@ -12,10 +12,11 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
     private val database = Firebase.firestore
 
-    override fun insertUser(user: User, userId: String) {
+    override fun insertUser(user: User, userId: String, onSuccess: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId).set(user.userToDatabase())
+            .addOnSuccessListener { onSuccess() }
     }
 
     override fun getUser(userId: String): User? {
@@ -39,7 +40,8 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
     override fun insertTransaction(
         userId: String,
         transaction: Transaction,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
     ) {
         database
             .collection(DatabaseCollection.Users.collectionName)
@@ -48,6 +50,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(transaction.uuid).set(transaction.transactionToDatabase())
             .addOnSuccessListener {
                 onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onFailure(exception)
             }
     }
 
@@ -64,18 +69,23 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .collection(DatabaseCollection.Transactions.collectionName).get()
             .addOnSuccessListener { transactions ->
                 for (transaction in transactions) {
-                    transactionList.add(transaction.toObject<Transaction>())
+                    val data = transaction.data
+                    val parsedTransaction = Transaction.fromDatabase(data)
+                    transactionList.add(parsedTransaction)
                 }
                 onSuccess(transactionList)
             }
             .addOnFailureListener(onFailure)
     }
 
-    override fun deleteTransaction(userId: String, transactionId: String) {
+    override fun deleteTransaction(userId: String, transactionId: String, onComplete: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId).collection(DatabaseCollection.Transactions.collectionName)
             .document(transactionId).delete()
+            .addOnSuccessListener {
+                onComplete()
+            }
     }
 
     override fun insertCategory(userId: String, category: Category) {
@@ -126,7 +136,9 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                     .collection(DatabaseCollection.Transactions.collectionName).get()
                     .addOnSuccessListener { transactions ->
                         for (transaction in transactions) {
-                            user?.addTransaction(transaction.toObject<Transaction>())
+                            val data = transaction.data
+                            val parsedTransaction = Transaction.fromDatabase(data)
+                            user?.addTransaction(parsedTransaction)
                         }
                         onSuccess(user)
                     }
@@ -183,10 +195,44 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 val transactionList = mutableListOf<Transaction>()
 
                 transactions.forEach { transaction ->
-                    transactionList.add(transaction.toObject<Transaction>())
+                    val data = transaction.data
+                    val parsedTransaction = Transaction.fromDatabase(data)
+                    transactionList.add(parsedTransaction)
                 }
                 onSuccess(transactionList)
             }
     }
 
+    override fun joinHouseholdIfExist(
+        userId: String,
+        householdId: String,
+        onSuccess: () -> Unit,
+        notExits: () -> Unit
+    ) {
+        val householdRef = database
+            .collection(DatabaseCollection.Households.collectionName)
+            .document(householdId)
+
+        householdRef.get().addOnSuccessListener { doc ->
+            if (doc.exists()) {
+                getAllDataFromUser(userId,
+                    onSuccess = { user ->
+                        if (user != null) {
+                            user.joinHousehold(householdId)
+                            insertUser(user, userId, onSuccess = {
+                                onSuccess()
+                            })
+                        }
+                    },
+                    onFailure = {})
+            }
+            else
+            {
+                notExits()
+            }
+        }
+            .addOnFailureListener {
+                notExits()
+            }
+    }
 }

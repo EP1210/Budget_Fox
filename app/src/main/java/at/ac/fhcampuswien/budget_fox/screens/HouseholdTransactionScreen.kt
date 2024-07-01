@@ -8,37 +8,42 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
 @Composable
-fun TransactionListScreen(
+fun HouseholdTransactionScreen(
     navigationController: NavController,
     route: String,
-    viewModel: UserViewModel
+    userViewModel: UserViewModel,
+    householdViewModel: HouseholdViewModel
 ) {
-
-    LaunchedEffect(Unit) {
-        viewModel.loadTransactions()
+    val householdId = userViewModel.getHousehold()
+    if(householdId == "") {
+        Text("Household not found!")
+        return
     }
+    householdViewModel.getHousehold(householdId)
 
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "Your transactions")
+            SimpleTopAppBar(title = "Household transactions")
         },
         bottomBar = {
             SimpleBottomNavigationBar(
@@ -51,16 +56,10 @@ fun TransactionListScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(paddingValues = it)
+                .fillMaxSize()
         ) {
-            items(viewModel.transactions) { transaction ->
-                TransactionListItem(
-                    navigationController = navigationController,
-                    transaction = transaction,
-                    numbersVisible = viewModel.numbersVisible,
-                    onDelete = {
-                        viewModel.deleteTransaction(it)
-                    }
-                )
+            items(items = householdViewModel.getTransactions()) { item: Transaction ->
+                TransactionListItem(transaction = item, numbersVisible = userViewModel.numbersVisible, onDelete = {})
             }
         }
 
@@ -68,48 +67,42 @@ fun TransactionListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = it)
-        ) {
+        )
+        {
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.Transaction.route)
+                    val route = Screen.HouseholdAddTransaction.setHouseholdId(householdId = userViewModel.getHousehold())
+                    navigationController.navigate(route)
                 },
                 shape = CircleShape,
                 modifier = Modifier
                     .padding(20.dp)
                     .align(alignment = Alignment.BottomEnd)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = "Add transaction"
-                )
+                Icon(Icons.Filled.Add, "Add transaction")
             }
             FloatingActionButton(
                 onClick = {
-                    viewModel.numbersVisible.value = !viewModel.numbersVisible.value
+                    userViewModel.numbersVisible.value = !userViewModel.numbersVisible.value
                 },
                 shape = CircleShape,
                 modifier = Modifier
                     .padding(20.dp)
                     .align(alignment = Alignment.BottomStart)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Lock,
-                    contentDescription = "Numbers Visible"
-                )
+                Icon(Icons.Filled.Lock, "Hide numbers")
             }
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.RegularTransaction.route)
+                    val route = Screen.HouseholdSettings.setArguments(householdId = userViewModel.getHousehold(), userId = userViewModel.getUserId())
+                    navigationController.navigate(route)
                 },
                 shape = CircleShape,
                 modifier = Modifier
                     .padding(20.dp)
                     .align(alignment = Alignment.BottomCenter)
             ) {
-                Icon(
-                    imageVector = Icons.Filled.DateRange,
-                    contentDescription = "Add regular transaction"
-                )
+                Icon(Icons.Filled.Settings, "Household settings")
             }
         }
     }

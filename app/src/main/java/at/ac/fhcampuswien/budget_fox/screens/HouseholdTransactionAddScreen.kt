@@ -11,36 +11,26 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
-import at.ac.fhcampuswien.budget_fox.widgets.TransactionDateField
-import kotlinx.coroutines.delay
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
-fun TransactionScreen(
+fun HouseholdTransactionAddScreen(
+    viewModel: HouseholdTransactionAddViewModel,
     navigationController: NavController,
-    viewModel: UserViewModel
+    householdId: String?
 ) {
-
-    val transactionMessage by viewModel.transactionMessage
-    var transactionDate by rememberSaveable { mutableStateOf(LocalDateTime.now()) }
+    if (householdId == null) {
+        Text("Household not found")
+        return
+    }
 
     Scaffold(
         topBar = {
@@ -56,6 +46,7 @@ fun TransactionScreen(
             }
         }
     ) {
+        viewModel.findHouseholdById(householdId)
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -67,44 +58,32 @@ fun TransactionScreen(
             SimpleNumberField(
                 title = "Amount"
             ) { amount ->
-                viewModel.setTransactionAmount(amount = amount.toDouble())
+                viewModel.setTransactionAmount(amount.toDouble())
             }
             SimpleField(
                 title = "Description"
             ) { description ->
-                viewModel.setTransactionDescription(description = description)
+                viewModel.setTransactionDescription(description)
             }
-            TransactionDateField(
-                onValueChanged = { date ->
-                    transactionDate = date
-                    viewModel.setTransactionDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                }
-            )
+            SimpleField(
+                title = "Date"
+            ) { interval ->
+                viewModel.setTransactionDate(interval)
+            }
 
             SimpleButton(
-                name = "Add income"
+                name = "Add income",
+                modifier = Modifier
+                    .padding(bottom = 30.dp)
             ) {
-                viewModel.insertTransaction()
+                viewModel.addHouseholdTransaction()
             }
+
             SimpleButton(
                 name = "Add expense"
             ) {
                 viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
-                viewModel.insertTransaction()
-            }
-
-            transactionMessage?.let { message ->
-                LaunchedEffect(message) {
-                    delay(4000)
-                    viewModel.transactionMessage.value = null
-                }
-                Text(
-                    text = message,
-                    color = if (message.contains("successfully")) Color.Green else Color.Red,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
+                viewModel.addHouseholdTransaction()
             }
         }
     }

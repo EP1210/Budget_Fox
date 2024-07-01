@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.room.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,4 +85,21 @@ dependencies {
     implementation(libs.vico.views)
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.analytics.ktx)
+
+    implementation(libs.compose.qr.code)
+
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    implementation(libs.zxing.core)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-view
+    implementation(libs.androidx.camera.view)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-camera2
+    implementation(libs.androidx.camera.camera2)
+
+    // https://mvnrepository.com/artifact/androidx.camera/camera-lifecycle
+    implementation(libs.androidx.camera.lifecycle)
+
+    //Guava: Google Core Libraries for Java
+    implementation(libs.guava)
 }
