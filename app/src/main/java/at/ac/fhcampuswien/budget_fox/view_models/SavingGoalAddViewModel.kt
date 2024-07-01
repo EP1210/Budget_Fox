@@ -1,13 +1,12 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.models.SavingGoal
-import at.ac.fhcampuswien.budget_fox.models.Transaction
-import java.util.Date
 
 class SavingGoalAddViewModel(
-    userId: String?
+    val userId: String?
 ) : ViewModel() {
     /*init {
         val userRepository = UserRepository()
@@ -17,4 +16,31 @@ class SavingGoalAddViewModel(
             userRepository.savingGoalToDatabase(userId, savingGoal, onSuccess = {})
         }
     }*/
+    val userRepository = UserRepository()
+
+    private var _goalTitle = mutableStateOf(value = "").value
+    val goalTitle: String
+        get() = _goalTitle
+
+    private var _goalAmount = mutableStateOf(value = 0.0).value
+    val goalAmount: Double
+        get() = _goalAmount
+
+    fun setGoalTitle(goalTitle: String) {
+        _goalTitle = goalTitle
+    }
+
+    fun setGoalAmount(goalAmount: Double) {
+        _goalAmount = goalAmount
+    }
+
+    fun addSavingGoal(navigateBackOnSuccess: () -> Unit) {
+        val savingGoal = SavingGoal(name = goalTitle, amount = goalAmount)
+
+        if (userId != null) {
+            userRepository.savingGoalToDatabase(userId, savingGoal, onSuccess = {
+                navigateBackOnSuccess()
+            })
+        }
+    }
 }
