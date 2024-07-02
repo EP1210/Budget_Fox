@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -21,8 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
-import at.ac.fhcampuswien.budget_fox.widgets.CategoryCard
+import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleCheckbox
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -100,7 +100,7 @@ fun CategoryList(
 ) {
     LazyColumn {
         items(items = viewModel.categoriesFromUser) { category ->
-            CategoryCard(
+            CategoryItem(
                 categoryName = category.name,
                 categoryDescription = category.description,
                 edit = {
@@ -123,28 +123,21 @@ fun CategoryList(
                         viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
                     }
                 },
-                check = {
-                    viewModel.setCurrentTransactionId(transactionId = transactionId)
-                    viewModel.setAtTransaction(category = category)
-                    // todo: remember (maybe)
-                    Checkbox(
-                        checked = viewModel.atTransaction,
-                        onCheckedChange = {
-                            if (viewModel.atTransaction) {
-                                viewModel.deleteCategoryAtTransaction(
-                                    transactionId = transactionId,
-                                    categoryId = category.uuid
-                                )
-                            } else {
-                                viewModel.insertCategoryAtTransaction(
-                                    categoryId = category.uuid,
-                                    transactionId = transactionId
-                                )
-                            }
-                            viewModel.updateCategoryTransactionMemberships(categoryId = category.uuid)
-                            viewModel.setAtTransaction(category = category)
+                widget = {
+                    SimpleCheckbox(isChecked = transactionId in category.transactionMemberships) { isChecked ->
+                        if (isChecked) {
+                            viewModel.deleteCategoryAtTransaction(
+                                transactionId = transactionId,
+                                categoryId = category.uuid
+                            )
+                        } else {
+                            viewModel.insertCategoryAtTransaction(
+                                categoryId = category.uuid,
+                                transactionId = transactionId
+                            )
                         }
-                    )
+                        viewModel.updateCategoryTransactionMemberships(categoryId = category.uuid)
+                    }
                 },
                 modifier = Modifier
                     .padding(horizontal = 20.dp, vertical = 5.dp)

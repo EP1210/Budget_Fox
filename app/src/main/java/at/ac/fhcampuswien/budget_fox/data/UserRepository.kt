@@ -162,6 +162,15 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                                 .document(userId)
                                 .collection(DatabaseCollection.Categories.collectionName)
                                 .document(categoryId).update("transactionMemberships", memberships)
+                                .addOnSuccessListener {
+                                    database
+                                        .collection(DatabaseCollection.Users.collectionName)
+                                        .document(userId)
+                                        .collection(DatabaseCollection.Transactions.collectionName)
+                                        .document(transactionDocument.id)
+                                        .collection(DatabaseCollection.Categories.collectionName)
+                                        .document(categoryId).update("transactionMemberships", memberships)
+                                }
                         }
                 }
             }

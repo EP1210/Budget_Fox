@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CategoryCard(
+fun CategoryItem(
     categoryName: String,
     categoryDescription: String,
     modifier: Modifier = Modifier,
     edit: @Composable () -> Unit,
     delete: @Composable () -> Unit,
-    check: @Composable () -> Unit
+    widget: @Composable () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -42,7 +42,7 @@ fun CategoryCard(
                 )
                 edit()
                 delete()
-                check()
+                widget()
             }
             if (categoryDescription.isNotBlank()) {
                 HorizontalDivider(
