@@ -51,6 +51,12 @@ class UserViewModel : ViewModel() {
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
 
+    private var _currentTransactionId = mutableStateOf(value = "").value
+
+    private var _atTransaction = mutableStateOf(value = false).value
+    val atTransaction: Boolean
+        get() = _atTransaction
+
     fun setUser(user: User) {
         _user = user
     }
@@ -102,6 +108,14 @@ class UserViewModel : ViewModel() {
 
     fun setCategoryDescription(categoryDescription: String) {
         _categoryDescription = categoryDescription
+    }
+
+    fun setCurrentTransactionId(transactionId: String) {
+        _currentTransactionId = transactionId
+    }
+
+    fun setAtTransaction(category: Category) {
+        _atTransaction = _currentTransactionId in category.transactionMemberships
     }
 
     fun insertCategoryAtUser(category: Category) {

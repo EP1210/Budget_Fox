@@ -14,10 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -128,14 +124,13 @@ fun CategoryList(
                     }
                 },
                 check = {
-                    var checked by remember {
-                        mutableStateOf(value = transactionId in category.transactionMemberships)
-                    }
-
+                    viewModel.setCurrentTransactionId(transactionId = transactionId)
+                    viewModel.setAtTransaction(category = category)
+                    // todo: remember (maybe)
                     Checkbox(
-                        checked = checked,
+                        checked = viewModel.atTransaction,
                         onCheckedChange = {
-                            if (checked) {
+                            if (viewModel.atTransaction) {
                                 viewModel.deleteCategoryAtTransaction(
                                     transactionId = transactionId,
                                     categoryId = category.uuid
@@ -147,7 +142,7 @@ fun CategoryList(
                                 )
                             }
                             viewModel.updateCategoryTransactionMemberships(categoryId = category.uuid)
-                            checked = it
+                            viewModel.setAtTransaction(category = category)
                         }
                     )
                 },
