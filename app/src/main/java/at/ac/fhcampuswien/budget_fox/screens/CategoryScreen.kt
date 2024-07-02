@@ -14,6 +14,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,7 +40,6 @@ fun CategoryScreen(
     viewModel.user?.getTransactions()?.forEach { transaction ->
         if (transaction.uuid == transactionId) {
             viewModel.getCategoriesFromUser()
-            viewModel.getIdsFromCategoriesAtTransaction(transactionId = transaction.uuid)
 
             Scaffold(
                 topBar = {
@@ -125,10 +128,14 @@ fun CategoryList(
                     }
                 },
                 check = {
+                    var checked by remember {
+                        mutableStateOf(value = transactionId in category.transactionMemberships)
+                    }
+
                     Checkbox(
-                        checked = category.uuid in viewModel.categoryIdsAtTransaction,
+                        checked = checked,
                         onCheckedChange = {
-                            if (category.uuid in viewModel.categoryIdsAtTransaction) {
+                            if (checked) {
                                 viewModel.deleteCategoryAtTransaction(
                                     transactionId = transactionId,
                                     categoryId = category.uuid
@@ -139,7 +146,8 @@ fun CategoryList(
                                     transactionId = transactionId
                                 )
                             }
-                            viewModel.getIdsFromCategoriesAtTransaction(transactionId = transactionId)
+                            viewModel.updateCategoryTransactionMemberships(categoryId = category.uuid)
+                            checked = it
                         }
                     )
                 },

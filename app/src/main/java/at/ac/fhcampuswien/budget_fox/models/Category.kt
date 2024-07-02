@@ -5,7 +5,8 @@ import java.util.UUID
 class Category(
     var uuid: String = "",
     var name: String = "",
-    var description: String = ""
+    var description: String = "",
+    var transactionMemberships: List<String> = emptyList()
 ) {
     constructor(
         name: String,

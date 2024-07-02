@@ -51,10 +51,6 @@ class UserViewModel : ViewModel() {
     val categoriesFromUser: List<Category>
         get() = _categoriesFromUser
 
-    private var _categoryIdsAtTransaction = mutableStateListOf<String>()
-    val categoryIdsAtTransaction: List<String>
-        get() = _categoryIdsAtTransaction
-
     fun setUser(user: User) {
         _user = user
     }
@@ -75,7 +71,7 @@ class UserViewModel : ViewModel() {
         _transactionDescription = description
     }
 
-    fun getUserId():String {
+    fun getUserId(): String {
         return firebaseUser?.uid ?: ""
     }
 
@@ -139,15 +135,12 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun getIdsFromCategoriesAtTransaction(transactionId: String) {
+    fun updateCategoryTransactionMemberships(categoryId: String) {
         if (firebaseUser != null) {
-            userRepository.getIdsFromCategoriesAtTransaction(
+            userRepository.updateCategoryTransactionMemberships(
                 userId = firebaseUser.uid,
-                transactionId = transactionId
-            ) { categoryIds ->
-                _categoryIdsAtTransaction.clear()
-                _categoryIdsAtTransaction.addAll(categoryIds)
-            }
+                categoryId = categoryId
+            )
         }
     }
 
@@ -171,25 +164,29 @@ class UserViewModel : ViewModel() {
     }
 
 
-    fun getHousehold() : String {
-        if(user != null && user?.householdId != "") {
+    fun getHousehold(): String {
+        if (user != null && user?.householdId != "") {
             return user!!.householdId
         }
         return ""
     }
 
-    fun joinHousehold(householdId: String, onSuccess: ()->Unit = {}, notExists: ()->Unit = {}) {
+    fun joinHousehold(householdId: String, onSuccess: () -> Unit = {}, notExists: () -> Unit = {}) {
         //TODO: Check race conditions! - Household is inserted in other VM
-        userRepository.joinHouseholdIfExist(userId = firebaseUser!!.uid, householdId = householdId, onSuccess = {
-            user?.joinHousehold(householdId)
-            onSuccess()
-        }, notExits = {
-            notExists()
-        })
+        userRepository.joinHouseholdIfExist(
+            userId = firebaseUser!!.uid,
+            householdId = householdId,
+            onSuccess = {
+                user?.joinHousehold(householdId)
+                onSuccess()
+            },
+            notExits = {
+                notExists()
+            })
     }
 
     fun leaveHousehold(userId: String): Boolean {
-        if(userId == getUserId()) {
+        if (userId == getUserId()) {
             _user?.householdId = ""
             _user?.let {
                 userRepository.insertUser(it, userId)

@@ -135,24 +135,35 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun getIdsFromCategoriesAtTransaction(
-        userId: String,
-        transactionId: String,
-        onSuccess: (List<String>) -> Unit
-    ) {
-        val categoryIds = mutableListOf<String>()
+    override fun updateCategoryTransactionMemberships(userId: String, categoryId: String) {
+        val memberships = mutableListOf<String>()
 
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
-            .collection(DatabaseCollection.Transactions.collectionName)
-            .document(transactionId)
-            .collection(DatabaseCollection.Categories.collectionName).get()
-            .addOnSuccessListener { categoryDocuments ->
-                categoryDocuments.forEach { categoryDocument ->
-                    categoryIds.add(categoryDocument.id)
+            .collection(DatabaseCollection.Transactions.collectionName).get()
+            .addOnSuccessListener { transactionDocuments ->
+                transactionDocuments.forEach { transactionDocument ->
+                    database
+                        .collection(DatabaseCollection.Users.collectionName)
+                        .document(userId)
+                        .collection(DatabaseCollection.Transactions.collectionName)
+                        .document(transactionDocument.id)
+                        .collection(DatabaseCollection.Categories.collectionName).get()
+                        .addOnSuccessListener { categoryDocuments ->
+                            for (categoryDocument in categoryDocuments) {
+                                if (categoryDocument.id == categoryId) {
+                                    memberships.add(transactionDocument.id)
+                                    break
+                                }
+                            }
+                            database
+                                .collection(DatabaseCollection.Users.collectionName)
+                                .document(userId)
+                                .collection(DatabaseCollection.Categories.collectionName)
+                                .document(categoryId).update("transactionMemberships", memberships)
+                        }
                 }
-                onSuccess(categoryIds)
             }
     }
 
@@ -302,9 +313,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                         }
                     },
                     onFailure = {})
-            }
-            else
-            {
+            } else {
                 notExits()
             }
         }
