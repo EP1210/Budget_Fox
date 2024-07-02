@@ -1,7 +1,9 @@
 package at.ac.fhcampuswien.budget_fox.data
 
+import android.util.Log
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Household
+import at.ac.fhcampuswien.budget_fox.models.SavingGoal
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
@@ -149,6 +151,83 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
+    override fun getSavingGoalsFromUser(userId: String, onSuccess: (List<SavingGoal>) -> Unit) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .get()
+            .addOnSuccessListener { savingGoals ->
+                val goals = mutableListOf<SavingGoal>()
+                savingGoals.forEach { goal ->
+                    goals.add(goal.toObject<SavingGoal>())
+                }
+                getSavingGoalsTransactions(userId = userId, goals = goals, onSuccess = onSuccess)
+            }
+    }
+
+    override fun getSavingGoalsTransactions(
+        userId: String,
+        goals: List<SavingGoal>,
+        onSuccess: (List<SavingGoal>) -> Unit
+    ) {
+        for (i in goals.indices) {
+            database
+                .collection(DatabaseCollection.Users.collectionName)
+                .document(userId)
+                .collection(DatabaseCollection.SavingGoals.collectionName)
+                .document(goals[i].uuid)
+                .collection(DatabaseCollection.Transactions.collectionName)
+                .get()
+                .addOnSuccessListener { transactions ->
+                    transactions.forEach { transaction ->
+                        goals[i].addTransaction(transaction.toObject<Transaction>())
+                    }
+                    if (i == goals.size - 1)
+                        onSuccess(goals)
+                }
+        }
+    }
+
+    override fun savingGoalToDatabase(
+        userId: String,
+        savingGoal: SavingGoal,
+        onSuccess: () -> Unit
+    ) {
+        val transactions = savingGoal.getTransactions()
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .document(savingGoal.uuid)
+            .set(savingGoal.savingGoalToDatabase())
+            .addOnSuccessListener {
+                for (i in transactions.indices) {
+                    database
+                        .collection(DatabaseCollection.Users.collectionName)
+                        .document(userId)
+                        .collection(DatabaseCollection.SavingGoals.collectionName)
+                        .document(savingGoal.uuid)
+                        .collection(DatabaseCollection.Transactions.collectionName)
+                        .document(transactions[i].uuid)
+                        .set(transactions[i].transactionToDatabase())
+                        .addOnSuccessListener {
+                            if (i == transactions.size - 1) {
+                                onSuccess()
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("FIREBASE", exception.toString())
+                        }
+                }
+                if (transactions.isEmpty())
+                    onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                Log.d("FIREBASE", exception.toString())
+            }
+    }
+
     override fun insertHousehold(household: Household) {
         database
             .collection(DatabaseCollection.Households.collectionName)
@@ -225,9 +304,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                         }
                     },
                     onFailure = {})
-            }
-            else
-            {
+            } else {
                 notExits()
             }
         }
