@@ -34,7 +34,7 @@ fun UserProfileScreen(
     route: String,
     userId: String?
 ) {
-    val factory: ViewModelFactory = ViewModelFactory()
+    val factory = ViewModelFactory()
     val viewModel: UserProfileViewModel = viewModel(factory = factory)
 
     if (userId == null) {
@@ -74,7 +74,7 @@ fun UserProfileScreen(
             }
 
 
-            val user = viewModel.getUserData(userId = userId).collectAsState();
+            val user = viewModel.getUserData(userId = userId).collectAsState()
             userName = user.value?.firstName + " " + user.value?.lastName
 
             val registrationEpoch =
