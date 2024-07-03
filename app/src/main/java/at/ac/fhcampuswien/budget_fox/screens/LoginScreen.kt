@@ -89,7 +89,7 @@ fun userLogin(
                         onSuccess = { user ->
                             if (user != null) {
                                 viewModel.setUser(user)
-                                navController.navigate(route = Screen.UserProfile.route) {
+                                navController.navigate(route = Screen.UserProfile.setArguments(userId = uid)) {
                                     popUpTo(id = 0)
                                 }
                             } else {

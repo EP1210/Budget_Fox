@@ -55,11 +55,11 @@ fun Navigation() {
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.UserProfile.route) {
+        composable(route = Screen.UserProfile.route) { backStackEntry ->
             UserProfileScreen(
                 navigationController = navigationController,
                 route = Screen.UserProfile.route,
-                viewModel = userViewModel
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
         composable(route = Screen.Welcome.route) {

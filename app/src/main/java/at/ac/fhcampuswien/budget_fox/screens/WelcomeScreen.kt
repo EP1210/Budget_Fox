@@ -57,7 +57,7 @@ fun WelcomeScreen(
                 onSuccess = { user ->
                     if (user != null) {
                         viewModel.setUser(user)
-                        navigationController.navigate(route = Screen.UserProfile.route) {
+                        navigationController.navigate(route = Screen.UserProfile.setArguments(userId = uid)) {
                             popUpTo(id = 0)
                         }
                     } else {

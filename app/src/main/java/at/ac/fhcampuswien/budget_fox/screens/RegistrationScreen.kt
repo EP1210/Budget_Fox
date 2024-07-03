@@ -131,7 +131,7 @@ fun registerUser(
                                 onSuccess = { user ->
                                     if (user != null) {
                                         viewModel.setUser(user)
-                                        navigationController.navigate(route = Screen.UserProfile.route) {
+                                        navigationController.navigate(route = Screen.UserProfile.setArguments(userId = firebaseUser.uid)) {
                                             popUpTo(id = 0)
                                         }
                                     } else {

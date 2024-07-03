@@ -8,18 +8,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.UserProfileViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.time.Instant
@@ -29,9 +31,17 @@ import java.time.ZoneOffset
 @Composable
 fun UserProfileScreen(
     navigationController: NavController,
-    viewModel: UserViewModel,
-    route: String
+    route: String,
+    userId: String?
 ) {
+    val factory: ViewModelFactory = ViewModelFactory()
+    val viewModel: UserProfileViewModel = viewModel(factory = factory)
+
+    if (userId == null) {
+        Text("User not found")
+        return
+    }
+
     Scaffold(
         bottomBar = {
             SimpleBottomNavigationBar(
@@ -64,26 +74,27 @@ fun UserProfileScreen(
             }
 
 
-            val user = viewModel.user
-            userName = user?.firstName + " " + user?.lastName
-            userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
-                Instant.ofEpochSecond(
-                    it
-                )
-            }, ZoneOffset.UTC)
-            userRegistrationDate = LocalDateTime.ofInstant(user?.dateOfRegistrationInEpoch?.let {
-                Instant.ofEpochSecond(
-                    it
-                )
-            }, ZoneOffset.UTC)
+            val user = viewModel.getUserData(userId = userId).collectAsState();
+            userName = user.value?.firstName + " " + user.value?.lastName
+
+            val registrationEpoch =
+                user.value?.dateOfRegistrationInEpoch?.let { Instant.ofEpochSecond(it) }
+            if (registrationEpoch != null) {
+                userRegistrationDate = LocalDateTime.ofInstant(registrationEpoch, ZoneOffset.UTC)
+            }
+
+            val birthdayEpoch = user.value?.dateOfBirthInEpoch?.let { Instant.ofEpochSecond(it) }
+            if (birthdayEpoch != null) {
+                userBirthDate = LocalDateTime.ofInstant(birthdayEpoch, ZoneOffset.UTC)
+            }
 
 
-            SimpleTitle(
+            /*SimpleTitle(
                 title = when (viewModel.newUser) {
                     true -> "Registration successful!"
                     false -> "Personal information"
                 }
-            )
+            )*/
             Text(
                 text = """E-Mail: $userMail
                 |Name: $userName
@@ -94,7 +105,7 @@ fun UserProfileScreen(
             )
 
             SimpleButton(name = "Saving goals") {
-                val userId = viewModel.getUserId()
+                /*val userId = viewModel.getUserId()
                 if (userId != "") {
                     val route = Screen.SavingGoalOverview.setArguments(userId = userId)
                     navigationController.navigate(route)
@@ -103,7 +114,7 @@ fun UserProfileScreen(
                 {
                     //TODO: Display error message
                     Log.d("TAG", "Route empty")
-                }
+                }*/
             }
 
             SimpleButton(name = "Logout") {

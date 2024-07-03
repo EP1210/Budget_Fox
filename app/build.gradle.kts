@@ -102,4 +102,6 @@ dependencies {
 
     //Guava: Google Core Libraries for Java
     implementation(libs.guava)
+
+    implementation(libs.kotlinx.coroutines.play.services)
 }

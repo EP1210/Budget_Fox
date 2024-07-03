@@ -6,7 +6,12 @@ const val USER_ID = "USER"
 sealed class Screen(val route: String) {
     data object Registration : Screen(route = "registration_screen")
     data object Login : Screen(route = "login_screen")
-    data object UserProfile : Screen(route = "user_profile_screen")
+    data object UserProfile : Screen(route = "user_profile_screen/{$USER_ID}") {
+        fun setArguments(userId: String) : String {
+            return this.route.replace(oldValue = "{$USER_ID}", userId)
+        }
+    }
+
     data object Welcome : Screen(route = "welcome_screen")
     data object Transaction : Screen(route = "transaction_screen")
     data object TransactionList : Screen(route = "transaction_list_screen")

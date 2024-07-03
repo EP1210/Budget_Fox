@@ -9,6 +9,10 @@ import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
 
@@ -311,5 +315,27 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .addOnFailureListener {
                 notExits()
             }
+    }
+
+    fun getData(userId: String): Flow<User?> {
+        return callbackFlow {
+            val userRef = database
+                .collection(DatabaseCollection.Users.collectionName)
+                .document(userId)
+
+            val listenerRegistration = userRef.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    cancel("Error fetching data", error)
+                    return@addSnapshotListener
+                }
+                val data = snapshot?.toObject<User>()
+
+                trySend(data).isSuccess
+                close()
+            }
+            awaitClose {
+                listenerRegistration.remove()
+            }
+        }
     }
 }
