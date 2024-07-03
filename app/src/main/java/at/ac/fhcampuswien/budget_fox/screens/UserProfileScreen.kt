@@ -93,6 +93,19 @@ fun UserProfileScreen(
             """.trimMargin()
             )
 
+            SimpleButton(name = "Saving goals") {
+                val userId = viewModel.getUserId()
+                if (userId != "") {
+                    val route = Screen.SavingGoalOverview.setArguments(userId = userId)
+                    navigationController.navigate(route)
+                }
+                else
+                {
+                    //TODO: Display error message
+                    Log.d("TAG", "Route empty")
+                }
+            }
+
             SimpleButton(name = "Logout") {
                 auth.signOut()
                 Log.d("TAG", "Signed out!")

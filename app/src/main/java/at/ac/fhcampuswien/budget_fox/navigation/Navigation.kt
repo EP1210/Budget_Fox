@@ -14,6 +14,8 @@ import at.ac.fhcampuswien.budget_fox.screens.HouseholdTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdWelcomeScreen
 import at.ac.fhcampuswien.budget_fox.screens.LoginScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
+import at.ac.fhcampuswien.budget_fox.screens.SavingGoalAddScreen
+import at.ac.fhcampuswien.budget_fox.screens.SavingGoalOverviewScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegularTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
@@ -23,6 +25,8 @@ import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalAddViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalOverviewViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
@@ -137,6 +141,24 @@ fun Navigation() {
             RegularTransactionScreen(
                 navigationController = navigationController,
                 viewModel = userViewModel)
+        }
+        composable(route = Screen.SavingGoalOverview.route) {navBackStackEntry ->
+            SavingGoalOverviewScreen(
+                navController = navigationController,
+                viewModel = SavingGoalOverviewViewModel(
+                    navBackStackEntry.arguments?.getString(
+                    USER_ID
+                    )
+                )
+            )
+        }
+        composable(route = Screen.SavingGoalAdd.route) { navBackStackEntry ->
+            SavingGoalAddScreen(
+                navController = navigationController,
+                viewModel = SavingGoalAddViewModel(
+                    navBackStackEntry.arguments?.getString(USER_ID)
+                )
+            )
         }
     }
 }
