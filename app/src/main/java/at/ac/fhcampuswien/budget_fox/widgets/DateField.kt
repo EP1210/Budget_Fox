@@ -37,7 +37,7 @@ fun DateField(
     val initialDateMillis = initialDate.toEpochMillis()
     val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDateMillis)
     val showDialog = rememberSaveable { mutableStateOf(false) }
-    var selectedDate by remember {
+    var selectedDate by rememberSaveable {
         mutableStateOf(initialDate)
     }
 
@@ -72,8 +72,8 @@ fun DateField(
         modifier = Modifier
             .padding(horizontal = 70.dp)
             .clickable {
-            showDialog.value = true
-        },
+                showDialog.value = true
+            },
         enabled = false,
         label = { Text(description) },
         textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp),
