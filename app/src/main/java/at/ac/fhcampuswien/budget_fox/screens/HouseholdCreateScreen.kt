@@ -15,21 +15,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -38,17 +34,22 @@ import com.lightspark.composeqr.QrCodeView
 @Composable
 fun HouseholdCreateScreen(
     navigationController: NavController,
-    viewModel: HouseholdCreateViewModel,
-    userViewModel: UserViewModel
+    userId: String?
 ) {
-    var size by remember { mutableStateOf(IntSize.Zero) }
+    val factory = ViewModelFactory()
+    val viewModel: HouseholdCreateViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
+    }
 
     Scaffold(
         topBar = {
             SimpleTopAppBar(
                 title = "Create a Household"
             ) {
-                if(viewModel.household.collectAsState().value == null) {
+                if (viewModel.household.collectAsState().value == null) {
                     IconButton(onClick = {
                         navigationController.popBackStack()
                     }) {
@@ -61,7 +62,7 @@ fun HouseholdCreateScreen(
             }
         },
         modifier = Modifier.onSizeChanged {
-            size = it
+            viewModel.setSize(size = it)
         }
     ) {
         Column(
@@ -70,7 +71,7 @@ fun HouseholdCreateScreen(
                 .padding(paddingValues = it)
                 .fillMaxSize()
         ) {
-            if(viewModel.household.collectAsState().value == null) {
+            if (viewModel.household.collectAsState().value == null) {
                 SimpleField(
                     title = "Household name"
                 ) { name ->
@@ -78,11 +79,10 @@ fun HouseholdCreateScreen(
                 }
                 SimpleButton(name = "Create") {
                     val id = viewModel.createHousehold()
-                    userViewModel.joinHousehold(id)
+                    viewModel.joinHousehold(userId = userId, householdId = id)
                 }
             }
-            if(viewModel.household.collectAsState().value != null)
-            {
+            if (viewModel.household.collectAsState().value != null) {
                 SimpleButton(name = "Go to household") {
                     navigationController.navigate(route = Screen.HouseholdTransaction.route) {
                         popUpTo(id = 0)
@@ -92,16 +92,17 @@ fun HouseholdCreateScreen(
                     text = "Join QR-Code for other users",
                     modifier = Modifier.padding(top = 16.dp)
                 )
-                Box(modifier = Modifier
-                    .then(
-                        with(LocalDensity.current) {
-                            Modifier.size(
-                                width = size.width.toDp(),
-                                height = size.width.toDp(),
-                            )
-                        }
-                    )
-                    .background(color = Color.White),
+                Box(
+                    modifier = Modifier
+                        .then(
+                            with(LocalDensity.current) {
+                                Modifier.size(
+                                    width = viewModel.size.value.width.toDp(),
+                                    height = viewModel.size.value.width.toDp(),
+                                )
+                            }
+                        )
+                        .background(color = Color.White),
                 ) {
                     QrCodeView(
                         data = viewModel.household.collectAsState().value!!.uuid,

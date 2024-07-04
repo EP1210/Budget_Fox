@@ -34,8 +34,8 @@ fun HouseholdWelcomeScreen(
 
     viewModel.getHousehold(userId = userId)
 
-    if(viewModel.householdId.value != "") {
-        navigationController.navigate(route = Screen.HouseholdTransaction.passHouseholdId(householdId = viewModel.householdId.value)) {
+     if(viewModel.householdId.value != "") {
+        navigationController.navigate(route = Screen.HouseholdTransaction.passHouseholdId(householdId = viewModel.householdId.value, userId = userId)) {
             popUpTo(id = 0)
         }
     }

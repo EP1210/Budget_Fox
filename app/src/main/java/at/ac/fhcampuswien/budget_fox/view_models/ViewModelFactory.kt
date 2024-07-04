@@ -17,6 +17,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
         StatisticsViewModel::class.java -> StatisticsViewModel()
         WelcomeViewModel::class.java -> WelcomeViewModel()
         HouseholdWelcomeViewModel::class.java -> HouseholdWelcomeViewModel()
+        HouseholdTransactionViewModel::class.java -> HouseholdTransactionViewModel()
         else -> throw IllegalArgumentException("Unknown ViewModel class!")
     } as T
 }
