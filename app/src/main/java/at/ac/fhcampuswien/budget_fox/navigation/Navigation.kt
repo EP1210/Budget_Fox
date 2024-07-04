@@ -150,9 +150,7 @@ fun Navigation() {
         composable(route = Screen.SavingGoalAdd.route) { navBackStackEntry ->
             SavingGoalAddScreen(
                 navController = navigationController,
-                viewModel = SavingGoalAddViewModel(
-                    navBackStackEntry.arguments?.getString(USER_ID)
-                )
+                userId = navBackStackEntry.arguments?.getString(USER_ID)
             )
         }
     }
