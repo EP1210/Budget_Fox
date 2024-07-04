@@ -22,8 +22,10 @@ fun SimpleNumberField(
     OutlinedTextField(
         value = textValue,
         onValueChange = { userInput ->
-            textValue = userInput
-            onValueChange(textValue)
+            if (userInput.matches(Regex("^\\d*\\.?\\d*\$"))) {
+                textValue = userInput
+                onValueChange(textValue)
+            }
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number
