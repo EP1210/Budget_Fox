@@ -34,7 +34,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun TransactionScreen(
+fun TransactionCreateScreen(
     navigationController: NavController,
     userId: String?
 ) {

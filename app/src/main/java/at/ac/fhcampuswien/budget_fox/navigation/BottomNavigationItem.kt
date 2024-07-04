@@ -31,7 +31,7 @@ fun getBottomNavigationItems(userId: String): List<BottomNavigationItem> {
             label = "Budget",
             selected = Icons.Filled.ShoppingCart,
             unselected = Icons.Outlined.ShoppingCart,
-            route = Screen.Transaction.passUserId(userId = userId)
+            route = Screen.TransactionList.passUserId(userId = userId)
         ),
         BottomNavigationItem(
             label = "Statistics",

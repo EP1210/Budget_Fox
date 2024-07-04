@@ -19,7 +19,7 @@ sealed class Screen(val route: String) {
             return this.route.replace(oldValue = "{$USER_ID}", userId)
         }
     }
-    data object Transaction : Screen(route = "transaction_screen/{$USER_ID}") {
+    data object TransactionList : Screen(route = "transaction_list_screen/{$USER_ID}") {
         fun passUserId(userId: String) : String {
             return this.route.replace(oldValue = "{$USER_ID}", userId)
         }

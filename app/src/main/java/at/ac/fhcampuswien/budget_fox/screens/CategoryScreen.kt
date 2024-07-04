@@ -11,14 +11,17 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Category
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.CategoryViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
@@ -28,70 +31,82 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 @Composable
 fun CategoryScreen(
     navigationController: NavController,
-    viewModel: UserViewModel,
+    userId: String?,
     transactionId: String?
 ) {
-    viewModel.user?.getTransactions()?.forEach { transaction ->
-        if (transaction.uuid == transactionId) {
-            viewModel.getCategoriesFromUser()
+    val factory = ViewModelFactory()
+    val viewModel: CategoryViewModel = viewModel(factory = factory)
 
-            Scaffold(
-                topBar = {
-                    SimpleTopAppBar(
-                        title = transaction.description
-                    ) {
-                        SimpleEventIcon(
-                            icon = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "An arrow icon to navigate back to the previous screen"
-                        ) {
-                            navigationController.popBackStack()
-                        }
-                    }
-                }
+    if (userId == null || userId == "" || transactionId == null || transactionId == "") {
+        Text("User not found")
+        return
+    }
+
+    viewModel.getTransaction(userId = userId, transactionId = transactionId)
+    viewModel.getCategoriesFromUser(userId = userId)
+
+
+    Scaffold(
+        topBar = {
+            SimpleTopAppBar(
+                title = viewModel.transaction.value?.description ?: "Transaction not found"
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues = it)
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "An arrow icon to navigate back to the previous screen"
                 ) {
-                    SimpleField(
-                        title = "Category name"
-                    ) { name ->
-                        viewModel.setCategoryName(categoryName = name)
-                    }
-                    SimpleField(
-                        title = "Description"
-                    ) { description ->
-                        viewModel.setCategoryDescription(categoryDescription = description)
-                    }
-                    SimpleButton(
-                        name = "Create category",
-                        modifier = Modifier
-                            .padding(bottom = 10.dp)
-                    ) {
-                        if (viewModel.categoryName.isNotBlank()) {
-                            viewModel.insertCategory(
-                                category = Category(
-                                    name = viewModel.categoryName,
-                                    description = viewModel.categoryDescription
-                                )
-                            )
-                            viewModel.setCategoryName(categoryName = "")
-                            viewModel.setCategoryDescription(categoryDescription = "")
-                        }
-                        viewModel.getCategoriesFromUser()
-                    }
-                    CategoryList(transactionId = transaction.uuid, viewModel = viewModel)
+                    navigationController.popBackStack()
                 }
             }
+        }
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues = it)
+        ) {
+            SimpleField(
+                title = "Category name"
+            ) { name ->
+                viewModel.setCategoryName(categoryName = name)
+            }
+            SimpleField(
+                title = "Description"
+            ) { description ->
+                viewModel.setCategoryDescription(categoryDescription = description)
+            }
+            SimpleButton(
+                name = "Create category",
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+            ) {
+                if (viewModel.categoryName.isNotBlank()) {
+                    viewModel.insertCategory(
+                        userId = userId,
+                        category = Category(
+                            name = viewModel.categoryName,
+                            description = viewModel.categoryDescription
+                        )
+                    )
+                    viewModel.setCategoryName(categoryName = "")
+                    viewModel.setCategoryDescription(categoryDescription = "")
+                }
+                viewModel.getCategoriesFromUser(userId = userId)
+            }
+            CategoryList(
+                transactionId = viewModel.transaction.value?.uuid ?: "",
+                userId = userId,
+                viewModel = viewModel
+            )
         }
     }
 }
 
 @Composable
 fun CategoryList(
-    viewModel: UserViewModel,
+    viewModel: CategoryViewModel,
+    userId: String,
     transactionId: String
 ) {
     LazyColumn {
@@ -114,8 +129,8 @@ fun CategoryList(
                         colour = Color.Red,
                         contentDescription = "An icon to delete the category"
                     ) {
-                        viewModel.deleteCategory(categoryId = category.uuid)
-                        viewModel.getCategoriesFromUser()
+                        viewModel.deleteCategory(userId = userId, categoryId = category.uuid)
+                        viewModel.getCategoriesFromUser(userId = userId)
                     }
                 },
                 toggle = {
@@ -127,8 +142,11 @@ fun CategoryList(
                             } else {
                                 category.transactionMemberships.add(transactionId)
                             }
-                            viewModel.updateCategoryTransactionMemberships(category = category)
-                            viewModel.getCategoriesFromUser()
+                            viewModel.updateCategoryTransactionMemberships(
+                                userId = userId,
+                                category = category
+                            )
+                            viewModel.getCategoriesFromUser(userId = userId)
                         }
                     )
                 },

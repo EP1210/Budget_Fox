@@ -18,14 +18,13 @@ import at.ac.fhcampuswien.budget_fox.screens.RegularTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalAddScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalOverviewScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
-import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
+import at.ac.fhcampuswien.budget_fox.screens.TransactionCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
-import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
 @Composable
@@ -63,22 +62,22 @@ fun Navigation() {
             )
         }
         composable(route = Screen.TransactionCreate.route) { backStackEntry ->
-            TransactionScreen(
+            TransactionCreateScreen(
                 navigationController = navigationController,
                 userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
-        composable(route = Screen.Transaction.route) { backStackEntry ->
+        composable(route = Screen.TransactionList.route) { backStackEntry ->
             TransactionListScreen(
                 navigationController = navigationController,
-                route = Screen.Transaction.route,
+                route = Screen.TransactionList.route,
                 userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
         composable(route = Screen.Category.route) { backStackEntry ->
             CategoryScreen(
                 navigationController = navigationController,
-                viewModel = userViewModel,
+                userId = backStackEntry.arguments?.getString(USER_ID),
                 transactionId = backStackEntry.arguments?.getString(TRANSACTION_ID)
             )
         }

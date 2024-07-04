@@ -89,7 +89,7 @@ fun TransactionListScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.TransactionCreate.route)
+                    navigationController.navigate(route = Screen.TransactionCreate.passUserId(userId = userId))
                 },
                 shape = CircleShape,
                 modifier = Modifier

@@ -80,6 +80,24 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .addOnFailureListener(onFailure)
     }
 
+    override fun getTransaction(
+        userId: String,
+        transactionId: String,
+        onSuccess: (Transaction) -> Unit
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId)
+            .get()
+            .addOnSuccessListener { transaction ->
+                transaction.data?.let {
+                    onSuccess(Transaction.fromDatabase(it))
+                }
+            }
+    }
+
     override fun deleteTransaction(userId: String, transactionId: String, onComplete: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
