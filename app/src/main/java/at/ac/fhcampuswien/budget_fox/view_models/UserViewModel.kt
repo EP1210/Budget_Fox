@@ -32,7 +32,7 @@ class UserViewModel : ViewModel() {
     val firstLogin: Boolean
         get() = _firstLogin
 
-    private var _transactionDate = mutableStateOf(value = "").value
+    private var _transactionDate = mutableStateOf(value = getCurrentDateString()).value
     val transactionDate: String
         get() = _transactionDate
 
@@ -275,5 +275,10 @@ class UserViewModel : ViewModel() {
         }
 
         return false
+    }
+
+    private fun getCurrentDateString(): String {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        return format.format(Date())
     }
 }
