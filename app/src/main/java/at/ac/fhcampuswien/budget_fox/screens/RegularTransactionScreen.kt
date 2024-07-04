@@ -29,7 +29,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleDropdownField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
-import at.ac.fhcampuswien.budget_fox.widgets.TransactionDateField
+import at.ac.fhcampuswien.budget_fox.widgets.DateField
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -75,7 +75,7 @@ fun RegularTransactionScreen(
             ) { description ->
                 viewModel.setTransactionDescription(description)
             }
-            TransactionDateField(
+            DateField(
                 description = "Date",
                 onValueChanged = { date ->
                     transactionDate = date

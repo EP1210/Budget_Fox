@@ -22,7 +22,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import at.ac.fhcampuswien.budget_fox.widgets.TransactionDateField
+import at.ac.fhcampuswien.budget_fox.widgets.DateField
 
 @Composable
 fun RegistrationScreen(
@@ -47,7 +47,7 @@ fun RegistrationScreen(
         PasswordField { pwd ->
             viewModel.setPassword(password = pwd)
         }
-        TransactionDateField(description = "Date of birth") { date ->
+        DateField(description = "Date of birth") { date ->
             viewModel.setDateOfBirth(dateOfBirth = date)
         }
         SimpleField(title = "First name") { name ->
