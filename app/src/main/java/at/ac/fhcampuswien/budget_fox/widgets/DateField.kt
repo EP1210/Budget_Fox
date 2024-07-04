@@ -33,10 +33,12 @@ fun DateField(
     description: String,
     onValueChanged: (LocalDateTime) -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
+    val initialDate = LocalDateTime.now()
+    val initialDateMillis = initialDate.toEpochMillis()
+    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDateMillis)
     val showDialog = rememberSaveable { mutableStateOf(false) }
     var selectedDate by remember {
-        mutableStateOf(LocalDateTime.now())
+        mutableStateOf(initialDate)
     }
 
     if (showDialog.value) {
@@ -81,4 +83,8 @@ fun DateField(
             disabledBorderColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
+}
+
+private fun LocalDateTime.toEpochMillis(): Long {
+    return this.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
 }
