@@ -7,7 +7,8 @@ class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(UserProfileViewModel::class.java))
             return UserProfileViewModel() as T
-
+        if(modelClass.isAssignableFrom(SavingGoalOverviewViewModel::class.java))
+            return SavingGoalOverviewViewModel() as T
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

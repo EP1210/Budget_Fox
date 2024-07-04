@@ -15,24 +15,33 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalOverviewViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SavingGoalListItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
 @Composable
 fun SavingGoalOverviewScreen(
-    navController: NavController, viewModel: SavingGoalOverviewViewModel
+    navController: NavController,
+    userId: String?
 ) {
-    viewModel.loadSavingGoals()
-    if (viewModel.userId == null) {
+    if (userId == null) {
         Text(text = "User not found")
         return
     }
+
+    val factory = ViewModelFactory()
+    val viewModel: SavingGoalOverviewViewModel = viewModel(factory = factory)
+
+    val savingGoalItems = viewModel.loadSavingGoals(userId = userId).collectAsState()
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Saving goals") {
@@ -53,7 +62,7 @@ fun SavingGoalOverviewScreen(
                 .padding(paddingValues = paddingVal)
                 .fillMaxSize()
         ) {
-            items(items = viewModel.savingGoals) { item ->
+            items(items = savingGoalItems.value) { item ->
                 SavingGoalListItem(savingGoal = item)
             }
         }
@@ -64,7 +73,7 @@ fun SavingGoalOverviewScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.SavingGoalAdd.setArguments(userId = viewModel.userId)
+                    val route = Screen.SavingGoalAdd.setArguments(userId = userId)
                     navController.navigate(route)
                 },
                 shape = CircleShape,

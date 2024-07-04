@@ -22,6 +22,7 @@ import at.ac.fhcampuswien.budget_fox.view_models.UserProfileViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import java.time.Instant
@@ -37,7 +38,7 @@ fun UserProfileScreen(
     val factory = ViewModelFactory()
     val viewModel: UserProfileViewModel = viewModel(factory = factory)
 
-    if (userId == null) {
+    if (userId == null || userId == "") {
         Text("User not found")
         return
     }
@@ -89,12 +90,8 @@ fun UserProfileScreen(
             }
 
 
-            /*SimpleTitle(
-                title = when (viewModel.newUser) {
-                    true -> "Registration successful!"
-                    false -> "Personal information"
-                }
-            )*/
+            SimpleTitle(title = "Personal information")
+
             Text(
                 text = """E-Mail: $userMail
                 |Name: $userName
@@ -105,16 +102,8 @@ fun UserProfileScreen(
             )
 
             SimpleButton(name = "Saving goals") {
-                /*val userId = viewModel.getUserId()
-                if (userId != "") {
-                    val route = Screen.SavingGoalOverview.setArguments(userId = userId)
-                    navigationController.navigate(route)
-                }
-                else
-                {
-                    //TODO: Display error message
-                    Log.d("TAG", "Route empty")
-                }*/
+                    val savingGoalsRoute = Screen.SavingGoalOverview.setArguments(userId = userId)
+                    navigationController.navigate(savingGoalsRoute)
             }
 
             SimpleButton(name = "Logout") {
