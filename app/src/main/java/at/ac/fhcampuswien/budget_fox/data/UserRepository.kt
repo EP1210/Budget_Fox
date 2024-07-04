@@ -79,7 +79,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .document(transactionId).delete()
     }
 
-    override fun insertCategoryAtUser(userId: String, category: Category) {
+    override fun insertCategory(userId: String, category: Category) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
@@ -102,122 +102,20 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun deleteCategoryAtUser(userId: String, categoryId: String) {
+    override fun updateCategoryTransactionMemberships(userId: String, category: Category) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(category.uuid).set(category)
+    }
+
+    override fun deleteCategory(userId: String, categoryId: String) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Categories.collectionName)
             .document(categoryId).delete()
-    }
-
-    override fun insertCategoryAtTransaction(
-        userId: String,
-        categoryId: String,
-        transactionId: String
-    ) {
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId)
-            .collection(DatabaseCollection.Categories.collectionName)
-            .document(categoryId).get()
-            .addOnSuccessListener { categoryDocument ->
-                val category = categoryDocument.toObject<Category>()
-
-                if (category != null) {
-                    database
-                        .collection(DatabaseCollection.Users.collectionName)
-                        .document(userId)
-                        .collection(DatabaseCollection.Transactions.collectionName)
-                        .document(transactionId)
-                        .collection(DatabaseCollection.Categories.collectionName)
-                        .document(categoryId).set(category)
-                }
-            }
-    }
-
-    override fun updateCategoryTransactionMemberships(userId: String, categoryId: String) {
-        val memberships = mutableListOf<String>()
-
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId)
-            .collection(DatabaseCollection.Transactions.collectionName).get()
-            .addOnSuccessListener { transactionDocuments ->
-                transactionDocuments.forEach { transactionDocument ->
-                    database
-                        .collection(DatabaseCollection.Users.collectionName)
-                        .document(userId)
-                        .collection(DatabaseCollection.Transactions.collectionName)
-                        .document(transactionDocument.id)
-                        .collection(DatabaseCollection.Categories.collectionName).get()
-                        .addOnSuccessListener { categoryDocuments ->
-                            for (categoryDocument in categoryDocuments) {
-                                if (categoryDocument.id == categoryId) {
-                                    memberships.add(transactionDocument.id)
-                                    break
-                                }
-                            }
-                            database
-                                .collection(DatabaseCollection.Users.collectionName)
-                                .document(userId)
-                                .collection(DatabaseCollection.Categories.collectionName)
-                                .document(categoryId).update("transactionMemberships", memberships)
-                                .addOnSuccessListener {
-                                    database
-                                        .collection(DatabaseCollection.Users.collectionName)
-                                        .document(userId)
-                                        .collection(DatabaseCollection.Transactions.collectionName)
-                                        .document(transactionDocument.id)
-                                        .collection(DatabaseCollection.Categories.collectionName)
-                                        .document(categoryId).update("transactionMemberships", memberships)
-                                }
-                        }
-                }
-            }
-    }
-
-    override fun deleteCategoryAtTransaction(
-        userId: String,
-        transactionId: String,
-        categoryId: String
-    ) {
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId)
-            .collection(DatabaseCollection.Transactions.collectionName)
-            .document(transactionId)
-            .collection(DatabaseCollection.Categories.collectionName)
-            .document(categoryId).delete()
-    }
-
-    override fun deleteCategoryAtAllTransactions(userId: String, categoryId: String) {
-        database
-            .collection(DatabaseCollection.Users.collectionName)
-            .document(userId)
-            .collection(DatabaseCollection.Transactions.collectionName).get()
-            .addOnSuccessListener { transactionDocuments ->
-                transactionDocuments.forEach { transactionDocument ->
-                    database
-                        .collection(DatabaseCollection.Users.collectionName)
-                        .document(userId)
-                        .collection(DatabaseCollection.Transactions.collectionName)
-                        .document(transactionDocument.id)
-                        .collection(DatabaseCollection.Categories.collectionName).get()
-                        .addOnSuccessListener { categoryDocuments ->
-                            categoryDocuments.forEach { categoryDocument ->
-                                if (categoryDocument.id == categoryId) {
-                                    database
-                                        .collection(DatabaseCollection.Users.collectionName)
-                                        .document(userId)
-                                        .collection(DatabaseCollection.Transactions.collectionName)
-                                        .document(transactionDocument.id)
-                                        .collection(DatabaseCollection.Categories.collectionName)
-                                        .document(categoryDocument.id).delete()
-                                }
-                            }
-                        }
-                }
-            }
     }
 
     // TODO: Single responsibility principle!

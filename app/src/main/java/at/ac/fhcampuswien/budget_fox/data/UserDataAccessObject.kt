@@ -18,19 +18,14 @@ interface UserDataAccessObject {
 
     fun deleteTransaction(userId: String, transactionId: String)
 
-    fun insertCategoryAtUser(userId: String, category: Category)
+    fun insertCategory(userId: String, category: Category)
 
     fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit)
 
-    fun deleteCategoryAtUser(userId: String, categoryId: String)
+    fun updateCategoryTransactionMemberships(userId: String, category: Category)
 
-    fun insertCategoryAtTransaction(userId: String, categoryId: String, transactionId: String)
-
-    fun updateCategoryTransactionMemberships(userId: String, categoryId: String)
-
-    fun deleteCategoryAtTransaction(userId: String, transactionId: String, categoryId: String)
-
-    fun deleteCategoryAtAllTransactions(userId: String, categoryId: String)
+    fun deleteCategory(userId: String, categoryId: String)
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)
+
 }

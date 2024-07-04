@@ -104,9 +104,9 @@ class UserViewModel : ViewModel() {
         _categoryDescription = categoryDescription
     }
 
-    fun insertCategoryAtUser(category: Category) {
+    fun insertCategory(category: Category) {
         if (firebaseUser != null) {
-            userRepository.insertCategoryAtUser(userId = firebaseUser.uid, category = category)
+            userRepository.insertCategory(userId = firebaseUser.uid, category = category)
         }
     }
 
@@ -119,50 +119,20 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun deleteCategoryAtUser(categoryId: String) {
-        if (firebaseUser != null) {
-            userRepository.deleteCategoryAtUser(userId = firebaseUser.uid, categoryId = categoryId)
-        }
-    }
-
-    fun insertCategoryAtTransaction(categoryId: String, transactionId: String) {
-        if (firebaseUser != null) {
-            userRepository.insertCategoryAtTransaction(
-                userId = firebaseUser.uid,
-                categoryId = categoryId,
-                transactionId = transactionId
-            )
-        }
-    }
-
-    fun updateCategoryTransactionMemberships(categoryId: String) {
+    fun updateCategoryTransactionMemberships(category: Category) {
         if (firebaseUser != null) {
             userRepository.updateCategoryTransactionMemberships(
                 userId = firebaseUser.uid,
-                categoryId = categoryId
+                category = category
             )
         }
     }
 
-    fun deleteCategoryAtTransaction(transactionId: String, categoryId: String) {
+    fun deleteCategory(categoryId: String) {
         if (firebaseUser != null) {
-            userRepository.deleteCategoryAtTransaction(
-                userId = firebaseUser.uid,
-                transactionId = transactionId,
-                categoryId = categoryId
-            )
+            userRepository.deleteCategory(userId = firebaseUser.uid, categoryId = categoryId)
         }
     }
-
-    fun deleteCategoryAtAllTransactions(categoryId: String) {
-        if (firebaseUser != null) {
-            userRepository.deleteCategoryAtAllTransactions(
-                userId = firebaseUser.uid,
-                categoryId = categoryId
-            )
-        }
-    }
-
 
     fun getHousehold(): String {
         if (user != null && user?.householdId != "") {

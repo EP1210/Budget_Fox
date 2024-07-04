@@ -10,14 +10,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,13 +40,11 @@ fun CategoryScreen(
                     SimpleTopAppBar(
                         title = transaction.description
                     ) {
-                        IconButton(onClick = {
+                        SimpleEventIcon(
+                            icon = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "An arrow icon to navigate back to the previous screen"
+                        ) {
                             navigationController.popBackStack()
-                        }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Localized description"
-                            )
                         }
                     }
                 }
@@ -79,7 +71,7 @@ fun CategoryScreen(
                             .padding(bottom = 10.dp)
                     ) {
                         if (viewModel.categoryName.isNotBlank()) {
-                            viewModel.insertCategoryAtUser(
+                            viewModel.insertCategory(
                                 category = Category(
                                     name = viewModel.categoryName,
                                     description = viewModel.categoryDescription
@@ -122,32 +114,21 @@ fun CategoryList(
                         colour = Color.Red,
                         contentDescription = "An icon to delete the category"
                     ) {
-                        viewModel.deleteCategoryAtUser(categoryId = category.uuid)
+                        viewModel.deleteCategory(categoryId = category.uuid)
                         viewModel.getCategoriesFromUser()
-                        viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
                     }
                 },
                 toggle = {
-                    var checked by remember {
-                        mutableStateOf(value = transactionId in category.transactionMemberships)
-                    }
-
                     Checkbox(
-                        checked = checked,
+                        checked = transactionId in category.transactionMemberships,
                         onCheckedChange = {
-                            if (checked) {
-                                viewModel.deleteCategoryAtTransaction(
-                                    transactionId = transactionId,
-                                    categoryId = category.uuid
-                                )
+                            if (transactionId in category.transactionMemberships) {
+                                category.transactionMemberships.remove(transactionId)
                             } else {
-                                viewModel.insertCategoryAtTransaction(
-                                    categoryId = category.uuid,
-                                    transactionId = transactionId
-                                )
+                                category.transactionMemberships.add(transactionId)
                             }
-                            viewModel.updateCategoryTransactionMemberships(categoryId = category.uuid)
-                            checked = it
+                            viewModel.updateCategoryTransactionMemberships(category = category)
+                            viewModel.getCategoriesFromUser()
                         }
                     )
                 },

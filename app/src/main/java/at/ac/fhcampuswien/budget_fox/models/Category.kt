@@ -6,7 +6,7 @@ class Category(
     var uuid: String = "",
     var name: String = "",
     var description: String = "",
-    var transactionMemberships: List<String> = emptyList()
+    var transactionMemberships: MutableList<String> = mutableListOf()
 ) {
     constructor(
         name: String,
