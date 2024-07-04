@@ -33,18 +33,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Transaction
-import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 @Composable
 fun TransactionListItem(
-    navigationController: NavController? = null,
     transaction: Transaction,
+    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true),
     onDelete: (Transaction) -> Unit,
-    numbersVisible: MutableState<Boolean> = mutableStateOf(value = true)
+    onItemClick: (String) -> Unit
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     var showDeleteButton by remember { mutableStateOf(false) }
@@ -62,7 +60,7 @@ fun TransactionListItem(
                         showDeleteButton = true
                     },
                     onTap = {
-                        navigationController?.navigate(route = Screen.Category.route)
+                        onItemClick(transaction.uuid)
                     }
                 )
             }

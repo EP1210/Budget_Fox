@@ -52,11 +52,12 @@ fun WelcomeScreen(
         val repository = UserRepository()
         val firebaseUser = Firebase.auth.currentUser
         val uid = firebaseUser?.uid
+
         if (uid != null) {
             repository.getAllDataFromUser(uid, //TODO: Leon Fragen
                 onSuccess = { user ->
                     if (user != null) {
-                        viewModel.setUser(user)
+                        viewModel.setUser(user = user)
                         navigationController.navigate(route = Screen.UserProfile.route) {
                             popUpTo(id = 0)
                         }
@@ -66,9 +67,7 @@ fun WelcomeScreen(
                 }, onFailure = { exception: Exception ->
                     Log.d("FIREBASE", "COLD NOT LOAD USER! $exception")
                 })
-        }
-        else
-        {
+        } else {
             Log.d("FIREBASE", "User is not logged in!")
         }
 

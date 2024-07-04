@@ -42,7 +42,6 @@ fun LoginScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 70.dp)
     ) {
         SimpleTitle(title = "Login")
 
@@ -88,7 +87,7 @@ fun userLogin(
                     repository.getAllDataFromUser(uid, //TODO: Leon Fragen
                         onSuccess = { user ->
                             if (user != null) {
-                                viewModel.setUser(user)
+                                viewModel.setUser(user = user)
                                 navController.navigate(route = Screen.UserProfile.route) {
                                     popUpTo(id = 0)
                                 }

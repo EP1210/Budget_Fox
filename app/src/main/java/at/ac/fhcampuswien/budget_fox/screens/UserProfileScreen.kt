@@ -48,23 +48,18 @@ fun UserProfileScreen(
                 .padding(paddingValues = it)
         ) {
             val auth = Firebase.auth
-
             val userMail = auth.currentUser?.email
-
             var userName by remember {
                 mutableStateOf("")
             }
-
             var userBirthDate by remember {
                 mutableStateOf(LocalDateTime.now())
             }
-
             var userRegistrationDate by remember {
                 mutableStateOf(LocalDateTime.now())
             }
-
-
             val user = viewModel.user
+
             userName = user?.firstName + " " + user?.lastName
             userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
                 Instant.ofEpochSecond(
@@ -77,9 +72,8 @@ fun UserProfileScreen(
                 )
             }, ZoneOffset.UTC)
 
-
             SimpleTitle(
-                title = when (viewModel.newUser) {
+                title = when (viewModel.firstLogin) {
                     true -> "Registration successful!"
                     false -> "Personal information"
                 }

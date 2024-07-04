@@ -54,11 +54,13 @@ fun TransactionListScreen(
         ) {
             items(viewModel.transactions) { transaction ->
                 TransactionListItem(
-                    navigationController = navigationController,
                     transaction = transaction,
                     numbersVisible = viewModel.numbersVisible,
                     onDelete = {
                         viewModel.deleteTransaction(it)
+                    },
+                    onItemClick = { transactionId ->
+                        navigationController.navigate(route = Screen.Category.passTransactionId(transactionId = transactionId))
                     }
                 )
             }
@@ -71,7 +73,7 @@ fun TransactionListScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.Transaction.route)
+                    navigationController.navigate(route = Screen.TransactionCreate.route)
                 },
                 shape = CircleShape,
                 modifier = Modifier

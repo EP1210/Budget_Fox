@@ -18,8 +18,8 @@ import at.ac.fhcampuswien.budget_fox.screens.SavingGoalAddScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalOverviewScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegularTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
-import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionScreen
+import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
@@ -35,8 +35,8 @@ fun Navigation() {
     val navigationController = rememberNavController()
     val userViewModel: UserViewModel = viewModel()
     val statisticsViewModel: StatisticsViewModel = viewModel()
-    val houseCreateViewModel: HouseholdCreateViewModel = viewModel()
-    val householdViewModel : HouseholdViewModel = viewModel()
+    val householdCreateViewModel: HouseholdCreateViewModel = viewModel()
+    val householdViewModel: HouseholdViewModel = viewModel()
     val addTransactionViewModel: HouseholdTransactionAddViewModel = viewModel()
 
     NavHost(
@@ -68,23 +68,24 @@ fun Navigation() {
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.Transaction.route) {
+        composable(route = Screen.TransactionCreate.route) {
             TransactionScreen(
                 navigationController = navigationController,
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.TransactionList.route) {
+        composable(route = Screen.Transaction.route) {
             TransactionListScreen(
                 navigationController = navigationController,
-                route = Screen.TransactionList.route,
+                route = Screen.Transaction.route,
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.Category.route) {
+        composable(route = Screen.Category.route) { backStackEntry ->
             CategoryScreen(
                 navigationController = navigationController,
-                viewModel = userViewModel
+                viewModel = userViewModel,
+                transactionId = backStackEntry.arguments?.getString(TRANSACTION_ID)
             )
         }
         composable(route = Screen.Statistics.route) {
@@ -104,7 +105,7 @@ fun Navigation() {
         composable(route = Screen.HouseholdCreate.route) {
             HouseholdCreateScreen(
                 navigationController = navigationController,
-                viewModel = houseCreateViewModel,
+                viewModel = householdCreateViewModel,
                 userViewModel = userViewModel
             )
         }
