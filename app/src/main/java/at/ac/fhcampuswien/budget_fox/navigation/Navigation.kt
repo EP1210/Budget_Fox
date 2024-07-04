@@ -131,21 +131,22 @@ fun Navigation() {
                 viewModel = userViewModel
             )
         }
-        composable(route = Screen.RegularTransaction.route) {
+        composable(route = Screen.RegularTransaction.route) { backStackEntry ->
             RegularTransactionScreen(
                 navigationController = navigationController,
-                viewModel = userViewModel)
-        }
-        composable(route = Screen.SavingGoalOverview.route) {navBackStackEntry ->
-            SavingGoalOverviewScreen(
-                navController = navigationController,
-                userId = navBackStackEntry.arguments?.getString(USER_ID)
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
-        composable(route = Screen.SavingGoalAdd.route) { navBackStackEntry ->
+        composable(route = Screen.SavingGoalOverview.route) {backStackEntry ->
+            SavingGoalOverviewScreen(
+                navController = navigationController,
+                userId = backStackEntry.arguments?.getString(USER_ID)
+            )
+        }
+        composable(route = Screen.SavingGoalAdd.route) { backStackEntry ->
             SavingGoalAddScreen(
                 navController = navigationController,
-                userId = navBackStackEntry.arguments?.getString(USER_ID)
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
     }
