@@ -42,11 +42,9 @@ fun LoginScreen(
         }
 
         SimpleButton(name = "Login") {
-            if (viewModel.email.isNotBlank() && viewModel.password.isNotBlank()) {
-                viewModel.userLogin { uid ->
-                    navigationController.navigate(route = Screen.UserProfile.setArguments(userId = uid)) {
-                        popUpTo(id = 0)
-                    }
+            viewModel.userLogin { uid ->
+                navigationController.navigate(route = Screen.UserProfile.setArguments(userId = uid)) {
+                    popUpTo(id = 0)
                 }
             }
         }

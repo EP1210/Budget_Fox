@@ -38,6 +38,11 @@ class LoginViewModel : ViewModel() {
     fun userLogin(
         onSuccess: (String) -> Unit
     ) {
+        if (email.isBlank() || password.isBlank()) {
+            _errorMessage.value = "Please fill out all fields!"
+            return
+        }
+
         Firebase.auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.widgets
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -65,7 +67,9 @@ fun DateField(
     OutlinedTextField(
         value = "${selectedDate.dayOfMonth} ${selectedDate.month} ${selectedDate.year}",
         onValueChange = {},
-        modifier = Modifier.clickable {
+        modifier = Modifier
+            .padding(horizontal = 70.dp)
+            .clickable {
             showDialog.value = true
         },
         enabled = false,
