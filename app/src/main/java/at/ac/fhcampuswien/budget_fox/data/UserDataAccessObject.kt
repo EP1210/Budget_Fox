@@ -23,6 +23,8 @@ interface UserDataAccessObject {
 
     fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit)
 
+    fun updateCategoryTransactionMemberships(userId: String, category: Category)
+
     fun deleteCategory(userId: String, categoryId: String)
 
     fun getAllDataFromUser(userId: String, onSuccess: (User?) -> Unit, onFailure: (Exception) -> Unit)

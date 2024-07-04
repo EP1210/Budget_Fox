@@ -155,6 +155,7 @@ private fun IncomeExpensesChart(modelProducer: CartesianChartModelProducer, modi
         labelPosition = DefaultCartesianMarker.LabelPosition.Top,
         indicator = indicator,
     )
+
     CartesianChartHost(
         chart =
         rememberCartesianChart(

@@ -32,7 +32,7 @@ fun getBottomNavigationItems(): List<BottomNavigationItem> {
             label = "Budget",
             selected = Icons.Filled.ShoppingCart,
             unselected = Icons.Outlined.ShoppingCart,
-            route = Screen.TransactionList.route
+            route = Screen.Transaction.route
         ),
         BottomNavigationItem(
             label = "Statistics",

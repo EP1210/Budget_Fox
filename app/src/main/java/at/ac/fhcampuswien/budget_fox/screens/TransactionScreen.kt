@@ -45,9 +45,11 @@ fun TransactionScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add transaction") {
-                IconButton(onClick = {
-                    navigationController.popBackStack()
-                }) {
+                IconButton(
+                    onClick = {
+                        navigationController.popBackStack()
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Localized description"
@@ -62,7 +64,6 @@ fun TransactionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = it)
-                .padding(horizontal = 70.dp)
         ) {
             SimpleNumberField(
                 title = "Amount"
@@ -83,12 +84,12 @@ fun TransactionScreen(
             )
 
             SimpleButton(
-                name = "Add income"
+                name = "Create income"
             ) {
                 viewModel.insertTransaction()
             }
             SimpleButton(
-                name = "Add expense"
+                name = "Create expense"
             ) {
                 viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
                 viewModel.insertTransaction()

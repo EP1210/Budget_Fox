@@ -105,12 +105,20 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Categories.collectionName).get()
-            .addOnSuccessListener { categories ->
-                categories.forEach { category ->
-                    categoriesFromUser.add(category.toObject<Category>())
+            .addOnSuccessListener { categoryDocuments ->
+                categoryDocuments.forEach { categoryDocument ->
+                    categoriesFromUser.add(categoryDocument.toObject<Category>())
                 }
                 onSuccess(categoriesFromUser)
             }
+    }
+
+    override fun updateCategoryTransactionMemberships(userId: String, category: Category) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(category.uuid).set(category)
     }
 
     override fun deleteCategory(userId: String, categoryId: String) {

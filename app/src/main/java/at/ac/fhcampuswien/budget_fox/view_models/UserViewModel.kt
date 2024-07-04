@@ -28,9 +28,9 @@ class UserViewModel : ViewModel() {
     val user: User?
         get() = _user
 
-    private var _newUser = mutableStateOf(value = false).value
-    val newUser: Boolean
-        get() = _newUser
+    private var _firstLogin = mutableStateOf(value = false).value
+    val firstLogin: Boolean
+        get() = _firstLogin
 
     private var _transactionDate = mutableStateOf(value = "").value
     val transactionDate: String
@@ -73,7 +73,7 @@ class UserViewModel : ViewModel() {
     }
 
     fun setUserState(firstLogin: Boolean?) {
-        _newUser = firstLogin ?: return
+        _firstLogin = firstLogin ?: return
     }
 
     fun setTransactionDate(date: String) {
@@ -88,7 +88,7 @@ class UserViewModel : ViewModel() {
         _transactionDescription = description
     }
 
-    fun getUserId():String {
+    fun getUserId(): String {
         return firebaseUser?.uid ?: ""
     }
 
@@ -101,12 +101,8 @@ class UserViewModel : ViewModel() {
     }
 
     fun insertCategory(category: Category) {
-        firebaseUser?.let { userRepository.insertCategory(userId = it.uid, category = category) }
-    }
-
-    fun deleteCategory(categoryId: String) {
         if (firebaseUser != null) {
-            userRepository.deleteCategory(userId = firebaseUser.uid, categoryId = categoryId)
+            userRepository.insertCategory(userId = firebaseUser.uid, category = category)
         }
     }
 
@@ -116,6 +112,21 @@ class UserViewModel : ViewModel() {
                 _categoriesFromUser.clear()
                 _categoriesFromUser.addAll(categories)
             }
+        }
+    }
+
+    fun updateCategoryTransactionMemberships(category: Category) {
+        if (firebaseUser != null) {
+            userRepository.updateCategoryTransactionMemberships(
+                userId = firebaseUser.uid,
+                category = category
+            )
+        }
+    }
+
+    fun deleteCategory(categoryId: String) {
+        if (firebaseUser != null) {
+            userRepository.deleteCategory(userId = firebaseUser.uid, categoryId = categoryId)
         }
     }
 
@@ -240,18 +251,22 @@ class UserViewModel : ViewModel() {
         return ""
     }
 
-    fun joinHousehold(householdId: String, onSuccess: ()->Unit = {}, notExists: ()->Unit = {}) {
+    fun joinHousehold(householdId: String, onSuccess: () -> Unit = {}, notExists: () -> Unit = {}) {
         //TODO: Check race conditions! - Household is inserted in other VM
-        userRepository.joinHouseholdIfExist(userId = firebaseUser!!.uid, householdId = householdId, onSuccess = {
-            user?.joinHousehold(householdId)
-            onSuccess()
-        }, notExits = {
-            notExists()
-        })
+        userRepository.joinHouseholdIfExist(
+            userId = firebaseUser!!.uid,
+            householdId = householdId,
+            onSuccess = {
+                user?.joinHousehold(householdId)
+                onSuccess()
+            },
+            notExits = {
+                notExists()
+            })
     }
 
     fun leaveHousehold(userId: String): Boolean {
-        if(userId == getUserId()) {
+        if (userId == getUserId()) {
             _user?.householdId = ""
             _user?.let {
                 userRepository.insertUser(it, userId)

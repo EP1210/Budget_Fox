@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.widgets
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -12,9 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun PasswordField(
@@ -28,6 +31,8 @@ fun PasswordField(
     }
 
     OutlinedTextField(
+        modifier = Modifier
+            .padding(horizontal = 70.dp),
         value = password,
         onValueChange = { userInput ->
             password = userInput
