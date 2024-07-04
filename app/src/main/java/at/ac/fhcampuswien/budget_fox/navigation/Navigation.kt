@@ -60,8 +60,7 @@ fun Navigation() {
         }
         composable(route = Screen.Welcome.route) {
             WelcomeScreen(
-                navigationController = navigationController,
-                viewModel = userViewModel
+                navigationController = navigationController
             )
         }
         composable(route = Screen.Transaction.route) {

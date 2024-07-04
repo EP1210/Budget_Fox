@@ -4,20 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class ViewModelFactory : ViewModelProvider.Factory {
-    /*
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if(modelClass.isAssignableFrom(UserProfileViewModel::class.java))
-            return UserProfileViewModel() as T
-        if(modelClass.isAssignableFrom(SavingGoalOverviewViewModel::class.java))
-            return SavingGoalOverviewViewModel() as T
-        if(modelClass.isAssignableFrom(SavingGoalAddViewModel::class.java))
-            return SavingGoalAddViewModel() as T
-        if(modelClass.isAssignableFrom(LoginViewModel::class.java))
-            return LoginViewModel() as T
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-     */
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T = when (modelClass) { // https://stackoverflow.com/questions/69150992/how-can-i-create-common-viewmodelfactory-with-repository-in-kotlin-android
         RegistrationViewModel::class.java -> RegistrationViewModel()
         LoginViewModel::class.java -> LoginViewModel()
@@ -29,6 +15,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
         RegularTransactionViewModel::class.java -> RegularTransactionViewModel()
         CategoryViewModel::class.java -> CategoryViewModel()
         StatisticsViewModel::class.java -> StatisticsViewModel()
+        WelcomeViewModel::class.java -> WelcomeViewModel()
         else -> throw IllegalArgumentException("Unknown ViewModel class!")
     } as T
 }
