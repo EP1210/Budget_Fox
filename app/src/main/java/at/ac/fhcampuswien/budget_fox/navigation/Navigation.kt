@@ -25,7 +25,6 @@ import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdCreateViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
-import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalAddViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
@@ -50,8 +49,7 @@ fun Navigation() {
         }
         composable(route = Screen.Login.route) {
             LoginScreen(
-                navigationController = navigationController,
-                viewModel = userViewModel
+                navigationController = navigationController
             )
         }
         composable(route = Screen.UserProfile.route) { backStackEntry ->

@@ -11,6 +11,8 @@ class ViewModelFactory : ViewModelProvider.Factory {
             return SavingGoalOverviewViewModel() as T
         if(modelClass.isAssignableFrom(SavingGoalAddViewModel::class.java))
             return SavingGoalAddViewModel() as T
+        if(modelClass.isAssignableFrom(LoginViewModel::class.java))
+            return LoginViewModel() as T
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
