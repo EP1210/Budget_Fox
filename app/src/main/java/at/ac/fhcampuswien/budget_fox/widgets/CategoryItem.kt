@@ -21,7 +21,7 @@ fun CategoryItem(
     modifier: Modifier = Modifier,
     edit: @Composable () -> Unit,
     delete: @Composable () -> Unit,
-    widget: @Composable () -> Unit
+    toggle: @Composable () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -42,7 +42,7 @@ fun CategoryItem(
                 )
                 edit()
                 delete()
-                widget()
+                toggle()
             }
             if (categoryDescription.isNotBlank()) {
                 HorizontalDivider(

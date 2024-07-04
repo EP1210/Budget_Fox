@@ -123,9 +123,9 @@ fun CategoryList(
                         viewModel.deleteCategoryAtAllTransactions(categoryId = category.uuid)
                     }
                 },
-                widget = {
-                    SimpleCheckbox(isChecked = transactionId in category.transactionMemberships) { isChecked ->
-                        if (isChecked) {
+                toggle = {
+                    SimpleCheckbox(isChecked = transactionId in category.transactionMemberships) {
+                        if (transactionId in category.transactionMemberships) {
                             viewModel.deleteCategoryAtTransaction(
                                 transactionId = transactionId,
                                 categoryId = category.uuid

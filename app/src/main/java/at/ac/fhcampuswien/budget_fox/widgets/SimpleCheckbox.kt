@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 @Composable
 fun SimpleCheckbox(
     isChecked: Boolean,
-    event: (Boolean) -> Unit
+    event: () -> Unit
 ) {
     var checked by remember {
         mutableStateOf(value = isChecked)
@@ -19,8 +19,8 @@ fun SimpleCheckbox(
     Checkbox(
         checked = checked,
         onCheckedChange = {
+            event()
             checked = it
-            event(checked)
         }
     )
 }
