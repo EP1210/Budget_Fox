@@ -43,8 +43,7 @@ fun Navigation() {
     ) {
         composable(route = Screen.Registration.route) {
             RegistrationScreen(
-                navigationController = navigationController,
-                viewModel = userViewModel
+                navigationController = navigationController
             )
         }
         composable(route = Screen.Login.route) {
