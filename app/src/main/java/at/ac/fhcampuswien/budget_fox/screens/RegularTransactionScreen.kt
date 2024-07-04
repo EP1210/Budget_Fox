@@ -76,6 +76,7 @@ fun RegularTransactionScreen(
                 viewModel.setTransactionDescription(description)
             }
             TransactionDateField(
+                description = "Date",
                 onValueChanged = { date ->
                     transactionDate = date
                     viewModel.setTransactionDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))

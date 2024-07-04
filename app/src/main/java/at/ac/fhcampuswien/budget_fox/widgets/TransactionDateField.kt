@@ -29,6 +29,7 @@ import java.time.LocalDateTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionDateField(
+    description: String,
     onValueChanged: (LocalDateTime) -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
@@ -69,7 +70,7 @@ fun TransactionDateField(
             showDialog.value = true
         },
         enabled = false,
-        label = { Text("Date") },
+        label = { Text(description) },
         textStyle = TextStyle(color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 16.sp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
