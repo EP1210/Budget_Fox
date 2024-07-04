@@ -48,7 +48,8 @@ fun HouseholdTransactionScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = ""
             )
         }
     ) {

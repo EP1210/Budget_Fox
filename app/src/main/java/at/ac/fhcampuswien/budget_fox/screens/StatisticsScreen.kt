@@ -21,8 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
@@ -61,15 +63,24 @@ import java.util.Locale
 fun StatisticsScreen(
     navigationController: NavController,
     route: String,
-    viewModel: StatisticsViewModel
+    userId: String?
 ) {
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
+    }
+
+    val factory = ViewModelFactory()
+    val viewModel: StatisticsViewModel = viewModel(factory = factory)
+
+    // todo
     val modelProducer = remember { CartesianChartModelProducer.build() }
     val incomes by viewModel.incomes.collectAsState()
     val expenses by viewModel.expenses.collectAsState()
     val selectedYear by viewModel.selectedYear.collectAsState()
 
     LaunchedEffect(selectedYear) { // coroutine function, when year changes then reload
-        viewModel.mapTransactionsFromUserToMonths(selectedYear) {
+        viewModel.mapTransactionsFromUserToMonths(selectedYear, userId) {
             modelProducer.tryRunTransaction {
                 columnSeries {
                     series(
@@ -94,7 +105,8 @@ fun StatisticsScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = userId
             )
         }
     ) {
@@ -105,7 +117,7 @@ fun StatisticsScreen(
         ) {
             YearDropdownMenu(
                 selectedYear = selectedYear,
-                onYearSelected = { year -> viewModel.setSelectedYear(year) }
+                onYearSelected = { year -> viewModel.setSelectedYear(year, userId) }
             )
 
             IncomeExpensesChart(

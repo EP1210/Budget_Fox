@@ -8,7 +8,7 @@ sealed class Screen(val route: String) {
     data object Registration : Screen(route = "registration_screen")
     data object Login : Screen(route = "login_screen")
     data object UserProfile : Screen(route = "user_profile_screen/{$USER_ID}") {
-        fun passUserId(userId: String) : String {
+        fun passUserId(userId: String): String {
             return this.route.replace(oldValue = "{$USER_ID}", userId)
         }
     }

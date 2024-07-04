@@ -39,7 +39,8 @@ fun UserProfileScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = userId
             )
         }
     ) {

@@ -32,7 +32,6 @@ import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 fun Navigation() {
     val navigationController = rememberNavController()
     val userViewModel: UserViewModel = viewModel()
-    val statisticsViewModel: StatisticsViewModel = viewModel()
     val householdCreateViewModel: HouseholdCreateViewModel = viewModel()
     val householdViewModel: HouseholdViewModel = viewModel()
     val addTransactionViewModel: HouseholdTransactionAddViewModel = viewModel()
@@ -63,17 +62,17 @@ fun Navigation() {
                 navigationController = navigationController
             )
         }
-        composable(route = Screen.TransactionCreate.route) {
+        composable(route = Screen.TransactionCreate.route) { backStackEntry ->
             TransactionScreen(
                 navigationController = navigationController,
-                viewModel = userViewModel
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
-        composable(route = Screen.Transaction.route) {
+        composable(route = Screen.Transaction.route) { backStackEntry ->
             TransactionListScreen(
                 navigationController = navigationController,
                 route = Screen.Transaction.route,
-                viewModel = userViewModel
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
         composable(route = Screen.Category.route) { backStackEntry ->
@@ -83,18 +82,18 @@ fun Navigation() {
                 transactionId = backStackEntry.arguments?.getString(TRANSACTION_ID)
             )
         }
-        composable(route = Screen.Statistics.route) {
+        composable(route = Screen.Statistics.route) { backStackEntry ->
             StatisticsScreen(
                 navigationController = navigationController,
                 route = Screen.Statistics.route,
-                viewModel = statisticsViewModel
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
-        composable(route = Screen.HouseholdWelcome.route) {
+        composable(route = Screen.HouseholdWelcome.route) { backStackEntry ->
             HouseholdWelcomeScreen(
                 navigationController = navigationController,
                 route = Screen.HouseholdWelcome.route,
-                viewModel = userViewModel
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
         composable(route = Screen.HouseholdCreate.route) {

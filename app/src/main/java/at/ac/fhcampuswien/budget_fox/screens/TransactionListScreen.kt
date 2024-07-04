@@ -13,14 +13,17 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.TransactionListViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
@@ -29,11 +32,18 @@ import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 fun TransactionListScreen(
     navigationController: NavController,
     route: String,
-    viewModel: UserViewModel
+    userId: String?
 ) {
+    val factory = ViewModelFactory()
+    val viewModel: TransactionListViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
+    }
 
     LaunchedEffect(Unit) {
-        viewModel.loadTransactions()
+        viewModel.loadTransactions(userId = userId)
     }
 
     Scaffold(
@@ -43,7 +53,8 @@ fun TransactionListScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = userId
             )
         }
     ) {
@@ -56,11 +67,16 @@ fun TransactionListScreen(
                 TransactionListItem(
                     transaction = transaction,
                     numbersVisible = viewModel.numbersVisible,
-                    onDelete = {
-                        viewModel.deleteTransaction(it)
+                    onDelete = { transaction ->
+                        viewModel.deleteTransaction(userId = userId, transaction = transaction)
                     },
                     onItemClick = { transactionId ->
-                        navigationController.navigate(route = Screen.Category.setArguments(transactionId = transactionId))
+                        navigationController.navigate(
+                            route = Screen.Category.setArguments(
+                                userId = userId,
+                                transactionId = transactionId
+                            )
+                        )
                     }
                 )
             }

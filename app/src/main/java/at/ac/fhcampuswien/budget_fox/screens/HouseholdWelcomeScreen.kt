@@ -5,12 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdWelcomeViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -19,13 +22,24 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 fun HouseholdWelcomeScreen(
     navigationController: NavController,
     route: String,
-    viewModel: UserViewModel
+    userId: String?
 ) {
-    if(viewModel.getHousehold() != "") {
-        navigationController.navigate(route = Screen.HouseholdTransaction.route) {
+    val factory = ViewModelFactory()
+    val viewModel: HouseholdWelcomeViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
+    }
+
+    viewModel.getHousehold(userId = userId)
+
+    if(viewModel.householdId.value != "") {
+        navigationController.navigate(route = Screen.HouseholdTransaction.passHouseholdId(householdId = viewModel.householdId.value)) {
             popUpTo(id = 0)
         }
     }
+
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Household")
@@ -33,7 +47,8 @@ fun HouseholdWelcomeScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = userId
             )
         }
     ) {
