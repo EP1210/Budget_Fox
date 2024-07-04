@@ -44,7 +44,7 @@ fun WelcomeScreen(
 
     //region Autologin
     viewModel.checkIfUserIsLoggedIn { uid ->
-        navigationController.navigate(route = Screen.UserProfile.setArguments(userId = uid)) {
+        navigationController.navigate(route = Screen.UserProfile.passUserId(userId = uid)) {
             popUpTo(id = 0)
         }
     }

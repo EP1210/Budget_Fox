@@ -43,7 +43,7 @@ fun LoginScreen(
 
         SimpleButton(name = "Login") {
             viewModel.userLogin { uid ->
-                navigationController.navigate(route = Screen.UserProfile.setArguments(userId = uid)) {
+                navigationController.navigate(route = Screen.UserProfile.passUserId(userId = uid)) {
                     popUpTo(id = 0)
                 }
             }
