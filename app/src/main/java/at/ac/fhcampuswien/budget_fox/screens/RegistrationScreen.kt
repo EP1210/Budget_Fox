@@ -56,7 +56,7 @@ fun RegistrationScreen(
 
         SimpleButton(name = "Register") {
             viewModel.registerUser { uid ->
-                navigationController.navigate(Screen.UserProfile.setArguments(userId = uid)) {
+                navigationController.navigate(Screen.UserProfile.passUserId(userId = uid)) {
                     popUpTo(id = 0)
                 }
             }

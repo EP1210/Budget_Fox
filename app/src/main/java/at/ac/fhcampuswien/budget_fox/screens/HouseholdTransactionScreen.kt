@@ -71,7 +71,7 @@ fun HouseholdTransactionScreen(
         {
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.HouseholdAddTransaction.setHouseholdId(householdId = userViewModel.getHousehold())
+                    val route = Screen.HouseholdAddTransaction.passHouseholdId(householdId = userViewModel.getHousehold())
                     navigationController.navigate(route)
                 },
                 shape = CircleShape,
