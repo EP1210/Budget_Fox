@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 fun CategoryItem(
     categoryName: String,
     categoryDescription: String,
-    edit: (String) -> Unit,
+    edit: (String, String) -> Unit,
     delete: () -> Unit,
     check: @Composable () -> Unit
 ) {
@@ -35,6 +35,7 @@ fun CategoryItem(
         mutableStateOf(value = false)
     }
     var newName = ""
+    var newDescription = ""
 
     Card(
         modifier = Modifier
@@ -92,11 +93,16 @@ fun CategoryItem(
                 ) { name ->
                     newName = name
                 }
+                SimpleField(
+                    title = "New description"
+                ) { description ->
+                    newDescription = description
+                }
                 SimpleButton(
                     name = "Save"
                 ) {
                     if (newName.isNotBlank()) {
-                        edit(newName)
+                        edit(newName, newDescription)
                     }
                 }
                 SimpleButton(

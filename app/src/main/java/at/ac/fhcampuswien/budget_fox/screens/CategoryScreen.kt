@@ -39,7 +39,7 @@ fun CategoryScreen(
         return
     }
 
-    viewModel.getTransaction(userId = userId, transactionId = transactionId)
+    viewModel.getSpecificTransaction(userId = userId, transactionId = transactionId)
     viewModel.getCategoriesFromUser(userId = userId)
 
 
@@ -111,9 +111,11 @@ fun CategoryList(
             CategoryItem(
                 categoryName = category.name,
                 categoryDescription = category.description,
-                edit = { newCategoryName ->
+                edit = { newCategoryName, newCategoryDescription ->
                     viewModel.setCategoryName(categoryName = newCategoryName)
-                    viewModel.updateCategory(userId = userId, categoryId = category.uuid)
+                    viewModel.updateCategoryName(userId = userId, categoryId = category.uuid)
+                    viewModel.setCategoryDescription(categoryDescription = newCategoryDescription)
+                    viewModel.updateCategoryDescription(userId = userId, categoryId = category.uuid)
                     viewModel.getCategoriesFromUser(userId = userId)
                 },
                 delete = {

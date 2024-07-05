@@ -25,7 +25,9 @@ interface UserDataAccessObject {
 
     fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit)
 
-    fun updateCategory(userId: String, categoryId: String, newCategoryName: String)
+    fun updateCategoryName(userId: String, categoryId: String, newCategoryName: String)
+
+    fun updateCategoryDescription(userId: String, categoryId: String, newCategoryDescription: String)
 
     fun updateCategoryTransactionMemberships(userId: String, category: Category)
 

@@ -131,12 +131,24 @@ class Repository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
-    override fun updateCategory(userId: String, categoryId: String, newCategoryName: String) {
+    override fun updateCategoryName(userId: String, categoryId: String, newCategoryName: String) {
         database
             .collection(DatabaseCollection.Users.collectionName)
             .document(userId)
             .collection(DatabaseCollection.Categories.collectionName)
             .document(categoryId).update("name", newCategoryName)
+    }
+
+    override fun updateCategoryDescription(
+        userId: String,
+        categoryId: String,
+        newCategoryDescription: String
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("description", newCategoryDescription)
     }
 
     override fun updateCategoryTransactionMemberships(userId: String, category: Category) {

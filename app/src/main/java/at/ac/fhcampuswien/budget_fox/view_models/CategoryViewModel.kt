@@ -36,7 +36,7 @@ class CategoryViewModel : ViewModel() {
         _categoryDescription = categoryDescription
     }
 
-    fun getTransaction(userId: String, transactionId: String) {
+    fun getSpecificTransaction(userId: String, transactionId: String) {
         repository.getSpecificTransaction(userId, transactionId) { transaction ->
             _transaction.value = transaction
         }
@@ -53,11 +53,19 @@ class CategoryViewModel : ViewModel() {
         }
     }
 
-    fun updateCategory(userId: String, categoryId: String) {
-        repository.updateCategory(
+    fun updateCategoryName(userId: String, categoryId: String) {
+        repository.updateCategoryName(
             userId = userId,
             categoryId = categoryId,
             newCategoryName = _categoryName
+        )
+    }
+
+    fun updateCategoryDescription(userId: String, categoryId: String) {
+        repository.updateCategoryDescription(
+            userId = userId,
+            categoryId = categoryId,
+            newCategoryDescription = _categoryDescription
         )
     }
 
