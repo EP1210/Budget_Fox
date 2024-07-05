@@ -83,7 +83,9 @@ fun CategoryItem(
                     .fillMaxSize()
             ) {
                 Text(
-                    text = "Edit category \"$categoryName\""
+                    text = "Edit category \"$categoryName\"",
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
                 )
                 SimpleField(
                     title = "New name"
@@ -93,7 +95,9 @@ fun CategoryItem(
                 SimpleButton(
                     name = "Save"
                 ) {
-                    edit(newName)
+                    if (newName.isNotBlank()) {
+                        edit(newName)
+                    }
                 }
                 SimpleButton(
                     name = "Delete category"

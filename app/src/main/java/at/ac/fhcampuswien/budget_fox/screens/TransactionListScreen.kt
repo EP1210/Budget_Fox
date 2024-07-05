@@ -67,15 +67,12 @@ fun TransactionListScreen(
                 TransactionListItem(
                     transaction = transaction,
                     numbersVisible = viewModel.numbersVisible,
-                    onDelete = { transaction ->
-                        viewModel.deleteTransaction(userId = userId, transaction = transaction)
+                    onDelete = { transactionToDelete ->
+                        viewModel.deleteTransaction(userId = userId, transaction = transactionToDelete)
                     },
                     onItemClick = { transactionId ->
                         navigationController.navigate(
-                            route = Screen.Category.setArguments(
-                                userId = userId,
-                                transactionId = transactionId
-                            )
+                            route = Screen.Category.setArguments(userId = userId, transactionId = transactionId)
                         )
                     }
                 )
