@@ -37,8 +37,8 @@ class CategoryViewModel : ViewModel() {
     }
 
     fun getTransaction(userId: String, transactionId: String) {
-        repository.getSpecificTransaction(userId, transactionId) {
-            _transaction.value = it
+        repository.getSpecificTransaction(userId, transactionId) { transaction ->
+            _transaction.value = transaction
         }
     }
 

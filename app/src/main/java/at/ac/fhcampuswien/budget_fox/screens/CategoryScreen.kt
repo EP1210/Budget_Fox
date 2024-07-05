@@ -7,15 +7,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -103,6 +101,7 @@ fun CategoryScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryList(
     viewModel: CategoryViewModel,
@@ -114,26 +113,16 @@ fun CategoryList(
             CategoryItem(
                 categoryName = category.name,
                 categoryDescription = category.description,
-                edit = {
-                    SimpleEventIcon(
-                        icon = Icons.Default.Edit,
-                        colour = Color.Blue,
-                        contentDescription = "An icon to edit the category"
-                    ) {
-                        // todo
-                    }
+                edit = { newCategoryName ->
+                    viewModel.setCategoryName(categoryName = newCategoryName)
+                    viewModel.updateCategory(userId = userId, categoryId = category.uuid)
+                    viewModel.getCategoriesFromUser(userId = userId)
                 },
                 delete = {
-                    SimpleEventIcon(
-                        icon = Icons.Default.Delete,
-                        colour = Color.Red,
-                        contentDescription = "An icon to delete the category"
-                    ) {
-                        viewModel.deleteCategory(userId = userId, categoryId = category.uuid)
-                        viewModel.getCategoriesFromUser(userId = userId)
-                    }
+                    viewModel.deleteCategory(userId = userId, categoryId = category.uuid)
+                    viewModel.getCategoriesFromUser(userId = userId)
                 },
-                toggle = {
+                check = {
                     Checkbox(
                         checked = transactionId in category.transactionMemberships,
                         onCheckedChange = {
@@ -149,9 +138,7 @@ fun CategoryList(
                             viewModel.getCategoriesFromUser(userId = userId)
                         }
                     )
-                },
-                modifier = Modifier
-                    .padding(horizontal = 20.dp, vertical = 5.dp)
+                }
             )
         }
     }
