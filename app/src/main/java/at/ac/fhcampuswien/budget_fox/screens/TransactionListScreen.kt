@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.view_models.CategoryViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.TransactionListViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
@@ -35,7 +36,8 @@ fun TransactionListScreen(
     userId: String?
 ) {
     val factory = ViewModelFactory()
-    val viewModel: TransactionListViewModel = viewModel(factory = factory)
+    val transactionListViewModel: TransactionListViewModel = viewModel(factory = factory)
+    val categoryViewModel: CategoryViewModel = viewModel(factory = factory)
 
     if (userId == null || userId == "") {
         Text("User not found")
@@ -43,8 +45,9 @@ fun TransactionListScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.loadTransactions(userId = userId)
+        transactionListViewModel.loadTransactions(userId = userId)
     }
+    categoryViewModel.getCategoriesFromUser(userId = userId)
 
     Scaffold(
         topBar = {
@@ -63,12 +66,20 @@ fun TransactionListScreen(
             modifier = Modifier
                 .padding(paddingValues = it)
         ) {
-            items(viewModel.transactions) { transaction ->
+            items(transactionListViewModel.transactions) { transaction ->
+                val categoryNames = mutableListOf<String>()
+
+                categoryViewModel.categoriesFromUser.forEach { category ->
+                    if (transaction.uuid in category.transactionMemberships) {
+                        categoryNames.add(category.name)
+                    }
+                }
                 TransactionListItem(
                     transaction = transaction,
-                    numbersVisible = viewModel.numbersVisible,
+                    numbersVisible = transactionListViewModel.numbersVisible,
+                    categoryNames = categoryNames,
                     onDelete = { transactionToDelete ->
-                        viewModel.deleteTransaction(userId = userId, transaction = transactionToDelete)
+                        transactionListViewModel.deleteTransaction(userId = userId, transaction = transactionToDelete)
                     },
                     onItemClick = { transactionId ->
                         navigationController.navigate(
@@ -100,7 +111,7 @@ fun TransactionListScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    viewModel.numbersVisible.value = !viewModel.numbersVisible.value
+                    transactionListViewModel.numbersVisible.value = !transactionListViewModel.numbersVisible.value
                 },
                 shape = CircleShape,
                 modifier = Modifier
