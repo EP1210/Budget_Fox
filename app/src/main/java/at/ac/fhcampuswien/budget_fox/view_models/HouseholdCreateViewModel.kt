@@ -4,14 +4,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Household
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class HouseholdCreateViewModel : ViewModel() {
-    private val userRepository = UserRepository()
+    private val userRepository = Repository()
 
     private var _householdName = mutableStateOf(value = "").value
 

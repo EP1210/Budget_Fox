@@ -2,12 +2,12 @@ package at.ac.fhcampuswien.budget_fox.view_models
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Household
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 
 class HouseholdTransactionViewModel : ViewModel() {
-    private val userRepository = UserRepository()
+    private val userRepository = Repository()
 
     val numbersVisible = mutableStateOf(value = true)
 

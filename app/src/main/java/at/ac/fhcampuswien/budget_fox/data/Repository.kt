@@ -10,7 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
+class Repository : UserDataAccessObject, HouseholdDataAccessObject {
 
     private val database = Firebase.firestore
 
@@ -80,7 +80,7 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .addOnFailureListener(onFailure)
     }
 
-    override fun getTransaction(
+    override fun getSpecificTransaction(
         userId: String,
         transactionId: String,
         onSuccess: (Transaction) -> Unit
@@ -129,6 +129,14 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 }
                 onSuccess(categoriesFromUser)
             }
+    }
+
+    override fun updateCategory(userId: String, categoryId: String, newCategoryName: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("name", newCategoryName)
     }
 
     override fun updateCategoryTransactionMemberships(userId: String, category: Category) {

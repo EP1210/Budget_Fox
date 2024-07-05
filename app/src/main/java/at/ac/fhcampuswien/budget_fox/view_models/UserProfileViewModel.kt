@@ -4,14 +4,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class UserProfileViewModel : ViewModel() {
-    private val repository = UserRepository()
+    private val repository = Repository()
 
     private var _userName = mutableStateOf(value = "")
     val userName: MutableState<String>

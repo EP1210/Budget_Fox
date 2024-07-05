@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
 class LoginViewModel : ViewModel() {
-    private var repository = UserRepository()
+    private var repository = Repository()
 
     //region Input fields
     private var _email = mutableStateOf(value = "").value

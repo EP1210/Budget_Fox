@@ -1,7 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,7 +9,7 @@ import java.util.Calendar
 
 class StatisticsViewModel : ViewModel() {
 
-    private val userRepository = UserRepository()
+    private val userRepository = Repository()
 
     private var _incomes = MutableStateFlow(mutableMapOf<Int, Double>())
     val incomes: StateFlow<Map<Int, Double>>

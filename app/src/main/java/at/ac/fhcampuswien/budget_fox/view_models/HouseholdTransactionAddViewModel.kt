@@ -3,14 +3,14 @@ package at.ac.fhcampuswien.budget_fox.view_models
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Household
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import java.text.SimpleDateFormat
 import java.util.Date
 
 class HouseholdTransactionAddViewModel: ViewModel() {
-    val userRepository = UserRepository()
+    val userRepository = Repository()
 
     private var _household : Household? = mutableStateOf(value = null).value
 

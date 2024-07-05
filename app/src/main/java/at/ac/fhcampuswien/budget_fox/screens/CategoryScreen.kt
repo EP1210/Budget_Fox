@@ -49,7 +49,7 @@ fun CategoryScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(
-                title = viewModel.transaction.value?.description ?: "Transaction not found"
+                title = "Transaction \"${viewModel.transaction.value?.description}\""
             ) {
                 SimpleEventIcon(
                     icon = Icons.AutoMirrored.Filled.ArrowBack,
@@ -120,7 +120,7 @@ fun CategoryList(
                         colour = Color.Blue,
                         contentDescription = "An icon to edit the category"
                     ) {
-                        // todo: logic to edit the category item
+                        // todo
                     }
                 },
                 delete = {
