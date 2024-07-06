@@ -103,11 +103,12 @@ fun TransactionListItem(
                 Text(
                     text = transaction.description,
                     color = MaterialTheme.colorScheme.inverseOnSurface,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    modifier = Modifier.weight(2f)
                 )
                 Column(
                     horizontalAlignment = Alignment.End,
-                    modifier = Modifier.weight(4f)
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(
                         text =
