@@ -2,8 +2,6 @@ package at.ac.fhcampuswien.budget_fox.widgets
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -14,10 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import at.ac.fhcampuswien.budget_fox.R
 
 @Composable
 fun PasswordField(
@@ -58,7 +58,11 @@ fun PasswordField(
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.AccountBox,
+                    painter = when {
+                        // Icon source: https://fonts.google.com/icons
+                        plaintextPassword -> painterResource(id = R.drawable.visibility_off)
+                        else -> painterResource(id = R.drawable.visibility)
+                    },
                     contentDescription = null
                 )
             }
