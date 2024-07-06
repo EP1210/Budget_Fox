@@ -48,7 +48,7 @@ fun HouseholdTransactionScreen(
 
     Scaffold(
         topBar = {
-            SimpleTopAppBar(title = "Household transactions")
+            SimpleTopAppBar(title = viewModel.household.value?.name ?: "Household transactions")
         },
         bottomBar = {
             SimpleBottomNavigationBar(

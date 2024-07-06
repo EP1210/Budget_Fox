@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.Repository
@@ -11,7 +12,9 @@ class HouseholdTransactionViewModel : ViewModel() {
 
     val numbersVisible = mutableStateOf(value = true)
 
-    private var household: Household? = null
+    private var _household: MutableState<Household?> = mutableStateOf(value = null)
+    val household: MutableState<Household?>
+        get() = _household
 
     fun getHousehold(householdId: String) {
         userRepository.getHousehold(householdId, onSuccess = { household ->
@@ -22,13 +25,13 @@ class HouseholdTransactionViewModel : ViewModel() {
                         transactions.forEach { transaction ->
                             household.addTransaction(transaction)
                         }
-                        this.household = household
+                        this._household.value = household
                     })
             }
         })
     }
 
     fun getTransactions(): List<Transaction> {
-        return household?.getTransactions() ?: mutableListOf<Transaction>()
+        return _household.value?.getTransactions() ?: mutableListOf<Transaction>()
     }
 }
