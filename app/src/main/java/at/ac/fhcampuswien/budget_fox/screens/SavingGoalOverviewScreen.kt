@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,6 +28,7 @@ import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SavingGoalListItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavingGoalOverviewScreen(
     navController: NavController,
@@ -63,7 +65,9 @@ fun SavingGoalOverviewScreen(
                 .fillMaxSize()
         ) {
             items(items = savingGoalItems.value) { item ->
-                SavingGoalListItem(savingGoal = item)
+                SavingGoalListItem(savingGoal = item) {
+                    navController.navigate(Screen.SavingGoalTransactionList.setArguments(userId = userId, savingGoalId = item.uuid))
+                }
             }
         }
         Box(

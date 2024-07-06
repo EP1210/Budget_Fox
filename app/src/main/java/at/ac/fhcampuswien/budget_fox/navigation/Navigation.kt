@@ -16,6 +16,7 @@ import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegularTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalAddScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalOverviewScreen
+import at.ac.fhcampuswien.budget_fox.screens.SavingGoalTransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
@@ -135,6 +136,13 @@ fun Navigation() {
             SavingGoalAddScreen(
                 navController = navigationController,
                 userId = backStackEntry.arguments?.getString(USER_ID)
+            )
+        }
+        composable(route = Screen.SavingGoalTransactionList.route) { backStackEntry ->
+            SavingGoalTransactionListScreen(
+                navigationController = navigationController,
+                userId = backStackEntry.arguments?.getString(USER_ID),
+                savingGoalId = backStackEntry.arguments?.getString(SAVING_GOAL_ID)
             )
         }
     }

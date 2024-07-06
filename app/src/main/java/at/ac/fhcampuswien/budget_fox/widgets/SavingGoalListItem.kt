@@ -27,7 +27,8 @@ import at.ac.fhcampuswien.budget_fox.models.Transaction
 
 @Composable
 fun SavingGoalListItem(
-    savingGoal: SavingGoal
+    savingGoal: SavingGoal,
+    onClick: () -> Unit = {}
 ) {
     val currentProgress by remember { mutableFloatStateOf((savingGoal.getProgress() / savingGoal.amount).toFloat()) }
     Column(
@@ -38,7 +39,7 @@ fun SavingGoalListItem(
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
             .clickable {
-                //TODO: Go to saving goal
+                onClick()
             }
             .padding(16.dp),
     ) {
@@ -46,7 +47,7 @@ fun SavingGoalListItem(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = savingGoal.name,
+                text = if (savingGoal.isDone) "${savingGoal.name} (✓)" else savingGoal.name,
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontSize = 16.sp
             )
