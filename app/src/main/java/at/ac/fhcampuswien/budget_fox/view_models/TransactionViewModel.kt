@@ -39,7 +39,7 @@ class TransactionViewModel : ViewModel() {
         _transactionDescription = description
     }
 
-    fun insertTransaction(userId: String) {
+    fun insertTransaction(userId: String, onSuccess: () -> Unit) {
         val format = SimpleDateFormat("yyyy-MM-dd")
         val date: Date? = format.parse(transactionDate)
 
@@ -54,7 +54,7 @@ class TransactionViewModel : ViewModel() {
                 transaction = transaction,
                 userId = userId,
                 onSuccess = {
-                    transactionMessage.value = "Transaction added successfully!"
+                    onSuccess()
                 },
                 onFailure = {
                     transactionMessage.value = "Error adding transaction: ${it.message}."

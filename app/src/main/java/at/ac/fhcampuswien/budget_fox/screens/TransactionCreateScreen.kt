@@ -79,13 +79,17 @@ fun TransactionCreateScreen(
             SimpleButton(
                 name = "Create income"
             ) {
-                viewModel.insertTransaction(userId = userId)
+                viewModel.insertTransaction(userId = userId) {
+                    navigationController.popBackStack()
+                }
             }
             SimpleButton(
                 name = "Create expense"
             ) {
                 viewModel.setTransactionAmount(viewModel.transactionAmount * -1)
-                viewModel.insertTransaction(userId = userId)
+                viewModel.insertTransaction(userId = userId) {
+                    navigationController.popBackStack()
+                }
             }
 
             Text(
