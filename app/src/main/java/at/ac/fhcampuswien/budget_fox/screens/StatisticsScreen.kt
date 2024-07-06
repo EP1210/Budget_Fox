@@ -25,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.StatisticsViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
+import at.ac.fhcampuswien.budget_fox.navigation.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottomAxis

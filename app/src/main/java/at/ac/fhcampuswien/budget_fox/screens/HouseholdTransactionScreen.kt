@@ -24,7 +24,7 @@ import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
+import at.ac.fhcampuswien.budget_fox.navigation.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 

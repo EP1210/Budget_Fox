@@ -16,7 +16,7 @@ data class BottomNavigationItem(
     val selected: ImageVector,
     val unselected: ImageVector,
     val route: String,
-    val alternativeRoute: String = ""
+    val alternativeRoute: String = "" // used for second screen (e.g. HouseholdWelcomeScreen & HouseholdTransactionScreen)
 )
 
 fun getBottomNavigationItems(userId: String): List<BottomNavigationItem> {
