@@ -4,12 +4,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 
 class CategoryViewModel : ViewModel() {
-    private val repository = UserRepository()
+
+    private val repository = Repository()
 
     private var _transaction = mutableStateOf<Transaction?>(value = null)
     val transaction: MutableState<Transaction?>
@@ -35,14 +36,14 @@ class CategoryViewModel : ViewModel() {
         _categoryDescription = categoryDescription
     }
 
-    fun getTransaction(userId: String, transactionId: String) {
-        repository.getTransaction(userId, transactionId) {
-            _transaction.value = it
+    fun getSpecificTransaction(userId: String, transactionId: String) {
+        repository.getSpecificTransaction(userId, transactionId) { transaction ->
+            _transaction.value = transaction
         }
     }
 
     fun insertCategory(userId: String, category: Category) {
-            repository.insertCategory(userId = userId, category = category)
+        repository.insertCategory(userId = userId, category = category)
     }
 
     fun getCategoriesFromUser(userId: String) {
@@ -50,6 +51,22 @@ class CategoryViewModel : ViewModel() {
             _categoriesFromUser.clear()
             _categoriesFromUser.addAll(categories)
         }
+    }
+
+    fun updateCategoryName(userId: String, categoryId: String) {
+        repository.updateCategoryName(
+            userId = userId,
+            categoryId = categoryId,
+            newCategoryName = _categoryName
+        )
+    }
+
+    fun updateCategoryDescription(userId: String, categoryId: String) {
+        repository.updateCategoryDescription(
+            userId = userId,
+            categoryId = categoryId,
+            newCategoryDescription = _categoryDescription
+        )
     }
 
     fun updateCategoryTransactionMemberships(userId: String, category: Category) {

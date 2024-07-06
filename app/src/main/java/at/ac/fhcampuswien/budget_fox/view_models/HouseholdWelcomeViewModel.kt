@@ -3,12 +3,12 @@ package at.ac.fhcampuswien.budget_fox.view_models
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.User
 
 class HouseholdWelcomeViewModel : ViewModel() {
 
-    private val repository = UserRepository()
+    private val repository = Repository()
 
     private var _householdId = mutableStateOf(value = "")
     val householdId: MutableState<String>

@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 
 class TransactionListViewModel : ViewModel() {
 
-    private val repository = UserRepository()
+    private val repository = Repository()
 
     private val _transactions = mutableStateListOf<Transaction>()
     val transactions: List<Transaction>

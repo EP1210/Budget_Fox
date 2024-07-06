@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -13,7 +13,7 @@ import java.util.Date
 
 
 class RegularTransactionViewModel : ViewModel() {
-    private val repository = UserRepository()
+    private val repository = Repository()
     private var _transactionMessage = mutableStateOf<String>(value = "")
 
     val transactionMessage: MutableState<String>
