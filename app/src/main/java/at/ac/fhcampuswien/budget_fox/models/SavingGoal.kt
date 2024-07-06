@@ -14,9 +14,9 @@ class SavingGoal(
         this.amount = amount
     }
 
-    fun getProgress() : Double {
+    fun getProgress(): Double {
         var sum = 0.0
-        _transactions.forEach {transaction ->
+        _transactions.forEach { transaction ->
             sum += transaction.amount
         }
         return sum
@@ -31,7 +31,7 @@ class SavingGoal(
     }
 
     fun savingGoalToDatabase(): Map<String, Any> {
-        return mapOf (
+        return mapOf(
             "uuid" to this.uuid,
             "name" to this.name,
             "amount" to this.amount

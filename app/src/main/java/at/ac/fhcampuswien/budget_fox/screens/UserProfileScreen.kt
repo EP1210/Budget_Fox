@@ -13,9 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.navigation.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.view_models.UserProfileViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.navigation.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase

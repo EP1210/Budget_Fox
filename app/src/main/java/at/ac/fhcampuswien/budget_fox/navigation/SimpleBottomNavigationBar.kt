@@ -16,7 +16,9 @@ fun SimpleBottomNavigationBar(
     NavigationBar {
         getBottomNavigationItems(userId = userId).forEach { navigationItem ->
             // First = Route without arguments
-            val selected = navigationItem.route.split("/").first() == currentRoute.split("/").first() || navigationItem.alternativeRoute.split("/").first() == currentRoute.split("/").first()
+            val selected = navigationItem.route.split("/").first() == currentRoute.split("/")
+                .first() || navigationItem.alternativeRoute.split("/")
+                .first() == currentRoute.split("/").first()
             NavigationBarItem(
                 selected = selected,
                 onClick = {
@@ -27,10 +29,10 @@ fun SimpleBottomNavigationBar(
                 icon = {
                     Icon(
                         imageVector =
-                            if(selected)
-                                navigationItem.selected
-                            else
-                                navigationItem.unselected,
+                        if (selected)
+                            navigationItem.selected
+                        else
+                            navigationItem.unselected,
                         contentDescription = null
                     )
                 },

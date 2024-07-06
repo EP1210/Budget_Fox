@@ -84,7 +84,12 @@ fun HouseholdCreateScreen(
             }
             if (viewModel.household.collectAsState().value != null) {
                 SimpleButton(name = "Go to household") {
-                    navigationController.navigate(route = Screen.HouseholdTransaction.passHouseholdId(householdId = viewModel.householdId, userId = userId)) {
+                    navigationController.navigate(
+                        route = Screen.HouseholdTransaction.passHouseholdId(
+                            householdId = viewModel.householdId,
+                            userId = userId
+                        )
+                    ) {
                         popUpTo(id = 0)
                     }
                 }

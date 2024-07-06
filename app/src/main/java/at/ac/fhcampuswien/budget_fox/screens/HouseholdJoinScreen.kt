@@ -125,13 +125,21 @@ fun HouseholdJoinScreen(
                         imageAnalysis.setAnalyzer(
                             ContextCompat.getMainExecutor(context),
                             QrCodeAnalyzer { qrScanResult ->
-                                if(qrScanResult != "") {
+                                if (qrScanResult != "") {
                                     Log.d("QrCodeAnalyzer", "Scanned QRCode: $qrScanResult")
-                                    viewModel.joinHousehold(householdId = qrScanResult, userId = userId, onSuccess = { householdId ->
-                                        navigationController.navigate(route = Screen.HouseholdTransaction.passHouseholdId(householdId = householdId, userId = userId)) {
-                                            popUpTo(id = 0)
+                                    viewModel.joinHousehold(
+                                        householdId = qrScanResult,
+                                        userId = userId,
+                                        onSuccess = { householdId ->
+                                            navigationController.navigate(
+                                                route = Screen.HouseholdTransaction.passHouseholdId(
+                                                    householdId = householdId,
+                                                    userId = userId
+                                                )
+                                            ) {
+                                                popUpTo(id = 0)
+                                            }
                                         }
-                                    }
                                     )
                                 }
                             }

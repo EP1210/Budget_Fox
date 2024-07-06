@@ -34,7 +34,8 @@ import com.lightspark.composeqr.QrCodeView
 fun HouseholdSettingsScreen(
     householdId: String?,
     userId: String?,
-    navigationController : NavController) {
+    navigationController: NavController
+) {
 
     val factory = ViewModelFactory()
     val viewModel: HouseholdSettingsViewModel = viewModel(factory = factory)
@@ -61,15 +62,15 @@ fun HouseholdSettingsScreen(
             viewModel.setSize(screenSize)
         }
     ) {
-        Column (
+        Column(
             modifier = Modifier
                 .padding(it)
-        ){
+        ) {
             FilledTonalButton(
                 onClick = {
                     viewModel.leaveHousehold(userId = userId, onSuccess = {
-                            navigationController.navigate(Screen.UserProfile.passUserId(userId = userId))
-                        },
+                        navigationController.navigate(Screen.UserProfile.passUserId(userId = userId))
+                    },
                         onFailure = {
                             //TODO Show error
                         })
@@ -77,7 +78,12 @@ fun HouseholdSettingsScreen(
                 modifier = Modifier
                     .padding(all = 16.dp)
                     .fillMaxWidth(),
-                colors = ButtonColors(containerColor = Color.Red, contentColor = Color.White, disabledContainerColor = Color.Magenta, disabledContentColor = Color.White)
+                colors = ButtonColors(
+                    containerColor = Color.Red,
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.Magenta,
+                    disabledContentColor = Color.White
+                )
             ) {
                 Text(
                     text = "Leave household"
@@ -86,20 +92,23 @@ fun HouseholdSettingsScreen(
             HorizontalDivider(
                 color = Color.LightGray,
                 thickness = 2.dp,
-                modifier = Modifier.padding(all= 16.dp)
+                modifier = Modifier.padding(all = 16.dp)
             )
-            Text (text = "Join code for household:",
-                modifier = Modifier.padding(horizontal = 16.dp))
-            Box(modifier = Modifier
-                .then(
-                    with(LocalDensity.current) {
-                        Modifier.size(
-                            width = viewModel.size.value.width.toDp(),
-                            height = viewModel.size.value.width.toDp(),
+            Text(
+                text = "Join code for household:",
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .then(
+                        with(LocalDensity.current) {
+                            Modifier.size(
+                                width = viewModel.size.value.width.toDp(),
+                                height = viewModel.size.value.width.toDp(),
                             )
-                    }
-                )
-                .background(color = Color.White),
+                        }
+                    )
+                    .background(color = Color.White),
             ) {
                 QrCodeView(
                     data = householdId,

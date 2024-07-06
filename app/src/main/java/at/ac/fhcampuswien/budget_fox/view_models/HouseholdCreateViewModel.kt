@@ -16,7 +16,7 @@ class HouseholdCreateViewModel : ViewModel() {
     private var _householdName = mutableStateOf(value = "").value
 
     private var _householdId = mutableStateOf(value = "").value
-    val householdId : String
+    val householdId: String
         get() = _householdId
 
     private var _size = mutableStateOf(value = IntSize.Zero)
@@ -36,7 +36,7 @@ class HouseholdCreateViewModel : ViewModel() {
         _householdName = householdName
     }
 
-    fun createHousehold() : String {
+    fun createHousehold(): String {
         val household = Household(name = _householdName)
         _household.value = household
 

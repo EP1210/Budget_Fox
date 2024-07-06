@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.SavingGoal
 
-class SavingGoalAddViewModel: ViewModel() {
+class SavingGoalAddViewModel : ViewModel() {
     private val userRepository = Repository()
 
     //region input fields

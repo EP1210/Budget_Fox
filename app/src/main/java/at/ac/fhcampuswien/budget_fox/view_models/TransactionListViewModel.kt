@@ -30,7 +30,10 @@ class TransactionListViewModel : ViewModel() {
         repository.getCategoriesFromUser(userId = userId) { fetchedCategories ->
             fetchedCategories.forEach { category ->
                 category.transactionMemberships.remove(transaction.uuid)
-                repository.updateCategoryTransactionMemberships(userId = userId, category = category)
+                repository.updateCategoryTransactionMemberships(
+                    userId = userId,
+                    category = category
+                )
             }
         }
         repository.deleteTransaction(userId, transaction.uuid) {

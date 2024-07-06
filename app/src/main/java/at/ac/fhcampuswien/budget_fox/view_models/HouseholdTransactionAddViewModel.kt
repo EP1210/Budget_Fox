@@ -10,10 +10,10 @@ import at.ac.fhcampuswien.budget_fox.models.Transaction
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class HouseholdTransactionAddViewModel: ViewModel() {
+class HouseholdTransactionAddViewModel : ViewModel() {
     private val userRepository = Repository()
 
-    private var _household : Household? = mutableStateOf(value = null).value
+    private var _household: Household? = mutableStateOf(value = null).value
 
     private var _transactionDate = mutableStateOf(value = "").value
 
@@ -46,11 +46,11 @@ class HouseholdTransactionAddViewModel: ViewModel() {
     }
 
     fun addHouseholdTransaction() {
-        if(_household != null) {
+        if (_household != null) {
             val format = SimpleDateFormat("yyyy-MM-dd")
             val date: Date? = format.parse(_transactionDate)
 
-             if(date != null) {
+            if (date != null) {
                 val transaction = Transaction(
                     amount = transactionAmount,
                     description = _transactionDescription,
@@ -62,10 +62,9 @@ class HouseholdTransactionAddViewModel: ViewModel() {
                     householdId = _household!!.uuid
                 )
                 _household!!.addTransaction(transaction)
-            }
-            else {
+            } else {
                 _errorMessage.value = "Invalid date format"
-             }
+            }
         }
     }
 }
