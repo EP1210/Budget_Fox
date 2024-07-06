@@ -10,7 +10,7 @@ class SavingGoalOverviewViewModel : ViewModel() {
 
     private val _goals = MutableStateFlow<List<SavingGoal>>(mutableListOf())
 
-    fun loadSavingGoals(userId: String) : MutableStateFlow<List<SavingGoal>> {
+    fun loadSavingGoals(userId: String): MutableStateFlow<List<SavingGoal>> {
         userRepository.getSavingGoalsFromUser(userId, onSuccess = { goals ->
             _goals.value = goals
         })

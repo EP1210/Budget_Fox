@@ -12,31 +12,20 @@ class User(
     private val _categories: MutableList<Category> = mutableListOf(),
     var householdId: String = ""
 ) {
-    constructor(firstName: String, lastName: String, dateOfBirth: LocalDateTime, dateTimeOfRegistration: LocalDateTime) : this() {
+    constructor(
+        firstName: String,
+        lastName: String,
+        dateOfBirth: LocalDateTime,
+        dateTimeOfRegistration: LocalDateTime
+    ) : this() {
         this.firstName = firstName
         this.lastName = lastName
         this.dateOfBirthInEpoch = dateOfBirth.toEpochSecond(ZoneOffset.UTC)
         this.dateOfRegistrationInEpoch = dateTimeOfRegistration.toEpochSecond(ZoneOffset.UTC)
     }
 
-    fun addTransactions(transactions: List<Transaction>) {
-        _transactions.addAll(transactions)
-    }
-
     fun addTransaction(transaction: Transaction) {
         _transactions.add(transaction)
-    }
-
-    fun getTransactions(): List<Transaction> {
-        return _transactions
-    }
-
-    fun addCategory(category: Category) {
-        _categories.add(category)
-    }
-
-    fun getCategories(): List<Category> {
-        return _categories
     }
 
     fun joinHousehold(householdId: String) {

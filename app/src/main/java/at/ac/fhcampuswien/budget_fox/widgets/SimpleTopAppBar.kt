@@ -15,7 +15,8 @@ fun SimpleTopAppBar(title: String, arrowBack: @Composable () -> Unit = {}) {
             Text(
                 text = title,
                 color = MaterialTheme.colorScheme.inverseOnSurface
-            )},
+            )
+        },
         navigationIcon = arrowBack,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary

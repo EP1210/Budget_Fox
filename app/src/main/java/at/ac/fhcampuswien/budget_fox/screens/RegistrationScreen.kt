@@ -14,13 +14,13 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.RegistrationViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
+import at.ac.fhcampuswien.budget_fox.widgets.DateField
 import at.ac.fhcampuswien.budget_fox.widgets.EmailField
 import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import at.ac.fhcampuswien.budget_fox.widgets.DateField
 
 @Composable
 fun RegistrationScreen(
@@ -39,7 +39,7 @@ fun RegistrationScreen(
         SimpleTitle(title = "User registration")
 
         EmailField { mail ->
-           viewModel.setEmail(email = mail)
+            viewModel.setEmail(email = mail)
         }
         PasswordField { pwd ->
             viewModel.setPassword(password = pwd)

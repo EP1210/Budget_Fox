@@ -22,9 +22,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.navigation.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
@@ -54,7 +54,7 @@ fun HouseholdTransactionScreen(
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
                 currentRoute = route,
-                userId = ""
+                userId = userId
             )
         }
     ) {
@@ -81,9 +81,11 @@ fun HouseholdTransactionScreen(
         {
             FloatingActionButton(
                 onClick = {
-                    val route =
-                        Screen.HouseholdAddTransaction.passHouseholdId(householdId = householdId)
-                    navigationController.navigate(route)
+                    val addTransactionRoute =
+                        Screen.HouseholdAddTransaction.passHouseholdId(
+                            householdId = householdId
+                        )
+                    navigationController.navigate(addTransactionRoute)
                 },
                 shape = CircleShape,
                 modifier = Modifier
@@ -105,11 +107,11 @@ fun HouseholdTransactionScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.HouseholdSettings.setArguments(
+                    val householdSettingsRoute = Screen.HouseholdSettings.setArguments(
                         householdId = householdId,
                         userId = userId
                     )
-                    navigationController.navigate(route)
+                    navigationController.navigate(householdSettingsRoute)
                 },
                 shape = CircleShape,
                 modifier = Modifier

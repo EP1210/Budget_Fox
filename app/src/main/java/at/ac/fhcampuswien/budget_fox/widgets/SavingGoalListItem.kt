@@ -78,7 +78,10 @@ fun SavingGoalListItem(
 @Composable
 @Preview
 fun Preview() {
-    val goal = SavingGoal(name = "IntelliJ Jahreslizenz", amount = 202.80) //https://www.jetbrains.com/de-de/idea/buy/?section=personal&billing=yearly
+    val goal = SavingGoal(
+        name = "IntelliJ Jahreslizenz",
+        amount = 202.80
+    ) //https://www.jetbrains.com/de-de/idea/buy/?section=personal&billing=yearly
     goal.addTransaction(Transaction(amount = 10.0, description = "Oma Geburstag"))
     SavingGoalListItem(goal)
 }

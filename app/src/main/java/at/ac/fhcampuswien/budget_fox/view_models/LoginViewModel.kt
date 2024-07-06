@@ -16,13 +16,13 @@ class LoginViewModel : ViewModel() {
     private var _password = mutableStateOf(value = "").value
     private var _errorMessage = mutableStateOf(value = "")
 
-    val email : String
+    val email: String
         get() = _email
 
-    val password : String
+    val password: String
         get() = _password
 
-    val errorMessage : MutableState<String>
+    val errorMessage: MutableState<String>
         get() = _errorMessage
 
 

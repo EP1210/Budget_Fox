@@ -12,10 +12,10 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 import java.util.UUID
 
-class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) :
+    Worker(appContext, workerParams) {
 
     override fun doWork(): Result {
         val db = Firebase.firestore
@@ -32,7 +32,10 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
                     for (document in documents) {
                         val transactionData = document.data
                         val transaction = Transaction.fromDatabase(transactionData)
-                        if (transaction.nextDueDate != null && transaction.nextDueDate!!.before(currentTime)) {
+                        if (transaction.nextDueDate != null && transaction.nextDueDate!!.before(
+                                currentTime
+                            )
+                        ) {
                             var nextDueDate = transaction.nextDueDate!!
 
                             while (nextDueDate.before(currentTime)) {
@@ -45,7 +48,8 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
                                 newTransaction.uuid = UUID.randomUUID().toString()
                                 insertNewTransaction(newTransaction, userId)
 
-                                nextDueDate = calculateNextDueDate(nextDueDate, transaction.frequency!!)
+                                nextDueDate =
+                                    calculateNextDueDate(nextDueDate, transaction.frequency!!)
                             }
 
                             db.collection("users").document(userId)
@@ -58,7 +62,7 @@ class RegularExpenseWorker(appContext: Context, workerParams: WorkerParameters) 
                     Log.w(TAG, "Error getting documents", e)
                 }
         }
-            return Result.success()
+        return Result.success()
     }
 
     private fun calculateNextDueDate(currentDate: Date, frequency: String): Date {

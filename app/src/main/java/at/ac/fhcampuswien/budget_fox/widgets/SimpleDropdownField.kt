@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -29,7 +28,9 @@ fun SimpleDropdownField(
     var selectedItem by remember { mutableStateOf<String?>(null) }
 
     Column {
-        Box(modifier = Modifier.fillMaxWidth().padding(top = 10.dp)) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp)) {
             BasicText(
                 text = selectedItem ?: placeholder,
                 style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
@@ -46,9 +47,9 @@ fun SimpleDropdownField(
                     DropdownMenuItem(
                         { Text(text = label, color = MaterialTheme.colorScheme.onSurfaceVariant) },
                         onClick = {
-                        selectedItem = label
-                        expanded = false
-                        onItemSelected(label)
+                            selectedItem = label
+                            expanded = false
+                            onItemSelected(label)
                         }
                     )
                 }

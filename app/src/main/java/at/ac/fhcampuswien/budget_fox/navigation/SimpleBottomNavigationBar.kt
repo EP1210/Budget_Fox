@@ -1,4 +1,4 @@
-package at.ac.fhcampuswien.budget_fox.widgets
+package at.ac.fhcampuswien.budget_fox.navigation
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -6,7 +6,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.navigation.getBottomNavigationItems
 
 @Composable
 fun SimpleBottomNavigationBar(
@@ -16,8 +15,12 @@ fun SimpleBottomNavigationBar(
 ) {
     NavigationBar {
         getBottomNavigationItems(userId = userId).forEach { navigationItem ->
+            // First = Route without arguments
+            val selected = navigationItem.route.split("/").first() == currentRoute.split("/")
+                .first() || navigationItem.alternativeRoute.split("/")
+                .first() == currentRoute.split("/").first()
             NavigationBarItem(
-                selected = navigationItem.route == currentRoute || navigationItem.alternativeRoute == currentRoute,
+                selected = selected,
                 onClick = {
                     navigationController.navigate(route = navigationItem.route) {
                         popUpTo(id = 0)
@@ -26,10 +29,10 @@ fun SimpleBottomNavigationBar(
                 icon = {
                     Icon(
                         imageVector =
-                            if(navigationItem.route == currentRoute || navigationItem.alternativeRoute == currentRoute)
-                                navigationItem.selected
-                            else
-                                navigationItem.unselected,
+                        if (selected)
+                            navigationItem.selected
+                        else
+                            navigationItem.unselected,
                         contentDescription = null
                     )
                 },

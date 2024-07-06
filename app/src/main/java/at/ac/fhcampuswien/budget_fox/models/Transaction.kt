@@ -20,7 +20,14 @@ class Transaction(
         this.date = date
     }
 
-    constructor(amount: Double, description: String, date: Date, isRegular: Boolean, frequency: String?, nextDueDate: Date?) : this() {
+    constructor(
+        amount: Double,
+        description: String,
+        date: Date,
+        isRegular: Boolean,
+        frequency: String?,
+        nextDueDate: Date?
+    ) : this() {
         uuid = UUID.randomUUID().toString()
         this.amount = amount
         this.description = description

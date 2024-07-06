@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
+import at.ac.fhcampuswien.budget_fox.navigation.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.view_models.CategoryViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.TransactionListViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 
@@ -79,11 +79,17 @@ fun TransactionListScreen(
                     numbersVisible = transactionListViewModel.numbersVisible,
                     categoryNames = categoryNames,
                     onDelete = { transactionToDelete ->
-                        transactionListViewModel.deleteTransaction(userId = userId, transaction = transactionToDelete)
+                        transactionListViewModel.deleteTransaction(
+                            userId = userId,
+                            transaction = transactionToDelete
+                        )
                     },
                     onItemClick = { transactionId ->
                         navigationController.navigate(
-                            route = Screen.Category.setArguments(userId = userId, transactionId = transactionId)
+                            route = Screen.Category.setArguments(
+                                userId = userId,
+                                transactionId = transactionId
+                            )
                         )
                     }
                 )
@@ -111,7 +117,8 @@ fun TransactionListScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    transactionListViewModel.numbersVisible.value = !transactionListViewModel.numbersVisible.value
+                    transactionListViewModel.numbersVisible.value =
+                        !transactionListViewModel.numbersVisible.value
                 },
                 shape = CircleShape,
                 modifier = Modifier
@@ -125,7 +132,11 @@ fun TransactionListScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.RegularTransaction.passUserId(userId = userId))
+                    navigationController.navigate(
+                        route = Screen.RegularTransaction.passUserId(
+                            userId = userId
+                        )
+                    )
                 },
                 shape = CircleShape,
                 modifier = Modifier

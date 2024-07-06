@@ -11,9 +11,7 @@ class WelcomeViewModel : ViewModel() {
     fun checkIfUserIsLoggedIn(onLoggedIn: (String) -> Unit) {
         if (uid != null && uid != "") {
             onLoggedIn(uid)
-        }
-        else
-        {
+        } else {
             Log.d("FIREBASE", "User is not logged in!")
         }
     }
