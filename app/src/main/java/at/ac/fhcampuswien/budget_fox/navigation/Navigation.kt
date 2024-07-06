@@ -27,7 +27,6 @@ import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 @Composable
 fun Navigation() {
     val navigationController = rememberNavController()
-    val userViewModel: UserViewModel = viewModel()
 
     NavHost(
         navController = navigationController,
@@ -95,10 +94,10 @@ fun Navigation() {
                 userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
-        composable(route = Screen.HouseholdJoin.route) {
+        composable(route = Screen.HouseholdJoin.route) { backStackEntry ->
             HouseholdJoinScreen(
                 navigationController = navigationController,
-                viewModel = userViewModel
+                userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }
         composable(route = Screen.HouseholdTransaction.route) { backStackEntry ->

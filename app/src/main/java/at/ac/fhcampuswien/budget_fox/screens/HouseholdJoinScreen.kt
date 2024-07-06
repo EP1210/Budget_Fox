@@ -34,21 +34,30 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.helper.QrCodeAnalyzer
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdJoinViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
 @Composable
 fun HouseholdJoinScreen(
     navigationController: NavController,
-    viewModel: UserViewModel
+    userId: String?
 ) {
-    var message by remember {
-        mutableStateOf("SCAN QR")
+    val factory = ViewModelFactory()
+    val viewModel: HouseholdJoinViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
     }
+
     val context = LocalContext.current
+
+    //TODO: To view model?
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
     }
@@ -115,15 +124,13 @@ fun HouseholdJoinScreen(
                             .build()
                         imageAnalysis.setAnalyzer(
                             ContextCompat.getMainExecutor(context),
-                            QrCodeAnalyzer { result ->
-                                if(result != "") {
-                                    Log.d("QrCodeAnalyzer", "Scanned QRCode: $result")
-                                    viewModel.joinHousehold(result, onSuccess = {
-                                        navigationController.navigate(route = Screen.HouseholdTransaction.route) {
+                            QrCodeAnalyzer { qrScanResult ->
+                                if(qrScanResult != "") {
+                                    Log.d("QrCodeAnalyzer", "Scanned QRCode: $qrScanResult")
+                                    viewModel.joinHousehold(householdId = qrScanResult, userId = userId, onSuccess = { householdId ->
+                                        navigationController.navigate(route = Screen.HouseholdTransaction.passHouseholdId(householdId = householdId, userId = userId)) {
                                             popUpTo(id = 0)
                                         }
-                                    }, notExists = {
-                                            message = "Household does not exist"
                                     }
                                     )
                                 }
@@ -145,7 +152,7 @@ fun HouseholdJoinScreen(
                         .weight(1f)
                 )
                 Text(
-                    text = message,
+                    text = viewModel.userMessage.value,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier

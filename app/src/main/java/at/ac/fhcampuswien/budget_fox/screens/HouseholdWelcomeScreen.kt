@@ -62,12 +62,12 @@ fun HouseholdWelcomeScreen(
             SimpleButton(
                 name = "Create Household"
             ) {
-                navigationController.navigate(route = Screen.HouseholdCreate.route)
+                navigationController.navigate(route = Screen.HouseholdCreate.passUserId(userId = userId))
             }
             SimpleButton(
                 name = "Join Household"
             ) {
-                navigationController.navigate(route = Screen.HouseholdJoin.route)
+                navigationController.navigate(route = Screen.HouseholdJoin.passUserId(userId = userId))
             }
         }
     }

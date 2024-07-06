@@ -251,14 +251,14 @@ class UserViewModel : ViewModel() {
         return ""
     }
 
-    fun joinHousehold(householdId: String, onSuccess: () -> Unit = {}, notExists: () -> Unit = {}) {
+    fun joinHousehold(householdId: String, onSuccess: (String) -> Unit = {}, notExists: () -> Unit = {}) {
         //TODO: Check race conditions! - Household is inserted in other VM
         userRepository.joinHouseholdIfExist(
             userId = firebaseUser!!.uid,
             householdId = householdId,
             onSuccess = {
                 user?.joinHousehold(householdId)
-                onSuccess()
+                onSuccess(householdId)
             },
             notExits = {
                 notExists()
