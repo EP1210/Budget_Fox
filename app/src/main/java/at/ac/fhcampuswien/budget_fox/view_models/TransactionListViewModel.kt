@@ -27,6 +27,12 @@ class TransactionListViewModel : ViewModel() {
     }
 
     fun deleteTransaction(userId: String, transaction: Transaction) {
+        repository.getCategoriesFromUser(userId = userId) { fetchedCategories ->
+            fetchedCategories.forEach { category ->
+                category.transactionMemberships.remove(transaction.uuid)
+                repository.updateCategoryTransactionMemberships(userId = userId, category = category)
+            }
+        }
         repository.deleteTransaction(userId, transaction.uuid) {
             _transactions.remove(transaction)
         }
