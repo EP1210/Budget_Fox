@@ -14,15 +14,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
+import at.ac.fhcampuswien.budget_fox.widgets.DateField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HouseholdTransactionAddScreen(
@@ -69,18 +70,17 @@ fun HouseholdTransactionAddScreen(
             ) { description ->
                 viewModel.setTransactionDescription(description)
             }
-            SimpleField(
-                title = "Date"
-            ) { interval ->
-                viewModel.setTransactionDate(interval)
-            }
+            DateField(
+                description = "Date",
+                onValueChanged = { date ->
+                    viewModel.setTransactionDate(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                }
+            )
 
             Text(text = viewModel.errorMessage.value, color = Color.Red)
 
             SimpleButton(
-                name = "Add income",
-                modifier = Modifier
-                    .padding(bottom = 30.dp)
+                name = "Add income"
             ) {
                 viewModel.addHouseholdTransaction()
             }
