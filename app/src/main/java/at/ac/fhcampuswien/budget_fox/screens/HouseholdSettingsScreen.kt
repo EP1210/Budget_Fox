@@ -68,7 +68,7 @@ fun HouseholdSettingsScreen(
             FilledTonalButton(
                 onClick = {
                     viewModel.leaveHousehold(userId = userId, onSuccess = {
-                            navigationController.navigate(Screen.UserProfile.route)
+                            navigationController.navigate(Screen.UserProfile.passUserId(userId = userId))
                         },
                         onFailure = {
                             //TODO Show error

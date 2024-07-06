@@ -15,6 +15,10 @@ class HouseholdCreateViewModel : ViewModel() {
 
     private var _householdName = mutableStateOf(value = "").value
 
+    private var _householdId = mutableStateOf(value = "").value
+    val householdId : String
+        get() = _householdId
+
     private var _size = mutableStateOf(value = IntSize.Zero)
     val size: MutableState<IntSize>
         get() = _size
@@ -37,6 +41,8 @@ class HouseholdCreateViewModel : ViewModel() {
         _household.value = household
 
         userRepository.insertHousehold(household)
+
+        _householdId = household.uuid
         return household.uuid
     }
 

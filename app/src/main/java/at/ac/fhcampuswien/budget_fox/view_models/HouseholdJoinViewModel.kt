@@ -3,10 +3,10 @@ package at.ac.fhcampuswien.budget_fox.view_models
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 
 class HouseholdJoinViewModel : ViewModel() {
-    private val repository = UserRepository()
+    private val repository = Repository()
 
     private var _userMessage = mutableStateOf(value = "Scan QR-Code")
     val userMessage: MutableState<String>

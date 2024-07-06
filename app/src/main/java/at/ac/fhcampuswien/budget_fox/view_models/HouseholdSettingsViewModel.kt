@@ -4,10 +4,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.IntSize
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 
 class HouseholdSettingsViewModel : ViewModel() {
-    private val repository = UserRepository()
+    private val repository = Repository()
 
     private var _size = mutableStateOf(value = IntSize.Zero)
 
