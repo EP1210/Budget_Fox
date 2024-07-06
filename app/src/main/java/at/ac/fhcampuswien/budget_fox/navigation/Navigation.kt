@@ -23,14 +23,12 @@ import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.UserProfileScreen
 import at.ac.fhcampuswien.budget_fox.screens.WelcomeScreen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewModel
-import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
 
 @Composable
 fun Navigation() {
     val navigationController = rememberNavController()
     val userViewModel: UserViewModel = viewModel()
-    val householdViewModel: HouseholdViewModel = viewModel()
     val addTransactionViewModel: HouseholdTransactionAddViewModel = viewModel()
 
     NavHost(
@@ -124,8 +122,7 @@ fun Navigation() {
             HouseholdSettingsScreen(
                 householdId = backStackEntry.arguments?.getString(HOUSEHOLD_ID),
                 userId = backStackEntry.arguments?.getString(USER_ID),
-                navigationController = navigationController,
-                viewModel = userViewModel
+                navigationController = navigationController
             )
         }
         composable(route = Screen.RegularTransaction.route) { backStackEntry ->
