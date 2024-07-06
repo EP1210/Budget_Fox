@@ -4,15 +4,13 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import at.ac.fhcampuswien.budget_fox.data.Repository
-import at.ac.fhcampuswien.budget_fox.models.Household
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class HouseholdTransactionAddViewModel: ViewModel() {
-    val userRepository = Repository()
+class TransactionViewModel : ViewModel() {
 
-    private var _household : Household? = mutableStateOf(value = null).value
+    private val repository = Repository()
 
     private var _transactionDate = mutableStateOf(value = "").value
     val transactionDate: String
@@ -26,6 +24,9 @@ class HouseholdTransactionAddViewModel: ViewModel() {
     val transactionDescription: String
         get() = _transactionDescription
 
+    var transactionMessage = mutableStateOf(value = "")
+        private set
+
     fun setTransactionDate(date: String) {
         _transactionDate = date
     }
@@ -38,31 +39,29 @@ class HouseholdTransactionAddViewModel: ViewModel() {
         _transactionDescription = description
     }
 
-    fun findHouseholdById(householdId: String) {
-        userRepository.getHousehold(householdId, onSuccess = {
-            _household = it
-        })
-    }
+    fun insertTransaction(userId: String) {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = format.parse(transactionDate)
 
-    fun addHouseholdTransaction() {
-        if(_household != null) {
-            val format = SimpleDateFormat("yyyy-MM-dd")
-            val date: Date? = format.parse(transactionDate)
+        if (transactionAmount != 0.0 && transactionDescription.isNotBlank() && date != null) {
+            val transaction = Transaction(
+                amount = transactionAmount,
+                description = transactionDescription,
+                date = date
+            )
 
-            date?.let {
-                val transaction = Transaction(
-                    amount = transactionAmount,
-                    description = transactionDescription,
-                    date = it
-                )
-
-                userRepository.insertHouseholdTransaction(
-                    transaction = transaction,
-                    householdId = _household!!.uuid
-                )
-                _household!!.addTransaction(transaction)
-            }
-            //TODO: Display error message
+            repository.insertTransaction(
+                transaction = transaction,
+                userId = userId,
+                onSuccess = {
+                    transactionMessage.value = "Transaction added successfully!"
+                },
+                onFailure = {
+                    transactionMessage.value = "Error adding transaction: ${it.message}."
+                }
+            )
+        } else {
+            transactionMessage.value = "Invalid transaction data."
         }
     }
 }

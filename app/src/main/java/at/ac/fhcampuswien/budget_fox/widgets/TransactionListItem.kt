@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -22,8 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,6 +43,7 @@ import java.util.Locale
 fun TransactionListItem(
     transaction: Transaction,
     numbersVisible: MutableState<Boolean> = mutableStateOf(value = true),
+    categoryNames: List<String> = emptyList(),
     onDelete: (Transaction) -> Unit,
     onItemClick: (String) -> Unit
 ) {
@@ -135,6 +138,16 @@ fun TransactionListItem(
                         contentDescription = "Delete Transaction",
                         tint = Color.Red
                     )
+                }
+            }
+            if (categoryNames.isNotEmpty()) {
+                LazyRow {
+                    items(items = categoryNames) { categoryName ->
+                        Text(
+                            text = "| $categoryName ",
+                            color = MaterialTheme.colorScheme.inverseOnSurface
+                        )
+                    }
                 }
             }
         }

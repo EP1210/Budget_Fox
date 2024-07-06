@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import at.ac.fhcampuswien.budget_fox.models.Category
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.models.User
@@ -16,7 +16,7 @@ import java.util.Calendar
 import java.util.Date
 
 class UserViewModel : ViewModel() {
-    private val userRepository = UserRepository()
+    private val userRepository = Repository()
     private val firebaseUser = Firebase.auth.currentUser
 
     val numbersVisible = mutableStateOf(value = true)
@@ -32,7 +32,7 @@ class UserViewModel : ViewModel() {
     val firstLogin: Boolean
         get() = _firstLogin
 
-    private var _transactionDate = mutableStateOf(value = "").value
+    private var _transactionDate = mutableStateOf(value = getCurrentDateString()).value
     val transactionDate: String
         get() = _transactionDate
 
@@ -275,5 +275,10 @@ class UserViewModel : ViewModel() {
         }
 
         return false
+    }
+
+    private fun getCurrentDateString(): String {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        return format.format(Date())
     }
 }

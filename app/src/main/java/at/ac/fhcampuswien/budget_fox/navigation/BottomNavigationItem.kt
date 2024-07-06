@@ -17,34 +17,33 @@ data class BottomNavigationItem(
     val unselected: ImageVector,
     val route: String,
     val alternativeRoute: String = ""
-) {
-}
+)
 
-fun getBottomNavigationItems(): List<BottomNavigationItem> {
+fun getBottomNavigationItems(userId: String): List<BottomNavigationItem> {
     return listOf(
         BottomNavigationItem(
             label = "Profile",
             selected = Icons.Filled.Face,
             unselected = Icons.Outlined.Face,
-            route = Screen.UserProfile.route
+            route = Screen.UserProfile.passUserId(userId = userId)
         ),
         BottomNavigationItem(
             label = "Budget",
             selected = Icons.Filled.ShoppingCart,
             unselected = Icons.Outlined.ShoppingCart,
-            route = Screen.Transaction.route
+            route = Screen.TransactionList.passUserId(userId = userId)
         ),
         BottomNavigationItem(
             label = "Statistics",
             selected = Icons.Filled.Info,
             unselected = Icons.Outlined.Info,
-            route = Screen.Statistics.route
+            route = Screen.Statistics.passUserId(userId = userId)
         ),
         BottomNavigationItem(
             label = "Household",
             selected = Icons.Filled.Home,
             unselected = Icons.Outlined.Home,
-            route = Screen.HouseholdWelcome.route,
+            route = Screen.HouseholdWelcome.passUserId(userId = userId),
             alternativeRoute = Screen.HouseholdTransaction.route
         )
     )

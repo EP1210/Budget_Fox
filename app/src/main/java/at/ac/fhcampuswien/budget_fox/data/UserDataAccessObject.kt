@@ -17,11 +17,17 @@ interface UserDataAccessObject {
 
     fun getTransactionsFromUser(userId: String, onSuccess: (List<Transaction>) -> Unit, onFailure: (Exception) -> Unit)
 
+    fun getSpecificTransaction(userId: String, transactionId: String, onSuccess: (Transaction) -> Unit)
+
     fun deleteTransaction(userId: String, transactionId: String, onComplete: () -> Unit)
 
     fun insertCategory(userId: String, category: Category)
 
     fun getCategoriesFromUser(userId: String, onSuccess: (List<Category>) -> Unit)
+
+    fun updateCategoryName(userId: String, categoryId: String, newCategoryName: String)
+
+    fun updateCategoryDescription(userId: String, categoryId: String, newCategoryDescription: String)
 
     fun updateCategoryTransactionMemberships(userId: String, category: Category)
 

@@ -1,41 +1,30 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.LoginViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.EmailField
 import at.ac.fhcampuswien.budget_fox.widgets.PasswordField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTextLink
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 
 @Composable
 fun LoginScreen(
-    navigationController: NavController,
-    viewModel: UserViewModel
+    navigationController: NavController
 ) {
-    var email by remember {
-        mutableStateOf(value = "")
-    }
-    var password by remember {
-        mutableStateOf(value = "")
-    }
+    val factory = ViewModelFactory()
+    val viewModel: LoginViewModel = viewModel(factory = factory)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,62 +35,27 @@ fun LoginScreen(
         SimpleTitle(title = "Login")
 
         EmailField { mail ->
-            email = mail
+            viewModel.setEmail(mail)
         }
-        PasswordField { word ->
-            password = word
+        PasswordField { pwd ->
+            viewModel.setPassword(pwd)
         }
 
         SimpleButton(name = "Login") {
-            if (email.isNotBlank() && password.isNotBlank()) {
-                userLogin(
-                    email = email,
-                    password = password,
-                    navController = navigationController,
-                    viewModel = viewModel
-                )
+            viewModel.userLogin { uid ->
+                navigationController.navigate(route = Screen.UserProfile.passUserId(userId = uid)) {
+                    popUpTo(id = 0)
+                }
             }
         }
+
+        Text(
+            text = viewModel.errorMessage.value,
+            color = Color.Red
+        )
+
         SimpleTextLink(name = "Create account") {
             navigationController.navigate(route = Screen.Registration.route)
         }
     }
-}
-
-fun userLogin(
-    email: String,
-    password: String,
-    navController: NavController,
-    viewModel: UserViewModel
-) {
-    Firebase.auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                viewModel.setUserState(firstLogin = task.result.additionalUserInfo?.isNewUser)
-                //TODO: Duplicate code!
-                val repository = UserRepository()
-                val firebaseUser = Firebase.auth.currentUser
-                val uid = firebaseUser?.uid
-
-                if (uid != null) {
-                    repository.getAllDataFromUser(uid, //TODO: Leon Fragen
-                        onSuccess = { user ->
-                            if (user != null) {
-                                viewModel.setUser(user = user)
-                                navController.navigate(route = Screen.UserProfile.route) {
-                                    popUpTo(id = 0)
-                                }
-                            } else {
-                                Log.d("FIREBASE", "USER IS NULL!")
-                            }
-                        }, onFailure = { exception: Exception ->
-                            Log.d("FIREBASE", "COLD NOT LOAD USER! $exception")
-                        })
-                } else {
-                    Log.d("FIREBASE", "User is null!")
-                }
-            } else {
-                // todo: display error message in login screen
-            }
-        }
 }

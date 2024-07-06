@@ -10,7 +10,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 
-class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
+class Repository : UserDataAccessObject, HouseholdDataAccessObject {
 
     private val database = Firebase.firestore
 
@@ -80,6 +80,24 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
             .addOnFailureListener(onFailure)
     }
 
+    override fun getSpecificTransaction(
+        userId: String,
+        transactionId: String,
+        onSuccess: (Transaction) -> Unit
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .document(transactionId)
+            .get()
+            .addOnSuccessListener { transaction ->
+                transaction.data?.let {
+                    onSuccess(Transaction.fromDatabase(it))
+                }
+            }
+    }
+
     override fun deleteTransaction(userId: String, transactionId: String, onComplete: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)
@@ -111,6 +129,26 @@ class UserRepository : UserDataAccessObject, HouseholdDataAccessObject {
                 }
                 onSuccess(categoriesFromUser)
             }
+    }
+
+    override fun updateCategoryName(userId: String, categoryId: String, newCategoryName: String) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("name", newCategoryName)
+    }
+
+    override fun updateCategoryDescription(
+        userId: String,
+        categoryId: String,
+        newCategoryDescription: String
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("description", newCategoryDescription)
     }
 
     override fun updateCategoryTransactionMemberships(userId: String, category: Category) {

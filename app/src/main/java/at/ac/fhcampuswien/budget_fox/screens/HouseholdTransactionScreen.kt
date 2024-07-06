@@ -18,11 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.HouseholdViewModel
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
@@ -31,15 +32,19 @@ import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 fun HouseholdTransactionScreen(
     navigationController: NavController,
     route: String,
-    userViewModel: UserViewModel,
-    householdViewModel: HouseholdViewModel
+    userId: String?,
+    householdId: String?
 ) {
-    val householdId = userViewModel.getHousehold()
-    if(householdId == "") {
-        Text("Household not found!")
+
+    val factory = ViewModelFactory()
+    val viewModel: HouseholdTransactionViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "" || householdId == null || householdId == "") {
+        Text("User or household not found")
         return
     }
-    householdViewModel.getHousehold(householdId)
+
+    viewModel.getHousehold(householdId)
 
     Scaffold(
         topBar = {
@@ -48,7 +53,8 @@ fun HouseholdTransactionScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = ""
             )
         }
     ) {
@@ -58,8 +64,12 @@ fun HouseholdTransactionScreen(
                 .padding(paddingValues = it)
                 .fillMaxSize()
         ) {
-            items(items = householdViewModel.getTransactions()) { item: Transaction ->
-                TransactionListItem(transaction = item, numbersVisible = userViewModel.numbersVisible, onDelete = {}, onItemClick = {})
+            items(items = viewModel.getTransactions()) { item: Transaction ->
+                TransactionListItem(
+                    transaction = item,
+                    numbersVisible = viewModel.numbersVisible,
+                    onDelete = {},
+                    onItemClick = {})
             }
         }
 
@@ -71,7 +81,8 @@ fun HouseholdTransactionScreen(
         {
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.HouseholdAddTransaction.setHouseholdId(householdId = userViewModel.getHousehold())
+                    val route =
+                        Screen.HouseholdAddTransaction.passHouseholdId(householdId = householdId)
                     navigationController.navigate(route)
                 },
                 shape = CircleShape,
@@ -83,7 +94,7 @@ fun HouseholdTransactionScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    userViewModel.numbersVisible.value = !userViewModel.numbersVisible.value
+                    viewModel.numbersVisible.value = !viewModel.numbersVisible.value
                 },
                 shape = CircleShape,
                 modifier = Modifier
@@ -94,7 +105,10 @@ fun HouseholdTransactionScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    val route = Screen.HouseholdSettings.setArguments(householdId = userViewModel.getHousehold(), userId = userViewModel.getUserId())
+                    val route = Screen.HouseholdSettings.setArguments(
+                        householdId = householdId,
+                        userId = userId
+                    )
                     navigationController.navigate(route)
                 },
                 shape = CircleShape,

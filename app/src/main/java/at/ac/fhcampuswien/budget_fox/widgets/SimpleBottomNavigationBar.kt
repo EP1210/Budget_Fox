@@ -11,10 +11,11 @@ import at.ac.fhcampuswien.budget_fox.navigation.getBottomNavigationItems
 @Composable
 fun SimpleBottomNavigationBar(
     navigationController: NavController,
-    currentRoute: String
+    currentRoute: String,
+    userId: String
 ) {
     NavigationBar {
-        getBottomNavigationItems().forEach { navigationItem ->
+        getBottomNavigationItems(userId = userId).forEach { navigationItem ->
             NavigationBarItem(
                 selected = navigationItem.route == currentRoute || navigationItem.alternativeRoute == currentRoute,
                 onClick = {

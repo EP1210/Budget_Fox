@@ -8,35 +8,39 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.UserProfileViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTitle
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 
 @Composable
 fun UserProfileScreen(
     navigationController: NavController,
-    viewModel: UserViewModel,
-    route: String
+    route: String,
+    userId: String?
 ) {
+    val factory = ViewModelFactory()
+    val viewModel: UserProfileViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
+    }
+
     Scaffold(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = userId
             )
         }
     ) {
@@ -49,55 +53,23 @@ fun UserProfileScreen(
         ) {
             val auth = Firebase.auth
             val userMail = auth.currentUser?.email
-            var userName by remember {
-                mutableStateOf("")
-            }
-            var userBirthDate by remember {
-                mutableStateOf(LocalDateTime.now())
-            }
-            var userRegistrationDate by remember {
-                mutableStateOf(LocalDateTime.now())
-            }
-            val user = viewModel.user
 
-            userName = user?.firstName + " " + user?.lastName
-            userBirthDate = LocalDateTime.ofInstant(user?.dateOfBirthInEpoch?.let {
-                Instant.ofEpochSecond(
-                    it
-                )
-            }, ZoneOffset.UTC)
-            userRegistrationDate = LocalDateTime.ofInstant(user?.dateOfRegistrationInEpoch?.let {
-                Instant.ofEpochSecond(
-                    it
-                )
-            }, ZoneOffset.UTC)
+            SimpleTitle(title = "Personal information")
 
-            SimpleTitle(
-                title = when (viewModel.firstLogin) {
-                    true -> "Registration successful!"
-                    false -> "Personal information"
-                }
-            )
+            viewModel.getUserData(userId = userId)
+
             Text(
                 text = """E-Mail: $userMail
-                |Name: $userName
-                |Birth date: ${userBirthDate.dayOfMonth}.${userBirthDate.monthValue}.${userBirthDate.year}
-                |Registration date: ${userRegistrationDate.dayOfMonth}.${userRegistrationDate.monthValue}.${userRegistrationDate.year}
-                |Registration time: ${userRegistrationDate.hour}:${userRegistrationDate.minute}
+                |Name: ${viewModel.userName.value}
+                |Birth date: ${viewModel.userBirthDate.value.dayOfMonth}.${viewModel.userBirthDate.value.monthValue}.${viewModel.userBirthDate.value.year}
+                |Registration date: ${viewModel.userRegistrationDate.value.dayOfMonth}.${viewModel.userRegistrationDate.value.monthValue}.${viewModel.userRegistrationDate.value.year}
+                |Registration time: ${viewModel.userRegistrationDate.value.hour}:${viewModel.userRegistrationDate.value.minute}
             """.trimMargin()
             )
 
             SimpleButton(name = "Saving goals") {
-                val userId = viewModel.getUserId()
-                if (userId != "") {
-                    val route = Screen.SavingGoalOverview.setArguments(userId = userId)
-                    navigationController.navigate(route)
-                }
-                else
-                {
-                    //TODO: Display error message
-                    Log.d("TAG", "Route empty")
-                }
+                val savingGoalsRoute = Screen.SavingGoalOverview.setArguments(userId = userId)
+                navigationController.navigate(savingGoalsRoute)
             }
 
             SimpleButton(name = "Logout") {

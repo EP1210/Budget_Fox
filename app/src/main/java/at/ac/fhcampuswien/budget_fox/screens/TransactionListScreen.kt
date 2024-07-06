@@ -13,14 +13,18 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
-import at.ac.fhcampuswien.budget_fox.view_models.UserViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.CategoryViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.TransactionListViewModel
+import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleBottomNavigationBar
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
@@ -29,12 +33,21 @@ import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
 fun TransactionListScreen(
     navigationController: NavController,
     route: String,
-    viewModel: UserViewModel
+    userId: String?
 ) {
+    val factory = ViewModelFactory()
+    val transactionListViewModel: TransactionListViewModel = viewModel(factory = factory)
+    val categoryViewModel: CategoryViewModel = viewModel(factory = factory)
+
+    if (userId == null || userId == "") {
+        Text("User not found")
+        return
+    }
 
     LaunchedEffect(Unit) {
-        viewModel.loadTransactions()
+        transactionListViewModel.loadTransactions(userId = userId)
     }
+    categoryViewModel.getCategoriesFromUser(userId = userId)
 
     Scaffold(
         topBar = {
@@ -43,7 +56,8 @@ fun TransactionListScreen(
         bottomBar = {
             SimpleBottomNavigationBar(
                 navigationController = navigationController,
-                currentRoute = route
+                currentRoute = route,
+                userId = userId
             )
         }
     ) {
@@ -52,15 +66,25 @@ fun TransactionListScreen(
             modifier = Modifier
                 .padding(paddingValues = it)
         ) {
-            items(viewModel.transactions) { transaction ->
+            items(transactionListViewModel.transactions) { transaction ->
+                val categoryNames = mutableListOf<String>()
+
+                categoryViewModel.categoriesFromUser.forEach { category ->
+                    if (transaction.uuid in category.transactionMemberships) {
+                        categoryNames.add(category.name)
+                    }
+                }
                 TransactionListItem(
                     transaction = transaction,
-                    numbersVisible = viewModel.numbersVisible,
-                    onDelete = {
-                        viewModel.deleteTransaction(it)
+                    numbersVisible = transactionListViewModel.numbersVisible,
+                    categoryNames = categoryNames,
+                    onDelete = { transactionToDelete ->
+                        transactionListViewModel.deleteTransaction(userId = userId, transaction = transactionToDelete)
                     },
                     onItemClick = { transactionId ->
-                        navigationController.navigate(route = Screen.Category.passTransactionId(transactionId = transactionId))
+                        navigationController.navigate(
+                            route = Screen.Category.setArguments(userId = userId, transactionId = transactionId)
+                        )
                     }
                 )
             }
@@ -73,7 +97,7 @@ fun TransactionListScreen(
         ) {
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.TransactionCreate.route)
+                    navigationController.navigate(route = Screen.TransactionCreate.passUserId(userId = userId))
                 },
                 shape = CircleShape,
                 modifier = Modifier
@@ -87,7 +111,7 @@ fun TransactionListScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    viewModel.numbersVisible.value = !viewModel.numbersVisible.value
+                    transactionListViewModel.numbersVisible.value = !transactionListViewModel.numbersVisible.value
                 },
                 shape = CircleShape,
                 modifier = Modifier
@@ -101,7 +125,7 @@ fun TransactionListScreen(
             }
             FloatingActionButton(
                 onClick = {
-                    navigationController.navigate(route = Screen.RegularTransaction.route)
+                    navigationController.navigate(route = Screen.RegularTransaction.passUserId(userId = userId))
                 },
                 shape = CircleShape,
                 modifier = Modifier

@@ -1,9 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
 import androidx.lifecycle.ViewModel
-import at.ac.fhcampuswien.budget_fox.data.UserRepository
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import at.ac.fhcampuswien.budget_fox.data.Repository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +9,7 @@ import java.util.Calendar
 
 class StatisticsViewModel : ViewModel() {
 
-    private val userRepository = UserRepository()
+    private val userRepository = Repository()
 
     private var _incomes = MutableStateFlow(mutableMapOf<Int, Double>())
     val incomes: StateFlow<Map<Int, Double>>
@@ -25,17 +23,16 @@ class StatisticsViewModel : ViewModel() {
     val selectedYear: StateFlow<Int>
         get() = _selectedYear.asStateFlow()
 
-    fun setSelectedYear(year: Int) {
+    fun setSelectedYear(year: Int, userId: String) {
         _selectedYear.value = year
-        mapTransactionsFromUserToMonths(year)
+        mapTransactionsFromUserToMonths(year, userId)
     }
 
     fun mapTransactionsFromUserToMonths(
         year: Int,
+        userId: String,
         onSuccess: () -> Unit = {}
     ) {
-        val userId = Firebase.auth.currentUser?.uid ?: ""
-
         userRepository.getTransactionsFromUser(
             userId = userId,
             onSuccess = { transactions ->
