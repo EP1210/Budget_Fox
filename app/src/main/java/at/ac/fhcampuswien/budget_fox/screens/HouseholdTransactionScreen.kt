@@ -68,8 +68,8 @@ fun HouseholdTransactionScreen(
                 TransactionListItem(
                     transaction = item,
                     numbersVisible = viewModel.numbersVisible,
-                    onDelete = {},
-                    onItemClick = {})
+                    deleteEnabled = false
+                )
             }
         }
 

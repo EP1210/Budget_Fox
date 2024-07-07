@@ -74,8 +74,8 @@ fun SavingGoalTransactionListScreen(
             items(items = viewModel.transactions) { item: Transaction ->
                 TransactionListItem(
                     transaction = item,
-                    onDelete = {},
-                    onItemClick = {})
+                    deleteEnabled = false
+                )
             }
         }
 

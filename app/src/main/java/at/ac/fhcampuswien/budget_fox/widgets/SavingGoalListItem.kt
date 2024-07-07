@@ -12,9 +12,6 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +29,6 @@ fun SavingGoalListItem(
     onClick: () -> Unit = {},
     onEdit: (String) -> Unit = {}
 ) {
-    val currentProgress by remember { mutableFloatStateOf((savingGoal.getProgress() / savingGoal.amount).toFloat()) }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,7 +73,7 @@ fun SavingGoalListItem(
                 .padding(top = 5.dp)
         ) {
             LinearProgressIndicator(
-                progress = { currentProgress }, modifier = Modifier
+                progress = { (savingGoal.getProgress() / savingGoal.amount).toFloat() }, modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.inverseOnSurface),
                 color = Color.Green
