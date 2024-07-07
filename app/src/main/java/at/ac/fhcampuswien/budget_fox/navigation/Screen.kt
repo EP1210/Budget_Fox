@@ -98,4 +98,10 @@ sealed class Screen(val route: String) {
             return this.route.replace(oldValue = "{$USER_ID}", userId)
         }
     }
+
+    data object Budget : Screen(route = "budget_screen/{$USER_ID}") {
+        fun setArguments(userId: String): String {
+            return this.route.replace(oldValue = "{$USER_ID}", userId)
+        }
+    }
 }

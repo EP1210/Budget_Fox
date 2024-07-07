@@ -30,8 +30,6 @@ class CategoryViewModel : ViewModel() {
         get() = _categoryDescription
 
     private var _categoryBudget = mutableDoubleStateOf(value = 0.0).doubleValue
-    val categoryBudget: Double
-        get() = _categoryBudget
 
     fun setCategoryBudget(categoryBudget: Double) {
         _categoryBudget = categoryBudget
