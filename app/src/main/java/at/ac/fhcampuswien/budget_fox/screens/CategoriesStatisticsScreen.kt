@@ -49,6 +49,7 @@ import at.ac.fhcampuswien.budget_fox.view_models.TransactionListViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
+import androidx.compose.material3.MaterialTheme
 
 /*
  * Source: https://medium.com/@developerchunk/create-custom-pie-chart-with-animations-in-jetpack-compose-android-studio-kotlin-49cf95ef321e
@@ -273,14 +274,14 @@ fun DetailsPieChartItem(
                     text = data.first,
                     fontWeight = FontWeight.Medium,
                     fontSize = 22.sp,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.primary
                 )
                 Text(
                     modifier = Modifier.padding(start = 15.dp),
                     text = data.second.toString(),
                     fontWeight = FontWeight.Medium,
                     fontSize = 22.sp,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         }
