@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import at.ac.fhcampuswien.budget_fox.screens.CategoriesStatisticsScreen
+import at.ac.fhcampuswien.budget_fox.screens.BudgetScreen
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdJoinScreen
@@ -17,6 +18,7 @@ import at.ac.fhcampuswien.budget_fox.screens.RegistrationScreen
 import at.ac.fhcampuswien.budget_fox.screens.RegularTransactionScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalAddScreen
 import at.ac.fhcampuswien.budget_fox.screens.SavingGoalOverviewScreen
+import at.ac.fhcampuswien.budget_fox.screens.SavingGoalTransactionListScreen
 import at.ac.fhcampuswien.budget_fox.screens.StatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.TransactionListScreen
@@ -142,6 +144,19 @@ fun Navigation() {
             SavingGoalAddScreen(
                 navController = navigationController,
                 userId = backStackEntry.arguments?.getString(USER_ID)
+            )
+        }
+        composable(route = Screen.Budget.route) { backStackEntry ->
+            BudgetScreen(
+                navController = navigationController,
+                userId = backStackEntry.arguments?.getString(USER_ID)
+            )
+        }
+        composable(route = Screen.SavingGoalTransactionList.route) { backStackEntry ->
+            SavingGoalTransactionListScreen(
+                navigationController = navigationController,
+                userId = backStackEntry.arguments?.getString(USER_ID),
+                savingGoalId = backStackEntry.arguments?.getString(SAVING_GOAL_ID)
             )
         }
     }

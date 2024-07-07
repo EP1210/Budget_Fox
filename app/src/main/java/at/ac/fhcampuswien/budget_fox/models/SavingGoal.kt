@@ -6,6 +6,7 @@ class SavingGoal(
     var uuid: String = "",
     var name: String = "",
     var amount: Double = 0.0,
+    var isDone: Boolean = false,
     private val _transactions: MutableList<Transaction> = mutableListOf()
 ) {
     constructor(name: String, amount: Double) : this() {
@@ -34,7 +35,8 @@ class SavingGoal(
         return mapOf(
             "uuid" to this.uuid,
             "name" to this.name,
-            "amount" to this.amount
+            "amount" to this.amount,
+            "done" to this.isDone
         )
     }
 }

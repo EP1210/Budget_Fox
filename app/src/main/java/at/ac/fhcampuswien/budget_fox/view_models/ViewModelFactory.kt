@@ -23,6 +23,8 @@ class ViewModelFactory : ViewModelProvider.Factory {
             HouseholdTransactionAddViewModel::class.java -> HouseholdTransactionAddViewModel()
             HouseholdJoinViewModel::class.java -> HouseholdJoinViewModel()
             HouseholdCreateViewModel::class.java -> HouseholdCreateViewModel()
+            SavingGoalTransactionListViewModel::class.java -> SavingGoalTransactionListViewModel()
+            BudgetViewModel::class.java -> BudgetViewModel()
             else -> throw IllegalArgumentException("Unknown ViewModel class!")
         } as T
 }

@@ -9,6 +9,9 @@ import at.ac.fhcampuswien.budget_fox.models.User
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.util.Date
 
 class Repository : UserDataAccessObject, HouseholdDataAccessObject {
 
@@ -271,6 +274,131 @@ class Repository : UserDataAccessObject, HouseholdDataAccessObject {
             }
             .addOnFailureListener { exception ->
                 Log.d("FIREBASE", exception.toString())
+            }
+    }
+
+    override fun getTransactionsForSpecificSavingGoal(
+        userId: String,
+        savingGoalId: String,
+        onSuccess: (List<Transaction>) -> Unit
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .document(savingGoalId)
+            .collection(DatabaseCollection.Transactions.collectionName)
+            .get()
+            .addOnSuccessListener { transactions ->
+                val transactionList = mutableListOf<Transaction>()
+                transactions.forEach { transaction ->
+                    transactionList.add(transaction.toObject<Transaction>())
+                }
+                onSuccess(transactionList)
+            }
+    }
+
+    override fun transferToSavingGoal(
+        userId: String,
+        savingGoalId: String,
+        amount: Double,
+        onSuccess: () -> Unit
+    ) {
+        database.collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .document(savingGoalId)
+            .get()
+            .addOnSuccessListener { goal ->
+                val savingGoalName = goal.toObject<SavingGoal>()?.name
+
+                val transaction = Transaction(
+                    amount = amount * -1,
+                    description = "Transfer to saving goal: \"$savingGoalName\"",
+                    date = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                )
+
+                insertTransaction(userId, transaction, onSuccess = {
+                    transaction.amount *= -1
+                    transaction.description = "Transfer"
+                    database
+                        .collection(DatabaseCollection.Users.collectionName)
+                        .document(userId)
+                        .collection(DatabaseCollection.SavingGoals.collectionName)
+                        .document(savingGoalId)
+                        .collection(DatabaseCollection.Transactions.collectionName)
+                        .document(transaction.uuid)
+                        .set(transaction.transactionToDatabase())
+                        .addOnSuccessListener {
+                            onSuccess()
+                        }
+                }, onFailure = {})
+            }
+    }
+
+    override fun updateCategoryBudget(
+        userId: String,
+        categoryId: String,
+        newCategoryBudget: Double
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("budgetPerMonth", newCategoryBudget)
+    }
+
+    override fun markSavingGoalAsDone(userId: String, savingGoalId: String, onSuccess: () -> Unit) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .document(savingGoalId)
+            .get()
+            .addOnSuccessListener { goal ->
+                val savingGoal = goal.toObject<SavingGoal>()
+                getTransactionsForSpecificSavingGoal(userId = userId, savingGoalId = savingGoalId) {
+                    transactions ->
+                    transactions.forEach { transaction ->
+                        if (savingGoal != null) {
+                            savingGoal.addTransaction(transaction)
+                        val amount = savingGoal.getProgress()
+
+                            val chargebackTransaction = Transaction(
+                                amount = amount,
+                                description = "Saving goal \"${savingGoal.name}\" done",
+                                date = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                            )
+                            insertTransaction(userId = userId, transaction = chargebackTransaction, onSuccess = {
+                                savingGoal.isDone = true
+                                savingGoalToDatabase(userId = userId, savingGoal = savingGoal, onSuccess = {
+                                    onSuccess()
+                                })
+                            }, onFailure = {})
+                        }
+                    }
+
+                }
+            }
+    }
+
+    override fun savingGoalIsDone(
+        userId: String,
+        savingGoalId: String,
+        onSuccess: (Boolean) -> Unit
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.SavingGoals.collectionName)
+            .document(savingGoalId)
+            .get()
+            .addOnSuccessListener { goal ->
+                val savingGoal = goal.toObject<SavingGoal>()
+
+                if (savingGoal != null) {
+                    onSuccess(savingGoal.isDone)
+                }
             }
     }
 

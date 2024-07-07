@@ -27,7 +27,8 @@ import androidx.compose.ui.unit.sp
 fun CategoryItem(
     categoryName: String,
     categoryDescription: String,
-    edit: (String, String) -> Unit,
+    categoryBudget: Double,
+    edit: (String, String, Double) -> Unit,
     delete: () -> Unit,
     check: @Composable () -> Unit
 ) {
@@ -36,6 +37,7 @@ fun CategoryItem(
     }
     var newName = ""
     var newDescription = ""
+    var newBudget = 0.0
 
     Card(
         modifier = Modifier
@@ -69,6 +71,15 @@ fun CategoryItem(
                     text = categoryDescription
                 )
             }
+            if(categoryBudget != 0.0) {
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Budget: $categoryBudget €"
+                )
+            }
         }
     }
 
@@ -98,11 +109,15 @@ fun CategoryItem(
                 ) { description ->
                     newDescription = description
                 }
+                SimpleNumberField(title = "Budget") { budget ->
+                    if(budget.isNotBlank())
+                        newBudget = budget.toDouble()
+                }
                 SimpleButton(
                     name = "Save"
                 ) {
                     if (newName.isNotBlank()) {
-                        edit(newName, newDescription)
+                        edit(newName, newDescription, newBudget)
                     }
                 }
                 SimpleButton(

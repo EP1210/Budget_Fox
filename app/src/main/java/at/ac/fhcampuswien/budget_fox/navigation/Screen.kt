@@ -1,8 +1,9 @@
 package at.ac.fhcampuswien.budget_fox.navigation
 
-const val TRANSACTION_ID = "transactionId"
+const val TRANSACTION_ID = "TRANSACTION"
 const val HOUSEHOLD_ID = "HOUSEHOLD"
 const val USER_ID = "USER"
+const val SAVING_GOAL_ID = "SAVINGGOAL"
 
 sealed class Screen(val route: String) {
     data object Registration : Screen(route = "registration_screen")
@@ -99,7 +100,20 @@ sealed class Screen(val route: String) {
         }
     }
 
+    data object SavingGoalTransactionList : Screen(route = "saving_goal_transaction_list_screen/{$USER_ID}/{$SAVING_GOAL_ID}") {
+        fun setArguments(userId: String, savingGoalId: String): String {
+            return this.route.replace(oldValue = "{$USER_ID}", newValue = userId)
+                .replace(oldValue = "{$SAVING_GOAL_ID}", newValue = savingGoalId)
+        }
+    }
+
     data object SavingGoalAdd : Screen(route = "saving_goal_add_screen/{$USER_ID}") {
+        fun setArguments(userId: String): String {
+            return this.route.replace(oldValue = "{$USER_ID}", userId)
+        }
+    }
+
+    data object Budget : Screen(route = "budget_screen/{$USER_ID}") {
         fun setArguments(userId: String): String {
             return this.route.replace(oldValue = "{$USER_ID}", userId)
         }

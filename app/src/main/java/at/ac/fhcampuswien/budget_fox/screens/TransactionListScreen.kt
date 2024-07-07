@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.screens
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -64,7 +65,10 @@ fun TransactionListScreen(
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(paddingValues = it)
+                .padding(paddingValues = it),
+            contentPadding = PaddingValues(
+                bottom = 80.dp,
+            ),
         ) {
             items(transactionListViewModel.transactions) { transaction ->
                 val categoryNames = mutableListOf<String>()
