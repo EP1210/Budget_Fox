@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.ac.fhcampuswien.budget_fox.screens.BudgetScreen
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdCreateScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdJoinScreen
@@ -134,6 +135,12 @@ fun Navigation() {
         }
         composable(route = Screen.SavingGoalAdd.route) { backStackEntry ->
             SavingGoalAddScreen(
+                navController = navigationController,
+                userId = backStackEntry.arguments?.getString(USER_ID)
+            )
+        }
+        composable(route = Screen.Budget.route) { backStackEntry ->
+            BudgetScreen(
                 navController = navigationController,
                 userId = backStackEntry.arguments?.getString(USER_ID)
             )

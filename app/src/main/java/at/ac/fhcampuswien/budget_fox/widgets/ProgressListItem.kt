@@ -17,15 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.ac.fhcampuswien.budget_fox.models.SavingGoal
-import at.ac.fhcampuswien.budget_fox.models.Transaction
 
 @Composable
-fun SavingGoalListItem(
-    savingGoal: SavingGoal,
+fun ProgressListItem(
+    id: String = "",
+    name: String,
+    isDone: Boolean = false,
+    progress: Double = 0.0,
+    amount: Double = 0.0,
+    color: Color = Color.Green,
     onClick: () -> Unit = {},
     onEdit: (String) -> Unit = {}
 ) {
@@ -40,7 +42,7 @@ fun SavingGoalListItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        onEdit(savingGoal.uuid)
+                        onEdit(id)
                     },
                     onTap = {
                         onClick()
@@ -53,7 +55,7 @@ fun SavingGoalListItem(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = if (savingGoal.isDone) "${savingGoal.name} (✓)" else savingGoal.name,
+                text = if (isDone) "$name (✓)" else name,
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontSize = 16.sp
             )
@@ -61,7 +63,7 @@ fun SavingGoalListItem(
                 horizontalAlignment = Alignment.End, modifier = Modifier.weight(weight = 4f)
             ) {
                 Text(
-                    text = "${savingGoal.getProgress()} / ${savingGoal.amount} €",
+                    text = "$progress / $amount €",
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp,
                 )
@@ -73,22 +75,11 @@ fun SavingGoalListItem(
                 .padding(top = 5.dp)
         ) {
             LinearProgressIndicator(
-                progress = { (savingGoal.getProgress() / savingGoal.amount).toFloat() }, modifier = Modifier
+                progress = { (progress / amount).toFloat() }, modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.inverseOnSurface),
-                color = Color.Green
+                color = color
             )
         }
     }
-}
-
-@Composable
-@Preview
-fun Preview() {
-    val goal = SavingGoal(
-        name = "IntelliJ Jahreslizenz",
-        amount = 202.80
-    ) //https://www.jetbrains.com/de-de/idea/buy/?section=personal&billing=yearly
-    goal.addTransaction(Transaction(amount = 10.0, description = "Oma Geburstag"))
-    SavingGoalListItem(goal)
 }

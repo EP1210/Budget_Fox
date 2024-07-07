@@ -73,4 +73,6 @@ interface UserDataAccessObject {
     fun markSavingGoalAsDone(userId: String, savingGoalId: String, onSuccess: () -> Unit)
 
     fun savingGoalIsDone(userId: String, savingGoalId: String, onSuccess: (Boolean) -> Unit)
+
+    fun updateCategoryBudget(userId: String, categoryId: String, newCategoryBudget: Double)
 }

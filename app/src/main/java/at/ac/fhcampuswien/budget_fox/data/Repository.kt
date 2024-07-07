@@ -336,6 +336,18 @@ class Repository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
+    override fun updateCategoryBudget(
+        userId: String,
+        categoryId: String,
+        newCategoryBudget: Double
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("budgetPerMonth", newCategoryBudget)
+    }
+
     override fun markSavingGoalAsDone(userId: String, savingGoalId: String, onSuccess: () -> Unit) {
         database
             .collection(DatabaseCollection.Users.collectionName)

@@ -71,6 +71,10 @@ fun UserProfileScreen(
                 val savingGoalsRoute = Screen.SavingGoalOverview.setArguments(userId = userId)
                 navigationController.navigate(savingGoalsRoute)
             }
+            SimpleButton(name = "Budgets") {
+                val savingGoalsRoute = Screen.Budget.setArguments(userId = userId)
+                navigationController.navigate(savingGoalsRoute)
+            }
 
             SimpleButton(name = "Logout") {
                 auth.signOut()
