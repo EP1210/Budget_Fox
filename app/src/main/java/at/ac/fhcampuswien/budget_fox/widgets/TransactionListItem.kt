@@ -44,8 +44,9 @@ fun TransactionListItem(
     transaction: Transaction,
     numbersVisible: MutableState<Boolean> = mutableStateOf(value = true),
     categoryNames: List<String> = emptyList(),
-    onDelete: (Transaction) -> Unit,
-    onItemClick: (String) -> Unit
+    deleteEnabled: Boolean = true,
+    onDelete: (Transaction) -> Unit = {},
+    onItemClick: (String) -> Unit = {}
 ) {
     val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     var showDeleteButton by remember { mutableStateOf(false) }
@@ -60,7 +61,10 @@ fun TransactionListItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        showDeleteButton = true
+                        if(deleteEnabled)
+                        {
+                            showDeleteButton = true
+                        }
                     },
                     onTap = {
                         onItemClick(transaction.uuid)

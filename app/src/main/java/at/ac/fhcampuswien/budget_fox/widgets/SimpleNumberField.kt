@@ -16,10 +16,11 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun SimpleNumberField(
     title: String,
-    onValueChange: (String) -> Unit
+    textDefaultValue: String = "",
+    onValueChange: (String) -> Unit,
 ) {
     var textValue by remember {
-        mutableStateOf(value = "")
+        mutableStateOf(value = textDefaultValue)
     }
 
     OutlinedTextField(
