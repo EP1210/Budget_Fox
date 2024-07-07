@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -29,15 +30,13 @@ fun SimpleDropdownField(
 
     Column {
         Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 10.dp)) {
+                .clickable { expanded = true }
+                .align(Alignment.CenterHorizontally)) {
             BasicText(
                 text = selectedItem ?: placeholder,
                 style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                 modifier = Modifier
-                    .clickable { expanded = true }
                     .padding(20.dp)
-                    .fillMaxWidth()
             )
             DropdownMenu(
                 expanded = expanded,
