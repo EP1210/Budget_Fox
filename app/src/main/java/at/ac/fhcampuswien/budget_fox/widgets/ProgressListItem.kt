@@ -2,7 +2,7 @@ package at.ac.fhcampuswien.budget_fox.widgets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,13 +16,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import at.ac.fhcampuswien.budget_fox.models.Budget
 
 @Composable
-fun BudgetListItem(
-    budget: Budget
+fun ProgressListItem(
+    id: String = "",
+    name: String,
+    isDone: Boolean = false,
+    progress: Double = 0.0,
+    amount: Double = 0.0,
+    onClick: () -> Unit = {},
+    onEdit: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -31,8 +37,16 @@ fun BudgetListItem(
             .border(0.dp, Color.Transparent)
             .clip(RoundedCornerShape(6.dp))
             .background(MaterialTheme.colorScheme.primary)
-            .clickable {
-                //TODO: Go to saving goal
+
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = {
+                        onEdit(id)
+                    },
+                    onTap = {
+                        onClick()
+                    }
+                )
             }
             .padding(16.dp),
     ) {
@@ -40,7 +54,7 @@ fun BudgetListItem(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = budget.description,
+                text = if (isDone) "$name (✓)" else name,
                 color = MaterialTheme.colorScheme.inverseOnSurface,
                 fontSize = 16.sp
             )
@@ -48,7 +62,7 @@ fun BudgetListItem(
                 horizontalAlignment = Alignment.End, modifier = Modifier.weight(weight = 4f)
             ) {
                 Text(
-                    text = "${budget.amount} / ${budget.budget} €",
+                    text = "$progress / $amount €",
                     color = MaterialTheme.colorScheme.inverseOnSurface,
                     fontSize = 16.sp,
                 )
@@ -60,10 +74,10 @@ fun BudgetListItem(
                 .padding(top = 5.dp)
         ) {
             LinearProgressIndicator(
-                progress = { (budget.amount / budget.budget).toFloat() }, modifier = Modifier
+                progress = { (progress / amount).toFloat() }, modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.inverseOnSurface),
-                color = Color.Red
+                color = Color.Green
             )
         }
     }

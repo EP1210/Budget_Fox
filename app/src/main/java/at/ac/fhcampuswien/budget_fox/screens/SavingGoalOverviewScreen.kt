@@ -27,7 +27,7 @@ import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalOverviewViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.widgets.SavingGoalListItem
+import at.ac.fhcampuswien.budget_fox.widgets.ProgressListItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
@@ -70,7 +70,13 @@ fun SavingGoalOverviewScreen(
                 .fillMaxSize()
         ) {
             items(items = savingGoalItems.value) { item ->
-                SavingGoalListItem(savingGoal = item, onClick = {
+                ProgressListItem(
+                    id = item.uuid,
+                    name = item.name,
+                    isDone = item.isDone,
+                    progress = item.getProgress(),
+                    amount = item.amount,
+                    onClick = {
                     navController.navigate(
                         Screen.SavingGoalTransactionList.setArguments(
                             userId = userId,

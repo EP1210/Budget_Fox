@@ -15,7 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.BudgetViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
-import at.ac.fhcampuswien.budget_fox.widgets.BudgetListItem
+import at.ac.fhcampuswien.budget_fox.widgets.ProgressListItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
@@ -53,7 +53,11 @@ fun BudgetScreen(
                 .fillMaxSize()
         ) {
             items(items = viewModel.budgets.value) { item ->
-                BudgetListItem(budget = item)
+                ProgressListItem(
+                    name = item.description,
+                    amount = item.budget,
+                    progress = item.amount
+                )
             }
         }
     }
