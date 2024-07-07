@@ -357,24 +357,33 @@ class Repository : UserDataAccessObject, HouseholdDataAccessObject {
             .get()
             .addOnSuccessListener { goal ->
                 val savingGoal = goal.toObject<SavingGoal>()
-                getTransactionsForSpecificSavingGoal(userId = userId, savingGoalId = savingGoalId) {
-                    transactions ->
+                getTransactionsForSpecificSavingGoal(
+                    userId = userId,
+                    savingGoalId = savingGoalId
+                ) { transactions ->
                     transactions.forEach { transaction ->
                         if (savingGoal != null) {
                             savingGoal.addTransaction(transaction)
-                        val amount = savingGoal.getProgress()
+                            val amount = savingGoal.getProgress()
 
                             val chargebackTransaction = Transaction(
                                 amount = amount,
                                 description = "Saving goal \"${savingGoal.name}\" done",
                                 date = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
                             )
-                            insertTransaction(userId = userId, transaction = chargebackTransaction, onSuccess = {
-                                savingGoal.isDone = true
-                                savingGoalToDatabase(userId = userId, savingGoal = savingGoal, onSuccess = {
-                                    onSuccess()
-                                })
-                            }, onFailure = {})
+                            insertTransaction(
+                                userId = userId,
+                                transaction = chargebackTransaction,
+                                onSuccess = {
+                                    savingGoal.isDone = true
+                                    savingGoalToDatabase(
+                                        userId = userId,
+                                        savingGoal = savingGoal,
+                                        onSuccess = {
+                                            onSuccess()
+                                        })
+                                },
+                                onFailure = {})
                         }
                     }
 

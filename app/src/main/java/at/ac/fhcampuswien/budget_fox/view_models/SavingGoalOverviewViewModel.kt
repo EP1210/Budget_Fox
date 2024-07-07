@@ -10,20 +10,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class SavingGoalOverviewViewModel : ViewModel() {
     private val userRepository = Repository()
 
-    private var _bottomSheetVisible : MutableState<Boolean> = mutableStateOf(false)
-    val bottomSheetVisible : MutableState<Boolean>
+    private var _bottomSheetVisible: MutableState<Boolean> = mutableStateOf(false)
+    val bottomSheetVisible: MutableState<Boolean>
         get() = _bottomSheetVisible
 
     fun setBottomSheetVisible(visible: Boolean) {
         _bottomSheetVisible.value = visible
     }
 
-    private var _goal : MutableState<SavingGoal?> = mutableStateOf(value = null)
-    val selectedGoal : MutableState<SavingGoal?>
+    private var _goal: MutableState<SavingGoal?> = mutableStateOf(value = null)
+    val selectedGoal: MutableState<SavingGoal?>
         get() = _goal
 
     private var _selectedName: String = ""
-    private var _amount : Double = 0.0
+    private var _amount: Double = 0.0
 
     fun setGoalName(name: String) {
         _selectedName = name
@@ -51,8 +51,7 @@ class SavingGoalOverviewViewModel : ViewModel() {
     }
 
     fun saveEditedGoal(userId: String, onSuccess: () -> Unit) {
-        if(_goal.value != null)
-        {
+        if (_goal.value != null) {
             _goal.value?.name = _selectedName
             _goal.value?.amount = _amount
             userRepository.savingGoalToDatabase(userId = userId, savingGoal = _goal.value!!) {

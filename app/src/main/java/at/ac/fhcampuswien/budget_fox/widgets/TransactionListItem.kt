@@ -61,8 +61,7 @@ fun TransactionListItem(
             .pointerInput(Unit) {
                 detectTapGestures(
                     onLongPress = {
-                        if(deleteEnabled)
-                        {
+                        if (deleteEnabled) {
                             showDeleteButton = true
                         }
                     },

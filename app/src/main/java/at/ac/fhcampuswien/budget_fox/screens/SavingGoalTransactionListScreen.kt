@@ -85,8 +85,7 @@ fun SavingGoalTransactionListScreen(
                 .padding(paddingValues = it)
         )
         {
-            if(!viewModel.doneState.value)
-            {
+            if (!viewModel.doneState.value) {
                 FloatingActionButton(
                     onClick = {
                         viewModel.setAlertVisible(visible = true)
@@ -98,7 +97,8 @@ fun SavingGoalTransactionListScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.check_circle),
-                        contentDescription = "Mark saving goal as done")
+                        contentDescription = "Mark saving goal as done"
+                    )
                 }
                 FloatingActionButton(
                     onClick = {
@@ -111,11 +111,12 @@ fun SavingGoalTransactionListScreen(
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.savings),
-                        contentDescription = "Save money")
+                        contentDescription = "Save money"
+                    )
                 }
             }
         }
-        if(viewModel.bottomSheetVisible.value) {
+        if (viewModel.bottomSheetVisible.value) {
             ModalBottomSheet(onDismissRequest = {
                 viewModel.setBottomSheetVisible(visible = false)
                 viewModel.setAmount(amount = 0.0)
@@ -146,8 +147,7 @@ fun SavingGoalTransactionListScreen(
                 }
             }
         }
-        if(viewModel.alertVisible.value)
-        {
+        if (viewModel.alertVisible.value) {
             AlertDialog(
                 title = { Text(text = "Mark as done") },
                 text = { Text(text = "Are you sure you want to mark this saving goal as done?") },
@@ -156,7 +156,10 @@ fun SavingGoalTransactionListScreen(
                     SimpleButton(
                         name = "Yes"
                     ) {
-                        viewModel.markSavingGoalAsDone(userId = userId, savingGoalId = savingGoalId) {
+                        viewModel.markSavingGoalAsDone(
+                            userId = userId,
+                            savingGoalId = savingGoalId
+                        ) {
                             viewModel.setAlertVisible(visible = false)
                         }
                     }

@@ -140,7 +140,11 @@ fun StatisticsScreen(
 
                 FloatingActionButton(
                     onClick = {
-                        navigationController.navigate(route = Screen.CategoriesStatistics.passUserId(userId = userId))
+                        navigationController.navigate(
+                            route = Screen.CategoriesStatistics.passUserId(
+                                userId = userId
+                            )
+                        )
                     },
                     shape = CircleShape,
                     modifier = Modifier.size(45.dp)

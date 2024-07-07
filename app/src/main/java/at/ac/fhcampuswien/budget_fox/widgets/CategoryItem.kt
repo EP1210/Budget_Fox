@@ -71,7 +71,7 @@ fun CategoryItem(
                     text = categoryDescription
                 )
             }
-            if(categoryBudget != 0.0) {
+            if (categoryBudget != 0.0) {
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = Color.Black
@@ -110,7 +110,7 @@ fun CategoryItem(
                     newDescription = description
                 }
                 SimpleNumberField(title = "Budget") { budget ->
-                    if(budget.isNotBlank())
+                    if (budget.isNotBlank())
                         newBudget = budget.toDouble()
                 }
                 SimpleButton(

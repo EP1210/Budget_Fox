@@ -77,8 +77,7 @@ fun CategoryScreen(
             SimpleNumberField(
                 title = "Budget per month"
             ) { budget ->
-                if(budget.isNotBlank())
-                {
+                if (budget.isNotBlank()) {
                     viewModel.setCategoryBudget(categoryBudget = budget.toDouble())
                 }
             }
@@ -123,7 +122,7 @@ fun CategoryList(
                 categoryDescription = category.description,
                 categoryBudget = category.budgetPerMonth,
                 edit = { newCategoryName, newCategoryDescription, newBudget ->
-                    if(newBudget != 0.0) {
+                    if (newBudget != 0.0) {
                         viewModel.setCategoryBudget(categoryBudget = newBudget)
                         viewModel.updateCategoryBudget(userId = userId, categoryId = category.uuid)
                     }

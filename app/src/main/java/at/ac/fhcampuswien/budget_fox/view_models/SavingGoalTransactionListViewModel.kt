@@ -10,20 +10,20 @@ import at.ac.fhcampuswien.budget_fox.models.Transaction
 class SavingGoalTransactionListViewModel : ViewModel() {
     private var repository = Repository()
 
-    private var _bottomSheetVisible : MutableState<Boolean> = mutableStateOf(false)
-    val bottomSheetVisible : MutableState<Boolean>
+    private var _bottomSheetVisible: MutableState<Boolean> = mutableStateOf(false)
+    val bottomSheetVisible: MutableState<Boolean>
         get() = _bottomSheetVisible
 
-    private var _alertVisible : MutableState<Boolean> = mutableStateOf(false)
-    val alertVisible : MutableState<Boolean>
+    private var _alertVisible: MutableState<Boolean> = mutableStateOf(false)
+    val alertVisible: MutableState<Boolean>
         get() = _alertVisible
 
     private val _transactions = mutableStateListOf<Transaction>()
     val transactions: List<Transaction>
         get() = _transactions
 
-    private var _done : MutableState<Boolean> = mutableStateOf(true)
-    val doneState : MutableState<Boolean>
+    private var _done: MutableState<Boolean> = mutableStateOf(true)
+    val doneState: MutableState<Boolean>
         get() = _done
 
     fun setBottomSheetVisible(visible: Boolean) {
@@ -34,7 +34,7 @@ class SavingGoalTransactionListViewModel : ViewModel() {
         _alertVisible.value = visible
     }
 
-    private var _amount : Double = 0.0
+    private var _amount: Double = 0.0
 
     fun setAmount(amount: Double) {
         _amount = amount

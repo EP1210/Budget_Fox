@@ -66,9 +66,18 @@ interface UserDataAccessObject {
 
     fun savingGoalToDatabase(userId: String, savingGoal: SavingGoal, onSuccess: () -> Unit)
 
-    fun getTransactionsForSpecificSavingGoal(userId: String, savingGoalId: String, onSuccess: (List<Transaction>) -> Unit)
+    fun getTransactionsForSpecificSavingGoal(
+        userId: String,
+        savingGoalId: String,
+        onSuccess: (List<Transaction>) -> Unit
+    )
 
-    fun transferToSavingGoal(userId: String, savingGoalId: String, amount: Double, onSuccess: () -> Unit)
+    fun transferToSavingGoal(
+        userId: String,
+        savingGoalId: String,
+        amount: Double,
+        onSuccess: () -> Unit
+    )
 
     fun markSavingGoalAsDone(userId: String, savingGoalId: String, onSuccess: () -> Unit)
 

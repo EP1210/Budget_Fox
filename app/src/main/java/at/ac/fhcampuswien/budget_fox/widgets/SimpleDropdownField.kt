@@ -29,8 +29,8 @@ fun SimpleDropdownField(
 
     Column {
         Box(modifier = Modifier
-                .clickable { expanded = true }
-                .align(Alignment.CenterHorizontally)) {
+            .clickable { expanded = true }
+            .align(Alignment.CenterHorizontally)) {
             BasicText(
                 text = selectedItem ?: placeholder,
                 style = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),

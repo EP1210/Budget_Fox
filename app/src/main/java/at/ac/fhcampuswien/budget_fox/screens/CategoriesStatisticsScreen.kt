@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,7 +50,6 @@ import at.ac.fhcampuswien.budget_fox.view_models.TransactionListViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
-import androidx.compose.material3.MaterialTheme
 
 /*
  * Source: https://medium.com/@developerchunk/create-custom-pie-chart-with-animations-in-jetpack-compose-android-studio-kotlin-49cf95ef321e
@@ -110,7 +110,9 @@ fun CategoriesStatisticsScreen(
         ) {
             Button(
                 onClick = { showIncomes = !showIncomes },
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 16.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 16.dp)
             ) {
                 Text(text = if (showIncomes) "Switch to Expense" else "Switch to Income")
             }
@@ -120,7 +122,9 @@ fun CategoriesStatisticsScreen(
             Text(
                 text = if (showIncomes) "Income Statistics" else "Expense Statistics",
                 fontSize = 24.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 40.dp)
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 40.dp)
             )
 
             if (showIncomes) {
@@ -288,7 +292,11 @@ fun DetailsPieChartItem(
     }
 }
 
-fun getPieChartData(transactions: List<Transaction>, categories: List<Category>, isIncome: Boolean): Map<String, Int> {
+fun getPieChartData(
+    transactions: List<Transaction>,
+    categories: List<Category>,
+    isIncome: Boolean
+): Map<String, Int> {
     val filteredTransactions = transactions.filter { transaction ->
         if (isIncome) transaction.amount > 0 else transaction.amount < 0
     }

@@ -100,7 +100,8 @@ sealed class Screen(val route: String) {
         }
     }
 
-    data object SavingGoalTransactionList : Screen(route = "saving_goal_transaction_list_screen/{$USER_ID}/{$SAVING_GOAL_ID}") {
+    data object SavingGoalTransactionList :
+        Screen(route = "saving_goal_transaction_list_screen/{$USER_ID}/{$SAVING_GOAL_ID}") {
         fun setArguments(userId: String, savingGoalId: String): String {
             return this.route.replace(oldValue = "{$USER_ID}", newValue = userId)
                 .replace(oldValue = "{$SAVING_GOAL_ID}", newValue = savingGoalId)
