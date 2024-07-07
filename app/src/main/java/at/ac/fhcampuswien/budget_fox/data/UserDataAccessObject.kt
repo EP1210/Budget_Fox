@@ -66,5 +66,13 @@ interface UserDataAccessObject {
 
     fun savingGoalToDatabase(userId: String, savingGoal: SavingGoal, onSuccess: () -> Unit)
 
+    fun getTransactionsForSpecificSavingGoal(userId: String, savingGoalId: String, onSuccess: (List<Transaction>) -> Unit)
+
+    fun transferToSavingGoal(userId: String, savingGoalId: String, amount: Double, onSuccess: () -> Unit)
+
+    fun markSavingGoalAsDone(userId: String, savingGoalId: String, onSuccess: () -> Unit)
+
+    fun savingGoalIsDone(userId: String, savingGoalId: String, onSuccess: (Boolean) -> Unit)
+
     fun updateCategoryBudget(userId: String, categoryId: String, newCategoryBudget: Double)
 }
