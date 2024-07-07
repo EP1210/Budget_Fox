@@ -11,8 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
@@ -147,7 +146,7 @@ fun StatisticsScreen(
                     modifier = Modifier.size(45.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.Build,
+                        imageVector = Icons.Outlined.Info,
                         contentDescription = "CategoriesStatisticsScreen"
                     )
                 }

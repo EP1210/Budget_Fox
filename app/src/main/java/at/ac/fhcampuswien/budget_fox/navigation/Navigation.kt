@@ -83,7 +83,6 @@ fun Navigation() {
         composable(route = Screen.CategoriesStatistics.route) { backStackEntry ->
             CategoriesStatisticsScreen(
                 navigationController = navigationController,
-                route = Screen.CategoriesStatistics.route,
                 userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }

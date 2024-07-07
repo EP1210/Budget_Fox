@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -53,18 +55,24 @@ import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
  */
 
 val Purple200 = Color(0xFFBB86FC)
-val Purple500 = Color(0xFF6200EE)
 val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 val Blue = Color(0xFF2196F3)
+val Yellow = Color(0xFFFFEB3B)
+val Red = Color(0xFFF44336)
+val Green = Color(0xFF4CAF50)
+val Grey = Color(0xFF9E9E9E)
+val Orange = Color(0xFFFF9800)
+val LightBlue = Color(0xFF81D4FA)
+val LightGreen = Color(0xFF8BC34A)
+val Pink = Color(0xFFE91E63)
 
 @Composable
 fun CategoriesStatisticsScreen(
     navigationController: NavController,
-    route: String,
     userId: String?
 ) {
-    if (userId == null || userId.isEmpty()) {
+    if (userId.isNullOrEmpty()) {
         Text("User not found")
         return
     }
@@ -72,7 +80,6 @@ fun CategoriesStatisticsScreen(
     val factory = ViewModelFactory()
     val categoryViewModel: CategoryViewModel = viewModel(factory = factory)
     val transactionListViewModel: TransactionListViewModel = viewModel(factory = factory)
-
 
     LaunchedEffect(Unit) {
         categoryViewModel.getCategoriesFromUser(userId)
@@ -145,10 +152,17 @@ fun PieChart(
 
     val colors = listOf(
         Purple200,
-        Purple500,
         Teal200,
         Purple700,
-        Blue
+        Blue,
+        Yellow,
+        Red,
+        Green,
+        Grey,
+        Orange,
+        LightBlue,
+        LightGreen,
+        Pink
     )
 
     var animationPlayed by remember { mutableStateOf(false) }
@@ -214,15 +228,16 @@ fun DetailsPieChart(
     data: Map<String, Int>,
     colors: List<Color>
 ) {
-    Column(
+    LazyColumn(
         modifier = Modifier
-            .padding(top = 80.dp)
+            .padding(top = 60.dp)
             .fillMaxWidth()
     ) {
-        data.values.forEachIndexed { index, value ->
+        items(data.entries.toList()) { entry ->
+            val index = data.entries.indexOf(entry)
             DetailsPieChartItem(
-                data = Pair(data.keys.elementAt(index), value),
-                color = colors[index]
+                data = Pair(entry.key, entry.value),
+                color = colors[index % colors.size]
             )
         }
     }
