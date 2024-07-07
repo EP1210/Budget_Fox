@@ -274,6 +274,18 @@ class Repository : UserDataAccessObject, HouseholdDataAccessObject {
             }
     }
 
+    override fun updateCategoryBudget(
+        userId: String,
+        categoryId: String,
+        newCategoryBudget: Double
+    ) {
+        database
+            .collection(DatabaseCollection.Users.collectionName)
+            .document(userId)
+            .collection(DatabaseCollection.Categories.collectionName)
+            .document(categoryId).update("budgetPerMonth", newCategoryBudget)
+    }
+
     override fun insertHousehold(household: Household) {
         database
             .collection(DatabaseCollection.Households.collectionName)

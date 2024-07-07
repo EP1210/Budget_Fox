@@ -111,7 +111,12 @@ fun CategoryList(
             CategoryItem(
                 categoryName = category.name,
                 categoryDescription = category.description,
-                edit = { newCategoryName, newCategoryDescription ->
+                categoryBudget = category.budgetPerMonth,
+                edit = { newCategoryName, newCategoryDescription, newBudget ->
+                    if(newBudget != 0.0) {
+                        viewModel.setCategoryBudget(categoryBudget = newBudget)
+                        viewModel.updateCategoryBudget(userId = userId, categoryId = category.uuid)
+                    }
                     viewModel.setCategoryName(categoryName = newCategoryName)
                     viewModel.updateCategoryName(userId = userId, categoryId = category.uuid)
                     viewModel.setCategoryDescription(categoryDescription = newCategoryDescription)

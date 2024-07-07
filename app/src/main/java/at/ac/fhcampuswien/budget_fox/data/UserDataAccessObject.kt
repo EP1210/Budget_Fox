@@ -65,4 +65,6 @@ interface UserDataAccessObject {
     )
 
     fun savingGoalToDatabase(userId: String, savingGoal: SavingGoal, onSuccess: () -> Unit)
+
+    fun updateCategoryBudget(userId: String, categoryId: String, newCategoryBudget: Double)
 }

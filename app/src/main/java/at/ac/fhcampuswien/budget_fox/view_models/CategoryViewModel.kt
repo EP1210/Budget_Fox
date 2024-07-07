@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.budget_fox.view_models
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -27,6 +28,14 @@ class CategoryViewModel : ViewModel() {
     private var _categoryDescription = mutableStateOf(value = "").value
     val categoryDescription: String
         get() = _categoryDescription
+
+    private var _categoryBudget = mutableDoubleStateOf(value = 0.0).doubleValue
+    val categoryBudget: Double
+        get() = _categoryBudget
+
+    fun setCategoryBudget(categoryBudget: Double) {
+        _categoryBudget = categoryBudget
+    }
 
     fun setCategoryName(categoryName: String) {
         _categoryName = categoryName
@@ -73,6 +82,14 @@ class CategoryViewModel : ViewModel() {
         repository.updateCategoryTransactionMemberships(
             userId = userId,
             category = category
+        )
+    }
+
+    fun updateCategoryBudget(userId: String, categoryId: String) {
+        repository.updateCategoryBudget(
+            userId = userId,
+            categoryId = categoryId,
+            newCategoryBudget = _categoryBudget
         )
     }
 
