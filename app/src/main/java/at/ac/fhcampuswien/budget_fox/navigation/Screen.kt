@@ -40,6 +40,12 @@ sealed class Screen(val route: String) {
         }
     }
 
+    data object CategoriesStatistics : Screen(route = "categories_statistics_screen/{$USER_ID}") {
+        fun passUserId(userId: String): String {
+            return this.route.replace(oldValue = "{$USER_ID}", userId)
+        }
+    }
+
     data object HouseholdWelcome : Screen(route = "household_welcome_screen/{$USER_ID}") {
         fun passUserId(userId: String): String {
             return this.route.replace(oldValue = "{$USER_ID}", userId)

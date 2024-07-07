@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.ac.fhcampuswien.budget_fox.screens.CategoriesStatisticsScreen
 import at.ac.fhcampuswien.budget_fox.screens.BudgetScreen
 import at.ac.fhcampuswien.budget_fox.screens.CategoryScreen
 import at.ac.fhcampuswien.budget_fox.screens.HouseholdCreateScreen
@@ -78,6 +79,12 @@ fun Navigation() {
             StatisticsScreen(
                 navigationController = navigationController,
                 route = Screen.Statistics.route,
+                userId = backStackEntry.arguments?.getString(USER_ID)
+            )
+        }
+        composable(route = Screen.CategoriesStatistics.route) { backStackEntry ->
+            CategoriesStatisticsScreen(
+                navigationController = navigationController,
                 userId = backStackEntry.arguments?.getString(USER_ID)
             )
         }

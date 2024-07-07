@@ -12,9 +12,9 @@ class TransactionViewModel : ViewModel() {
 
     private val repository = Repository()
 
-    private var _transactionDate = mutableStateOf(value = "").value
+    private var _transactionDate = mutableStateOf(getCurrentDateString())
     val transactionDate: String
-        get() = _transactionDate
+        get() = _transactionDate.value
 
     private var _transactionAmount = mutableDoubleStateOf(value = 0.0).doubleValue
     val transactionAmount: Double
@@ -28,7 +28,7 @@ class TransactionViewModel : ViewModel() {
         private set
 
     fun setTransactionDate(date: String) {
-        _transactionDate = date
+        _transactionDate.value = date
     }
 
     fun setTransactionAmount(amount: Double) {
@@ -63,5 +63,10 @@ class TransactionViewModel : ViewModel() {
         } else {
             transactionMessage.value = "Invalid transaction data."
         }
+    }
+
+    private fun getCurrentDateString(): String {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        return format.format(Date())
     }
 }
