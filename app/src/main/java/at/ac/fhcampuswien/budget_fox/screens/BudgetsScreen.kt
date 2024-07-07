@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import at.ac.fhcampuswien.budget_fox.view_models.BudgetViewModel
@@ -56,7 +57,8 @@ fun BudgetScreen(
                 ProgressListItem(
                     name = item.description,
                     amount = item.budget,
-                    progress = item.amount
+                    progress = item.amount,
+                    color = Color.Red
                 )
             }
         }

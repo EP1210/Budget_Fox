@@ -77,13 +77,13 @@ fun SavingGoalOverviewScreen(
                     progress = item.getProgress(),
                     amount = item.amount,
                     onClick = {
-                    navController.navigate(
-                        Screen.SavingGoalTransactionList.setArguments(
-                            userId = userId,
-                            savingGoalId = item.uuid
+                        navController.navigate(
+                            Screen.SavingGoalTransactionList.setArguments(
+                                userId = userId,
+                                savingGoalId = item.uuid
+                            )
                         )
-                    )
-                },
+                    },
                     onEdit = { goalId ->
                         viewModel.loadSelectedGoal(goalId = goalId)
                         viewModel.setBottomSheetVisible(visible = true)
@@ -135,7 +135,7 @@ fun SavingGoalOverviewScreen(
                         title = "Amount",
                         textDefaultValue = viewModel.selectedGoal.value?.amount.toString()
                     ) { amount ->
-                        if(amount.isNotEmpty()) {
+                        if (amount.isNotEmpty()) {
                             viewModel.setGoalAmount(amount.toDouble())
                         }
                     }

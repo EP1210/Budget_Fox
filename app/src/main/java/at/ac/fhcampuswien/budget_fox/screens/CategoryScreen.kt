@@ -23,6 +23,7 @@ import at.ac.fhcampuswien.budget_fox.widgets.CategoryItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
 @Composable
@@ -73,6 +74,14 @@ fun CategoryScreen(
             ) { description ->
                 viewModel.setCategoryDescription(categoryDescription = description)
             }
+            SimpleNumberField(
+                title = "Budget per month"
+            ) { budget ->
+                if(budget.isNotBlank())
+                {
+                    viewModel.setCategoryBudget(categoryBudget = budget.toDouble())
+                }
+            }
             SimpleButton(
                 name = "Create category",
                 modifier = Modifier
@@ -83,7 +92,8 @@ fun CategoryScreen(
                         userId = userId,
                         category = Category(
                             name = viewModel.categoryName,
-                            description = viewModel.categoryDescription
+                            description = viewModel.categoryDescription,
+                            budgetPerMonth = viewModel.categoryBudget
                         )
                     )
                     viewModel.setCategoryName(categoryName = "")

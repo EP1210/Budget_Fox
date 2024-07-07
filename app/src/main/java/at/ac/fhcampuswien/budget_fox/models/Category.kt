@@ -11,10 +11,12 @@ class Category(
 ) {
     constructor(
         name: String,
-        description: String
+        description: String,
+        budgetPerMonth: Double
     ) : this() {
         uuid = UUID.randomUUID().toString()
         this.name = name
         this.description = description
+        this.budgetPerMonth = budgetPerMonth
     }
 }

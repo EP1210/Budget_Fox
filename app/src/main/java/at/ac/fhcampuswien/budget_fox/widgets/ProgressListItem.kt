@@ -27,6 +27,7 @@ fun ProgressListItem(
     isDone: Boolean = false,
     progress: Double = 0.0,
     amount: Double = 0.0,
+    color: Color = Color.Green,
     onClick: () -> Unit = {},
     onEdit: (String) -> Unit = {}
 ) {
@@ -77,7 +78,7 @@ fun ProgressListItem(
                 progress = { (progress / amount).toFloat() }, modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.inverseOnSurface),
-                color = Color.Green
+                color = color
             )
         }
     }
