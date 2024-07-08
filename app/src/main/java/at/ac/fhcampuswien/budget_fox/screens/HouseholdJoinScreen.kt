@@ -16,8 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +38,7 @@ import at.ac.fhcampuswien.budget_fox.helper.QrCodeAnalyzer
 import at.ac.fhcampuswien.budget_fox.navigation.Screen
 import at.ac.fhcampuswien.budget_fox.view_models.HouseholdJoinViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 
 @Composable
@@ -86,13 +85,11 @@ fun HouseholdJoinScreen(
             SimpleTopAppBar(
                 title = "Join a Household"
             ) {
-                IconButton(onClick = {
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "An arrow icon to navigate back to the previous screen"
+                ) {
                     navigationController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
                 }
             }
         }
