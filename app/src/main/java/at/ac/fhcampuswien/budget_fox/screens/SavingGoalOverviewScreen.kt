@@ -13,7 +13,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +28,7 @@ import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalOverviewViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.ProgressListItem
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -52,13 +52,11 @@ fun SavingGoalOverviewScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Saving goals") {
-                IconButton(onClick = {
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "An arrow icon to navigate back to the previous screen"
+                ) {
                     navController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
                 }
             }
         },

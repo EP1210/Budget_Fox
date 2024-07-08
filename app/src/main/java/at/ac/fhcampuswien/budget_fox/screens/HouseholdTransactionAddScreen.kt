@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +18,7 @@ import at.ac.fhcampuswien.budget_fox.view_models.HouseholdTransactionAddViewMode
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.DateField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
@@ -41,13 +40,11 @@ fun HouseholdTransactionAddScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Add transaction") {
-                IconButton(onClick = {
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "An arrow icon to navigate back to the previous screen"
+                ) {
                     navigationController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
-                    )
                 }
             }
         }

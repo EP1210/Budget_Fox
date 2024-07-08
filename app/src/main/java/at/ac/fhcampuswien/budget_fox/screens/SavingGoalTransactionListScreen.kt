@@ -13,7 +13,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +28,7 @@ import at.ac.fhcampuswien.budget_fox.models.Transaction
 import at.ac.fhcampuswien.budget_fox.view_models.SavingGoalTransactionListViewModel
 import at.ac.fhcampuswien.budget_fox.view_models.ViewModelFactory
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleButton
+import at.ac.fhcampuswien.budget_fox.widgets.SimpleEventIcon
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleNumberField
 import at.ac.fhcampuswien.budget_fox.widgets.SimpleTopAppBar
 import at.ac.fhcampuswien.budget_fox.widgets.TransactionListItem
@@ -54,13 +54,11 @@ fun SavingGoalTransactionListScreen(
     Scaffold(
         topBar = {
             SimpleTopAppBar(title = "Saving goal transactions") {
-                IconButton(onClick = {
+                SimpleEventIcon(
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "An arrow icon to navigate back to the previous screen"
+                ) {
                     navigationController.popBackStack()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Go back"
-                    )
                 }
             }
         }
